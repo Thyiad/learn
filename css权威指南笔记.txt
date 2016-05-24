@@ -1,0 +1,36 @@
+--------------------------------------------第一章 CSS和文档-------------------------------------------------------
+1.元素类型：
+	替换元素、非替换元素
+	块级元素、行内元素
+	·替换元素通常都不是块级元素
+	·行内元素可以继承块级元素，反过来不行(xhtml)
+	
+2.<link rel="stylesheet" type="text/css" href="sheet1.css" media="all">
+	rel:关系
+	type:要加载的数据类型
+	href:资源路径
+	media:all、aural、braille、embossed、handheld、print、projection、screen、tty、tv
+	
+3.style节点：<style type="text/css"></style>
+	·老浏览器不识别style节点, 可以在节点开始标记和结束标记之间插入注释:
+	<style><!--
+	@import url(sheet2.css);
+	--></style>
+	
+4.@import指令
+	·用来在style节点下导入其他css文件
+	·除了IE以外，必须放置在样式表的开头
+	
+5.css注释：/*...*/
+	html注释：<!--...-->
+
+
+
+
+
+
+
+
+
+
+

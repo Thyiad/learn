@@ -1,0 +1,333 @@
+bootstrap 2
+1.文字的标签：
+  简称：<abbr>
+	<abbr title=""></abbr>
+  斜体：<em>
+  加粗黑体：<strong>
+  大写：.initialism
+  引用：<blockquote>
+			<small>
+  右对齐：.pull-right
+  
+2.列表：
+	无序列表：ul li
+	有序列表：ol li
+	描述列表：dl dt dd 后两个分别是描述的词汇、描述的内容
+			dl->.dl-horizontal
+			
+boostrap 3
+1.col-xs <768<%@ Page Title="" Language="C#" MasterPageFile="~/MainWin.Master" AutoEventWireup="true" CodeBehind="ProductEdit.aspx.cs" Inherits="ERP.Web.product.ProductEdit" %>
+
+<%@ MasterType VirtualPath="~/MainWin.master" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="PageTitle" runat="server">
+    修改产品信息
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="HeaderContent" runat="server">
+    <i class="fa fa-cog">修改产品信息</i>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="PageContent" runat="server">
+    <style>
+          .conversion {
+                        padding-top:7px;color:red;
+                    }
+    </style>
+    <form id="frmEdit" class="form-horizontal" action="/api/Product.ashx?action=update">
+        <input name="ID" type="hidden" value="<%=dr["ID"] %>" />
+        <h3>基本信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">产品分类</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4 ">
+                            <%=ERP.Lib.WebSelect_ProductClassify("ClassifyID","","(选择分类)" ,dr["ClassifyID"].ToString()," required  ")%>
+                        </div>
+                        <div class="group">
+                            <label class="col-sm-2 col-md-2  col-lg-2 control-label">工厂</label>
+                            <div class="col-sm-4  col-md-4  col-lg-4 ">
+                                <%=ERP.Lib.WebSelect_Factory("FactoryID","","(选择工厂)" ,dr["FactoryID"].ToString()," required  ")%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">货号</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4 ">
+                            <input type="text" value="<%=dr["No"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">工厂货号</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4">
+                            <input type="text" value="<%=dr["NoFactory"] %>" class="form-control" name="NoFactory" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">品名</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4 ">
+                            <input type="text" value="<%=dr["Name"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">单位</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4">
+                            <input type="text" value="<%=dr["Unit"] %>" class="form-control" required="required" name="NoFactory" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">客户</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4 ">
+                            <%=ERP.Lib.WebSelect_Customer("CustomerID","","(选择客户)" ,dr["CustomerID"].ToString()," required  ")%>
+                        </div>
+                        <div class="group">
+                            <label class="col-sm-2 col-md-2  col-lg-2 control-label">款式</label>
+                            <div class="col-sm-4  col-md-4  col-lg-4 ">
+                                <%=ERP.Lib.WebSelect_Style("StyleID","","(选择款式)" ,dr["StyleID"].ToString()," required  ")%>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class=" form-group">
+                    <label class="col-sm-2 col-md-2  col-lg-2 control-label">描述信息</label>
+                    <div class="col-sm-10  col-md-10  col-lg-10 ">
+                        <textarea name="Comment" rows="6" cols="20" class="form-control">"<%=dr["Desc"].ToString() %>" </textarea>
+                        <div class="help-block">(填写产品描述信息)</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group col-md-8 col-lg-8 col-sm-8">
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3  col-lg-3 control-label">长(CM)</label>
+                            <div class="col-sm-6  col-md-6  col-lg-6 ">
+                                <input type="text" value="<%=dr["Length"] %>" class="form-control" name="Length" />
+                            </div>
+                            <div class="col-sm-3  col-md-3 col-lg-3 ">
+                                =<label class="conversion">55.5</label>(in)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3  col-lg-3 control-label">高(CM)</label>
+                            <div class="col-sm-6  col-md-6  col-lg-6 ">
+                                <input type="text" value="<%=dr["Height"] %>" class="form-control" name="Length" />
+                            </div>
+                            <div class="col-sm-3  col-md-3 col-lg-3 ">
+                                =<label class="conversion">55.5</label>(in)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3  col-lg-3 control-label">宽(CM)</label>
+                            <div class="col-sm-6  col-md-6  col-lg-6 ">
+                                <input type="text" value="<%=dr["Width"] %>" class="form-control" name="Length" />
+                            </div>
+                            <div class="col-sm-3  col-md-3 col-lg-3 ">
+                                =<label class="conversion">55.5</label>(in)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3  col-lg-3 control-label">重量(KGS)</label>
+                            <div class="col-sm-6  col-md-6  col-lg-6 ">
+                                <input type="text" value="<%=dr["Length"] %>" class="form-control" name="Length" />
+                            </div>
+                            <div class="col-sm-3  col-md-3 col-lg-3 ">
+                                =<label class="conversion">55.5</label>(LBS)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group  col-md-4 col-lg-4 col-sm-4">
+                        图片区域
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h3>PDQ信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">PDQ装率</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2">
+                            <input type="text" value="<%=dr["PDQPackRate"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">长(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["PDQLength"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">宽(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["PDQWidth"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">高(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["PDQHeight"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h3>内盒信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+                <div class="form-group">
+                      <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">内盒率</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2">
+                            <input type="text" value="<%=dr["InnerBoxRate"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">长(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["InnerLength"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                </div>
+             <div class="form-group">
+                 <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">宽(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["InnerWidth"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">高(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["InnerHeight"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+             </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">内盒材积</label>
+                        <div class="col-sm-4  col-md-4  col-lg-4">
+                            <label class="conversion">5.56</label>(Cuft)
+                        </div>
+                    </div>
+                    <div class="group">
+                         <label class="col-sm-2 col-md-2  col-lg-2 control-label">内盒重量(KGS)</label>
+                         <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["InnerWeight"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(LBS)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h3>外箱信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">外箱率</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2">
+                            <input type="text" value="<%=dr["OuterBoxRate"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">长(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["OuterLength"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">宽(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["OuterWidth"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="col-sm-2 col-md-2  col-lg-2 control-label">高(CM)</label>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            <input type="text" value="<%=dr["OuterHeight"] %>" class="form-control" required="required" name="No" />
+                        </div>
+                        <div class="col-sm-2  col-md-2  col-lg-2 ">
+                            =<label class="conversion">55.5</label>(in)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h3>价格信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+            </div>
+        </div>
+        <hr />
+        <h3>托盘信息</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+            </div>
+        </div>
+        <hr />
+        <h3>关税及运费</h3>
+        <hr />
+        <div class="row">
+            <div class="group col-md-11 col-lg-11 col-sm-11">
+            </div>
+        </div>
+    </form>
+</asp:Content>
+
+	sm >=768
+	md >=992
+	lg >=1200
+	
+2.push-3	当前元素向右推3个网格
+  pull-9	当前元素位置像左拉9个网格

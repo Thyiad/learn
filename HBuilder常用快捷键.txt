@@ -1,0 +1,29 @@
+切换tab:	Ctrl+Tab
+全部保存： Ctrl+Shift+S
+
+激活代码助手:	Alt+/
+显示方法参数提示:	Alt+Shift+?
+转到定义:	Ctrl+Alt+D
+
+开启关闭注释整行：	Ctrl+/
+开启关闭注释已选内容：	Ctrl+Shift+/
+注释分隔条：	Ctrl+Shift+B
+
+删除当前行：	Ctrl+D
+删除前一词：	Ctrl+Backspace
+
+重复插入当前行或选中区域：	Ctrl+Shift+R
+插入转义字符：Shift+按键
+
+上下移动行：	Ctrl+向上/下
+向下空行：Ctrl+Enter
+向上空行：Ctrl+Shift+Enter
+
+转到上/下一个文本输入点：Alt+向上/下
+行首：	主页
+行尾：	End
+页首：	Ctrl+主页
+页尾：	Ctrl+End
+折叠：	Ctrl+Alt+-
+展开：	Ctrl+Alt+加号
+

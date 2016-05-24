@@ -1,0 +1,636 @@
+------------------------------------- 第一章 概述 -------------------------------------------------
+1.#!/usr/bin/perl	
+	在Unix系统中, 如果文本的第一行前两个字符是"#!", 接着的就是执行下面文件的程序
+	
+2.数据类型
+	·简单的数据类型被称为标量, 复杂类型还有列表和数组
+	·数值和字符串都是标量
+	
+	数值类型：
+		·所有数值类型都被看做双精度浮点数(double型)
+		·数值允许用下划线来分隔书写：61_298_040_283_768
+		·八进制以0开头, 十六进制以0x开头, 二进制以0b开头
+		
+		操作符：
+		+ - * /
+		%	取模. 两个数先转换为整数后再计算, 例如：10.5%3.2 ==> 10%3.
+		**	次方. 例如2**3 ==> 2的3次方
+	
+	单引号字符串：
+		\ 和 ' 是特殊字符
+		但在单引号字符串中转义很特殊, 只有在后面是\ 或 ' 时才是转义的作用
+		例如：'\n'			# 没有换行的含义, 仅仅是两个字符\和n。
+	双引号字符串：
+		不像单引号那么古怪, 中间支持二进制字符、八进制字符、十六进制字符和转义字符。
+		转义字符：
+		\n				换行
+		\r				回车
+		\t				制表符
+		\f				formfeed
+		\b				退格
+		\a				响铃
+		\c				escape
+		\007			任何八进制, 这里是007=bell(响铃)
+		\x7f			任何十六进制, 这里是007=bell
+		\cC				一个控制符, 这里是, ctrl+c
+		\\				反斜线
+		\"				双引号 "
+		\l				下个字符小写
+		\u				下个字符大写
+		\L				接着的字符均小写直到\E
+		\U				接着的字符均大写直到\E
+		\Q				在non-word字符前加上\, 直到\E
+		\E				结束\L,\E和\Q
+		
+		
+3.字符串用.号进行拼接
+	例如："hello"."world"	#同"helloworld"
+  字符串重复操作符：x	小写字母
+  ·右边的操作次数会先被转换成整数, 如果是小于1的小数, 那么将得到空字符串
+	例如："f"x3		#fff
+		  5x4		#5555
+		  4.8x4.9	#4.84.84.84.8	
+		  5x0.3		#空字符串
+4.内置警告信息
+	use warnings;			# 显示警告信息
+	use diagnostics;		# 显示详情
+	-Mdiagnostics;			# 命令行选项的方式
+		
+------------------------------------- 第二章 标量数据 ----------------------------------------------------
+		
+1.标量变量
+	变量以美元符号开头：	#美元符号告诉编译器, 这是一个变量, 这样就不会跟Perl自带的函数或操作符产生冲突
+	$name	# 区分大小写, 例如相对 $Name
+	
+2.双目运算符
+	同其他语言, 其中有几个特殊的
+	$str.=" ";	# 末尾追加一个空格
+	$num**3;	# 三次方
+		
+3.双引号内才可以使用变量内插, 在单引号中没有内插的作用, 仅仅是普通输出
+	$meal ="efg";
+	$barney ="abc $meal";			# 值为abc efg
+	$barney = "abc ${meal}hij";		# 值为abc efghij, 使用花括号避免歧义, 否则这里会将$mealhij视为一个变量名称
+	# 注意, 花括号需要括号整个范围：如果是数组, 那么则是${name[index]};
+	
+4.chr();		# chr(十六进制)将代码点转化为字符, 例如：chr(0x05D0);
+  "\x{03B1}";	# 可以使用变量的方式引用：$alef = chr(0x03B1), 也可以在双引号中直接使用, 此时需要用花括号括起来
+  ord();		# ord(字符)将字符转化为代码点, 例如：ord("d");
+  
+5.Perl没有bool类型, 直接对标量进行判断
+	0			# 假
+	"0"			# 假
+	""			# 假
+	undef		# 假
+	引用类型	# 真
+  
+  !颠倒真假值, 返回 1 或 undef
+  
+6.<STDIN>	用来接收输入, 接收到换行时终止, 所以始终带终止
+	$input = <STDIN>;
+  
+7. chomp()	用来截除字符串的最后一个换行符, 返回值为它实际移除的字符数
+			如果是数组, 那么就截除每一个元素的最后一个换行符
+
+8.只要去掉括号不会改变表达式的意义, 那么括号就可以省略. 例如上例可为：chomp$input;
+
+9.undef	未定义
+   defined() 判断某个变量是否有定义, 返回真假, 也就是1和undef
+   
+10.数字和字符串所用的比较符不同
+	比较		数字		字符串
+	相等		==			eq
+	不等		!=			ne
+	小于		<			lt
+	大于		>			gt
+	小于或等于	<=			le
+	大于或等于	>=			ge
+	
+------------------------------ 第三章 列表和数组 ---------------------------------
+	
+1.数组里的最大索引值：$#name;
+   也可以使用负数索引值：$name[-1];
+   
+2.范围操作符：1..5 # 同(1,2,3,4,5), 如果是小数, 小数部分会被去掉：(1,5..5.7)与之相同
+
+3.qw()：建立单词列表
+	qw(fred barney betty wilma dino);	# 同("fred", "barney", "betty", "wilma", "dino");
+	也可以使用其他定界符： !!  //  ##  ()  {}  []  <>
+	
+4.交换元素：($p1, $p2)=($p2, $p1);
+
+5.引用数组：@name;
+
+6.pop(@name)：移除并返回数组的最后一个值
+   push(@name, value)：添加一个值到数组的最后一项(可为值、列表或数组)
+   shift(@name)：移除并返回数组的第一个值
+   unshift(@name, value)：添加一个值到数组的第一项
+
+7.splice(@name, startIndex, length, value)
+   从指定位置移除指定数目的值，并在该位置插入指定的值。返回值为移除操作之后的数组内容。(插入操作之前)
+
+8.if (EXPR) BLOCK elsif (EXPR) BLOCK ... else BLOCK
+   
+9.foreach $temp (@name){	# 或者(@name)可以改为列表：(qw(value1 value2 value3)) 或者 (("value1", value2, value3))
+	# 做操作, 此时对$temp的修改将反映到@name中, 因为$temp就是列表元素本身
+	# $temp的值将在循环结束之后还原
+	# 如果不指定$temp, 将默认使用$_作为控制变量
+	}
+
+10.reverse	：取反
+	@wilma = reverse 6..10;
+	@barney = reverse(@fred);
+	@fred = reverse @fred;
+	
+11.sort		：排序, 默认按照代码点大小进行排序
+	@fred = sort {code} @fred;		# 同reverse, 不会修改参数
+	
+12.each		：返回一个列表：元素的索引及值
+	while(my ($index, $value) = each @name){
+		print"$index: $value";
+	}
+	
+13.数组在标量上下文中一般返回长度, 当然也有其他的情况
+	$num = 42+@people;		# 返回42+@people数组的长度
+
+15.数组内插print时输出：数组各项以空格隔开的字符串		#例如：abc def
+   不内插print时输出： 数组各项直接拼接的字符串		#例如：abcdef
+
+16.scalar	: 切换到标量上下文 # 例如：scalar @rocks
+
+17.my		：创建当前作用域变量, 一次声明一个：
+	my $fred, $barney;	# 只声明了$fred
+	my($fred, $barney);	# 两个都声明了
+
+-------------------------------- 第四章 子程序 ---------------------------------
+	
+1.如同其他语言中的系统函数及自定义函数, Perl中的自定义函数被叫做子程序, 例如：
+	sub marine{
+		$n+=1;
+		print"Hello, sailor number $n!\n";
+	}
+	使用方式：&marine;
+	参数默认为@_, 内部通过索引使用：$_[0], $_[1], $_[2]
+	参数的使用习惯：my($m, $n)=@_	# 使用列表上下文, 分别取了第一个、第二个值
+
+2.使用严格约束：use strict;
+
+3.state	:持久性当前作用域变量, 感觉像是静态变量	
+	sub marine{
+		state $n=0;
+		$n += 1;
+		print "Hello, state variable current is $n!\n";
+	}
+
+4.匿名子程序：
+	my $method_ref = sub{...code...};	# 子程序引用
+		
+-----------------------------第五章 输入与输出------------------------------------
+1.while(<STDIN>)是while(defined($line = <STDIN>))的简写
+
+2.参数中 - 连字符视为需要从标准输入读取数据
+	
+3.chomp 不加参数时, 默认作用在$_上
+
+4.<STDIN>指定从标准输入(通常为键盘键盘)获取, 而钻石操作符<>是从用户指定的位置读取(包括标准输入-键盘)
+	while(<>){
+		chomp;
+		print "It was $_!";
+	}
+  print <>;	# 直接打印出待输出的列表, 因为属于列表上下文
+
+5.当前正在处理的文件名会被保存在$ARGV中. 如果是从键盘获取, 那么文件名就会是- 连字符
+	
+6.运行参数存储在@ARGV数组中, 有点像js中的arguments关键字
+
+7.printf 格式化输出, 格式和参数的例如
+	printf "Hello, %s; "
+
+8.格式化类型：
+	%s			字符串
+	%d			十进制数字(非四舍五入, 乃无条件截断)
+	%f			数字(四舍五入, 甚至可以指定小数点后的位置：%6.3f)
+	%g			数字(按需求, 可以是整数, 浮点, 指数)
+	都可以指定长度, 比如：%10d, 如果实际没有10位就会被空格填充, 如果超出则自动扩张
+	如果为负数, 则表示向左对齐
+	
+9.建议使用全大写命名文件句柄	
+	系统保留的文件句柄名：STDIN、STDOUT、STDERR、DATA、ARGV、ARGVOUT
+	
+10.打开文件句柄：
+	open CONFIG, '<dino'						# 读取, 不加<默认也是读取
+	open CONFIG, '>dino'						# 替换式写入
+	open LOG, '>>logfile'						# 追加式写入
+	open CONFIG, '<', 'dino'					# 3个参数形式
+	open CONFIG, '<:encoding(UTF-8)', 'dino'	# 指定编码, 会验证数据是否是此种编码
+	open CONFIG, '>:utf8', 'dino'				# 简写式指定编码, 不会验证, 直接按此种编码来处理
+	
+11.crlf过滤层：
+	open BEDROCK, '<:crlf', $file_name			# 把每个换行符转换为CR_LF, DOS以\r\n做换行符, Unix以\n做换行符
+	
+12.二进制方式读写文件句柄：
+		binmode STDOUT, ':encoding(UTF-8)';		# 二进制方式用以关闭换行符相关的处理
+	
+13.open的返回值指示它的执行结果成功与否：
+	my $success = open LOG, '>>', 'logfile';
+	if(!$success){
+		# 打开文件句柄失败
+		...
+	}
+	
+14.关闭文件句柄：
+	close CONFIG;
+	
+15.处理错误和警告：
+	die "Cannot create logfile: $!";			# $!中存储的是最近的一条错误/警告信息
+	die "Cannot create logfile\n";				# 以换行结尾, 不显示错误详情, 即文件名和行号
+	warn "Warn information: $!"					# 同die
+
+16.自动处理错误：
+	use autodie;								# 从Perl 5.10开始
+
+17.输出到文件句柄：
+	print LOG "Information";					# printf相同, 句柄名后不能有逗号
+	
+18.改变默认文件句柄：
+	select BEDROCK;								# 要记得改回去
+	
+19.不缓冲信息：
+	$|=1;
+	例如：
+		select LOG;
+		$| = 1;									# 不会将LOG的内容保留在缓冲区
+	
+20.STDOUT是行缓冲, 而STDERR是没有缓冲的：
+	print "Hello, \nabc"; print STDERR "Hi\n";
+	
+21.带换行的输出：say
+	use 5.010;
+	say "Hello!";
+	
+22.使用标量变量句柄：
+	open my $rocks_fh, '<', 'rocks.txt'
+		or die "Could not open rocks.txt: $!";
+	
+23.明确标量变量文件句柄：
+	print LOG;									# 认识裸字句柄, 默认打印出变量$_中的内容
+	print $eock_fh;								# 默认当成字符串来打印, 打印出引用地址, 类似于：GLOB(0XABCDEF12)
+	print {$rock_fh};							
+	print {$rocks[0]} "sandstone\n";
+	
+-------------------------------------------------第六章 哈希-------------------------------------------------------
+1.哈希使用%来指示：%name
+
+2.反序是把键值反转了：%name=reverse %another;
+
+3.胖箭头：
+	my %name = (
+		'fred' => 'flintstone',
+		dino => undef,		# 胖箭头的左侧可省略引号, 只要左侧不是操作符等特殊情况, 逗号不行
+		barney => 'rubble',
+	);
+
+4.引用时可省略引号：$name{fred}		# 同胖箭头的省略情形, 如果不是裸字, 视为表达式进行计算
+
+5.哈希函数：
+	keys, values: 
+		my @k = keys %name;
+		my @v = values %name;
+	each:
+		while(my ($key, $value) = each %hash){
+			print "$key => $value\n";
+		}
+	exists:
+		if(exists $books{"dino"}){
+			print "Hey, $books{dino} exists!\n";
+		}
+	delete:
+	delete $books{"dino"};
+
+6.单个哈希元素内插是可以的, 但是整个哈希内插是不支持的	# 其一, 作用不大; 其二, printf中的格式字符串就用的%, 会导致紊乱
+
+7.%ENV中存储的是环境信息：
+	print "PATH is $ENV{PATH}\n";	# 打印PATH环境变量
+
+-------------------------------------------------第七章 漫游正则表达式王国-------------------------------------------------------
+1.Unicode属性：\p{PROPERTY}
+	例如：/\p{Space}/;		# 空白符, \s不匹配垂直制表符, 下一行, 不间断空格字符
+		  /\p{Digit}/;		# 数字
+		  /\p{Hex}\p{Hex}/;	# {Hex}匹配十六进制数字的字符集合
+
+2.#也是元字符, 在模式中需要转义\#
+		  
+3.反向引用：\N、\g{N}		# \g{N}是Perl 5.10开始支持的新写法, use 5.010;
+	例如：\1; \g{1};	
+	后一种写法也可以是负数：
+		/(.)\g{-1}/;		# 指的是相对于自己的位置, 前面的那个分组
+4.字符类
+	\h	水平空白符
+	\v	垂直空白符			# 同\h合起来就是\p{Space}
+	\N	非换行符			# 5.12
+	\A	字符串的绝对开头
+	\z	字符串的绝对结尾
+	\Z	字符串的结尾		# 后可有换行
+
+-------------------------------------------------第八章 用正则表达式进行匹配-------------------------------------------------------
+1.同qw, 定界符可以是多样的
+
+2.// 是 m//的缩写：模式匹配操作符
+
+3.模式匹配修饰符：
+	i			# 大小写无关
+	a			# 严格按照ASCII的范围来匹配 - 5.14
+	u			# 按照Unicode范围匹配 - 5.14
+		# 重复的两个编码设定, 指示映射处理仅仅采用指定编码方式
+	l			# locale, 按本地设定的字符编码进行匹配 - 5.14
+	m//s		# .默认不能匹配换行, 改为匹配任意字符, 类似于C#中的单行模式
+	m//m		# 多行模式
+	x			# 随意加入空白符, 但是如果要匹配空白符就需要使用转义\t或\s了, 模式中出现的注释会被当做空白符忽略, 可以这样加注释：
+		/
+			-?		# 一个可有可无的减号
+			[0-9]+	# 一个或多个数字
+		/x
+4.绑定操作符：=~
+
+5.分组命名：?<name>	# 同C#, 但是C#还支持?'name'形式
+	结果保存在名为 %+ 的哈希中, 访问方式：$+{name}
+	反向引用的方式：\g{name}
+	
+6.系统命名的分组：$` $& $'	# 分别为：匹配内容前面的文本、匹配内容、匹配内容后面的文本
+	但是使用这些存在拖慢性能的隐患。
+	5.10开始, 修饰符 P 只针对特定的正则表达式开启类似的自动捕获变量
+	${^PREMATCH},${^MATCH},${^POSTMATCH}
+	
+-------------------------------------------------第九章 用正则表达式处理文本------------------------------------------------------
+1.s///	使用正则进行文本替换
+	修饰符g进行全局替换, 否则只替换一次，例如：
+	s/\s+/ /g;
+
+2.替换模式默认返回成功替换的次数, 修饰符 r 把替换结果作为返回值返回
+
+3.\U把后面的所有字符转换成大写, \L为小写：
+	s/(fred)/\U$1/gi;
+	默认影响之后全部的字符, 需要使用\E关闭大小写转换的功能：
+	s/(fred)/\U$1\E end/gi;
+	\u, \l 则只影响一个字符
+	连用小技巧：
+	s/somaMatchStr/\u\L$1/gi;	# 首字母大写, 其余小写
+								# 这里\u和\L可以反过来, 作者Larry特意的兼容处理, 好心人。。
+
+4.split /regex/, str;	使用正则进行文本分割	# 默认保留开始处的空字段, 舍弃结尾处的空字段
+	split /:/, ":a:b:c:::";	# 结果为 ("","a","b","c"), 默认这样是为了效率, 取消这种行为需要设置第三个参数为-1
+	split /:/, ":a:b:c:::", -1;	# 结果为 ("","a","b","c","","","")
+
+5.join	联接
+	join ":", @pieces;
+	join":", 1,2,3;
+	
+6.列表上下文m//返回的是捕获的列表：
+	my($first, $second, $third)=/(\S+) (\S+), (\S+)/;
+	配合使用修饰符g和括号返回所有捕获的内容：
+	my @words = (/\w+/ig);	#返回数组
+	my %name = (/(\w+)\s+(\w+)/g);	#返回哈希, 里面的两个分组正好成为新哈希的键-值对
+	
+7.$^I	自动备份原文件(以变量值为后缀名), 修改后输出到原来的路径
+
+8.命令行选项
+	-p		类似于：
+					while(<>){
+						print;
+					}
+	-n		同上, 没有print;
+	-i		设置 $^I 变量值
+	-w		开启警告功能
+	-e		可供执行的程序代码-添加到上面的while循环体中	# 最后一个-e 选项代码可省略末尾封号
+					-e "code"
+					
+-------------------------------------------------第十章 更多控制结构------------------------------------------------------
+1. if elsif else	# elseif 被省略掉了e, 好坑爹
+
+2.last	退出循环
+  next	结束当前循环
+  redo	重新开始当次循环
+	使用标签退出指定循环：
+	LINE: while(<>){
+		foreach(split){
+			last LINE if /__END__/;
+		}
+	}
+3.短路操作符：
+	my $name = $names{$someone} || 'no name';	# 逻辑或操作符, 左边为假则把右边的值赋值出去, 类似于简短的三元运算符
+	my $name = $names{$someone} // 'no name';	# 定义或操作符, 左边未定义则把右边的值赋值出去, 判断定义与否而不再是判断逻辑真假
+	
+4.存储错误信息的变量：
+	$!	$ERROR and $OS_ERROR	操作系统或者库函数调用的错误
+	$?	$CHILD_ERROR			最近一次调用wait()得到的返回值
+	$@	$EVAL_ERROR				最近一次调用eval()得到的错误
+	$^E	$EXTENDED_OS_ERROR		操作系统特有的错误信息
+	
+5.Perl引用：
+
+	数据类型		定义			举例
+	标量变量		\$Var			$Pointer  =  \$Var	
+	数组			\@Array 		$Pointer  =  \@Array
+	哈希变量 		\%Hash 			$Pointer  =  \%Hash
+	文件句柄		\*FILEHANDLE 	$Pointer  =  \
+	常量 			\常量  			$Pointer  =  \3.1415926
+	子程序			\&SubRoutine	$Pointer  =  \&SubRoutine
+	匿名数组 		[ LIST ]   		$Pointer  =  [ “Smith”，“Jack”，“Jimmy”，“ZhaZha”]
+	匿名哈希变量	{ Key=>Value }	$Pointer  = { Key1=>Value1，Key2=>Value2}
+	匿名子程序		sub {}			$Pointer  =  sub { printf( “Hello，Perl World\n”)；}
+	对象引用 		bless  $self；
+	
+	从引用访问变量的方式：
+		数组：@{$ref}	#当{}内部是$var的形式时，{}是可以省略的
+		哈希：%{$ref}	#${$ref}{"hashKey"}
+		
+	解引用：									# 大括号用来解引用
+	$aref->[]　　数组解引用						# @{$array_ref}
+	$href->{}　　哈希解引用						# %{$hash_ref}
+	$href->()　　子过程解引用					# &{$method_ref} 或 $method_ref->();
+	
+	@a = ([1, 2, 3],[4, 5, 6],[7, 8, 9]);
+	my $aref = [1, [2, 3], [4, 5, 6]] ;
+	# 前者可以用$a[x][y]的形式访问，而后者只能用解引用的方式访问，即$a->[x][y]的形式。
+-------------------------------------------------第十一章 使用模块------------------------------------------------------
+1.仅使用模块中的部分函数
+	use File::Basename qw/ basename /;	# 只导入basename这个函数
+	use File::Basename qw/ /; 
+	use File::Basename qw/ /;	#不引入任何新函数
+	my $dirname = File::Basename::dirname $name;	# 不导入函数名称也可以通过全名的方式来调用函数
+2.常用模块：
+	File::Basename	从文件全路径里取出文件名及文件夹名	basename dirname
+	File::Spec		组合成文件全名	File::Spec->catfile($dirname, $basename)	#面向对象，引用方式
+	Path::Class		处理文件名,例如：
+										my $dir = dir(qw(users fred lib));	# 组成文件路径 users/fred/lib
+										my $subdir = $dir-> subdir('perl5');	# 组成子文件夹路径
+										my $parent = $dir->parent;	# 父文件夹路径
+	CGI.pm			构建CGI程序
+	DBI				数据库模块	# 通常还需要安装对应的数据库驱动
+						$dbh=DBI->connect($data_source, $username, $password);
+						my $data_source = "dbi:Pg:dbname=name_of_database";	#假设是PostgreSQL, 驱动程序是DBD::Pg模块
+						my $sth=$dbh->prepate("SELECT * FROM foo WHERE bla");	# 准备SQL语句
+						$sth->execute();	# 执行
+						my @row_ary=$sth->fetchrow_array;
+						$sth->finish;	# 结束
+						$dbh->disconnect();	# 断开连接
+	DateTime		日期和时间模块
+						my $dt = DateTime->from_epoch(epoch=>time);
+						# 自定义输出
+						printf '%4d%02d%02d', $dt->year, $dt->month, $dt->day;
+						# 模块的格式化输出
+						print $dt->ymd;	#2011-04-23
+						print $dt->ymd('/');	#2011/04/23
+						print $dt->ymd('');	#20110423
+						# 构造方法
+						my $dt1 = DateTime->new(
+							year=>1987,
+							month=>12,
+							day=>18,
+						);	
+						# 数学计算 
+						my #duration = $dt2-$dt1
+						# 显示
+						my units = $duration->in_units(qw(year month day));
+						printf '%d years, $d months, and %d days', @units; # 23 year, 4months, and 14days
+						# 加间隔时间
+						my $duration = DateTime::Duration->new (day => 5);
+						my $dt3 = $dt2 +$duration;
+						print $dt3->ymd;
+	Time::Piece		更轻便的时间模块
+						my $t = localtime;
+						print 'The month is '.$t->month."\n";	# 输出 The month is Apr
+						
+	
+-------------------------------------------------第十二章 文件测试------------------------------------------------------
+1.文件检测选项及其含义：
+	-r	可读
+	-w	可写
+	-x	可执行
+	-o	所有权
+	-e	存在(文件或目录名)
+	-z	文件存在, 大小为0(目录恒为false)
+	-s	文件或目录存在, 大小大于0(值为文件的大小, 单位: 字节)
+	-f	是普通文件
+	-d	是目录
+	-l	是符号链接
+	-T	看起来像文本文件
+	-B	看起来像二进制文件
+	-M	最后一次被修改后至今的天数
+	-A	最后一次被访问后至今的天数
+	
+2.重复测试同一个文件的不同属性：
+	if(-r $file and -w _){}			# 也可以在多条语句中使用，如下例
+	if(-r $file){}
+	if(-w _){}
+	if(-w -r $file){}		# 栈式测试，从左至右
+	
+	
+----------------------------------第十二章 目录处理---------------------------
+1.chdir	改变工作目录
+
+2.glob 文件名匹配, 返回一个数组
+		功能与系统有关, 例如 linux中 glob '*' 代表不以.号开头的文件名(同shell, 所以匹配所有的为glob '.* *', 用空格分隔两个条目)
+	
+3.opendir 打开文件夹句柄, 例如：
+		opendir($handleName, $fileName);
+	readdir	读文件夹句柄, 只返回文件名, 不包含文件路径
+
+4.File::Spec::Functions	文件通用的模块
+
+5.List::Util
+	max
+	maxstr
+	min
+	minstr
+	any
+	all
+	first
+	
+	
+---------------------------------- 其他笔记 ---------------------------
+1.几个特殊而常用的符号：
+  q		单引号
+  qq	双引号
+  qw	单词列表引号
+  qr	正则表达式引号
+  qx	反引号
+
+2.两边都是类似于下标的中间，箭头号可以省略：
+	my $ref= \@array; # 或者 \%hash
+	$ref->[0]->[0]; # 等同于$ref->[0][0], 只有后面的箭头号才可以省略
+	$ref->{'key'}{'key'}	# 哈希
+	$ref->[0]{'key'}
+	
+3.perl 调试
+	-d 选项进入调试
+		x 变量	进入查看
+	Data::Dumper
+	
+4.引用模块：
+	use 'filePath';						# 编译时引用模块
+	require 'path';						# 运行时引用模块
+  加入模块查找路径(运行环境)：
+	sub BEGIN {unshift @INC, 'path';}	# 加入自己的模块查找路径(文件夹)，等同于：
+	use lib 'path';						# 同上
+  FindBin模块：	
+	use FindBin qw($Bin);	# $Bin是当前脚本所在的文件夹，便捷定位到当前文件夹，还可以使用 $Bin/../lib 跳到上上级文件夹
+	
+5.Class->Method(@args) 等同于 Class::Method('Class', @args);
+
+6.声明全局变量：
+	our $str;			# 新式的
+	use vars qw($str)	# 老式的(Perl 5.005)
+	
+7.转换颜色的模块：
+	use Color::Conversions qw(color_name_to_rgb rgb_to_color_name); 
+	
+8.调用函数的上下文是否是列表：
+	wantarray	# 调用wantarray的函数的上下文是否是列表，分别返回1,空字符,undef(无上下文)
+	
+9.判断一个变量是否是引用：
+	ref($variable);
+	
+10.将错误的位置定位到调用函数处：
+	use Carp qw(croak carp);	# croak替代die, carp替代warn
+	
+11.link 为物理存储创建一个链接，相当于别名。创建多个时，都是指向同一个物理存储
+
+12.符号表
+	不是哈希，行为上像哈希，可以像使用哈希那样使用：(%PackageName::)
+		%main::
+	符号表总共有7种变量类型：
+		SCALAR - $
+		ARRAY - @
+		HASH - %
+		CODE - &
+		IO - file and dir handle
+		GLOB - *
+		FORMAT - format names
+		NAME - name
+		PACKAGE - package name
+	通过glob类型访问其他变量：
+		*bar{SCALAR}	# 返回的是标量的引用
+		*bar{ARRAY}		# 返回的是数组的引用
+
+13.system和exec的参数
+	如果是标量参数："app arg1 arg2"; 那么会用第一个参数作为要启动的进程
+	如果是数组参数: system @arg;	那么分两种情况：
+		1.如果数组只有一个元素，同标量参数
+		2.如果数组有多个元素，则使用第一个元素作为要启动的进程
+		可以使用以下方式来明确指明第一个元素就是要启动的进程：
+			system {$arg[0]} @arg;	#间接对象表示法
+			
+14.大小写
+	lc
+	uc
+	fc
+14.编码相关
+	perl里面只有2种字符串：perl字符串以及字节数组
+	use utf8;
+	open my $file, "<:encoding(utf8)"
+	binmode STDOUT, ':encoding(gb2312)';
+	decode 'utf8', $str;		#转为perl字符串
+	encode('utf8', $str);		#转为指定编码
+	
+	

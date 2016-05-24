@@ -1,0 +1,44 @@
+1. 最高效的plusReady调用方式：		//如果plus已经存在，直接使用，没有的话会监听plusready事件，在plus准备好后再调用plus api
+		mui.plusReady(function(){
+			 // 在这里调用plus api
+		});
+	
+2. mui也有初始化的过程，但在DOMContentLoaded完毕后就结束了，一般无需使用
+		mui.ready(function () {
+
+		});
+		
+3.判断Runtime是否支持5+ API:
+	if(navigator.userAgent.indexOf("Html5Plus")>=0)
+	
+4.自定义错误页面:	// manifest.json添加节点：
+		"error": {
+            "url": "error.html"
+        }
+		
+5.设置应用全屏显示
+	打包时设置是否全屏显示选项，或者修改manifest.json文件：
+		"fullscreen":true,
+	5+ api动态改变：
+		plus.navigator.setFullscreen(true);
+		plus.navigator.setFullscreen(false);
+		
+6.	手机屏幕的高度，状态栏和显示区域的总高度：
+	screen.height					物理分辨率	
+	plus.screen.resolutionHeight	逻辑分辨率
+	plus.screen.scale				放大系数
+	screen.height = plus.screen.resolutionHeight * plus.screen.scale
+	* 默认放大系数是3
+	
+7.获取webview的高度：
+	plus.android.invoke(plus.android.currentWebview(),"getHeight")
+	
+8.pop-in，官网更推荐
+	pop-in在iOS上推荐300毫秒，Android上推荐200-250毫秒
+	slide-in-right推荐150毫秒
+	只有iOS支持3个及以上的webview挤压动画，Android不支持
+	
+9.硬件加速配置：
+	manifest.json->distribute->google->hardwareAccelerated
+	"hardwareAccelerated":false
+	

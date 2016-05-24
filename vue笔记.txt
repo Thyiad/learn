@@ -1,0 +1,349 @@
+1.基本绑定：
+	new Vue(
+		{
+			el:'#elID',
+			data:{
+				// data obj
+			},
+			computed:{
+				// computed obj
+			},
+			methods:{
+				// methods obj
+			},
+		}
+	);
+	
+2.指令：
+	前缀为v-
+	*v-if, v-for, v-bind, v-on...
+	*特性插值会转为v-bind绑定: href='{{url}}' --> v-bind:href='url'
+	
+3.数据绑定只接受单个表达式：
+	{{number+1}}									ok
+	{{ok?'yes':'no'}}								ok
+	{{message.split('').reverse().join('')}}		ok
+	{{var a=1}}										no
+	{{if(ok){return message}}}						no
+	
+4.过滤器：
+	管道式的写法 --> {{message|capitalize}}
+	*可以串联: filterA|filterB
+	*可以带参数: filterA 'arg1' arg2
+	
+5.修饰符
+	前缀为.
+	*v-bind:href.literal='a/b/c'
+	
+6.缩写
+	v-bind:href='url' --> :href='url'
+	v-on:click='dosomething' --> @click='dosomething'
+	
+7.计算setter
+	computed:{
+		fullName:{
+			get:function(){
+				// getter
+			}
+			set:function(newValue){
+				//setter
+			}
+		}
+	}
+	
+8.Class与Style绑定
+	*变量语法：v-bind:class="{'class-a':isA, 'class-b':isB}"		-->		data:{isA:true, isB:false}
+	*对象语法：v-bind:class="classObj"								-->		data:{classObj:{'class-a':true, 'class-b':false}}
+	*数组语法：v-bind:class='[classA, classB]'						-->		data:{classA:'class-a', classB:'class-b'}
+
+9.条件渲染
+	*v-if, v-show, v-else
+	*<h1 v-if="ok">Yes</h1> <h1 v-else>No</h1>
+	*<h1 v-show="ok">Yes</h1> <h1 v-else>No</h1>
+	*show只是简单的display:none
+	
+10.列表渲染
+	v-for
+	*内置变量：{{$index}}
+	*用法：v-for='item in items'	
+		   v-for='(index, item) in items'	*数组则是索引，遍历对象则是键
+
+11.数组变动检测
+	能触发视图更新的方法：
+	*push, pop, shift, unshift, splice, sort, reverse			// 变异方法
+	*filter, concat, slice										// 替换数组
+	*尽可能复用DOM: track-by
+		v-for="item in items" track-by="_uid"
+		track-by='$index'										// 根据index追踪，不是很明白！...片段不被移动，简单地已对应索引的新值刷新,也能处理数据数组中重复的值...
+	
+	不能检测到以下变化：
+		1.直接用索引设置元素：	vm.items[0]={};					// vue解决方案：vm.items.$set(0, { childMsg: 'Changed!'}), vm.items.$remove(item)
+		2.修改数据的长度：		vm.items.length=0;				// js中常见的清空, vue解决方案：直接用空数组替换
+		
+12.对象v-for
+	内置变量：$key
+	
+13.值域v-for
+	<span v-for="n in 10">{{ n }}</span>
+
+14.内置的过滤器
+	filterBy 和 orderBy	
+	
+15.方法与事件处理器
+	·v-on 监听DOM事件
+		<button v-on:click="greet"></button>
+		<button v-on:click="greet('xx', $event)"></button>				// 内联语句处理器, $event为内置变量，原生的DOM事件
+	·事件修饰符
+		<a v-on:click.stop.prevent='doThis' />							// 阻止冒泡和默认行为，修饰符可以串联
+	·按键修饰符
+		<input v-on:keyup.13='submit' >									// 键盘事件后面可接keyCode
+		常见的按键有提供别名：
+			·enter
+			·tab
+			·delete
+			·esc
+			·space
+			·up
+			·down
+			·left
+			·right
+	
+16.表单控件绑定
+	·v-model绑定字段
+		<input type="checkbox" id="checkbox" v-model="checked">			// 绑定的值通常是静态字符串，勾选框是布尔值
+	·参数特性
+		lazy		// 延迟到change事件中同步(原为input)
+		number		// 仅允许输入数字
+		debounce	// 延时同步
+		
+17.过渡
+	典型的过渡：
+		<div v-if="show" transition="expand"></div>
+		需要添加CSS样式：
+			.expand-transition(必须), .expand-enter, .expand-leave
+			*如果未设置, 默认为.v-transition, .v-enter, .v-leave
+		同时提供钩子：
+			Vue.transition('expand',{...});
+			·beforeEnter, enter, afterEnter, enterCancelled, beforeLeave, leave, afterLeave, leaveCancelled
+		渐近过渡：
+			<div v-for='list' transition stagger='100'></div>
+			*钩子stagger, 延时过渡
+			
+18.组件
+	·创建组件：		var c = Vue.extend({
+						template:'<div>A custom component!</div>',
+					});
+	·注册组件:		Vue.component('my-component', c);					// 如果名字是myComponent, html中必须写成my-component
+	·使用组件：		<div id='app'><my-component></my-component></div>	// html
+					new Vue({el:'#app'});								// js
+					
+	*注册可缩写为	vue.component('my-component',{
+						template:'<div>A custom component!</div>',
+					});
+	局部注册：
+		var c = Vue.extend({});
+		var parentComponent = Vue.extend({
+			components:{
+				'my-component': c,
+			}
+		});
+	组件选项：
+		var c = Vue.extend({
+			data:function(){
+				return {a:1};
+			}
+		});
+		
+	is特性：
+		*table中限制其他的节点不能放置其中
+		<table>
+			<tr is='my-component'></tr>
+		</table>
+			
+	Props:
+		props用以从父组件接收数据:		 
+			使用：
+				Vue.component('child',{
+					props:['msg'],
+					template:'<span>{{msg}}</span>'
+				});
+			声明：
+				<child msg='hello!'></child>			// 字面量语法
+				<child v-bind:msg='parentMsg'></child>	// 动态语法
+			*如果props是myMsg, html中需要用my-msg(即：camelCase - kebab-case, 因为html的特性是不区分大小写)
+			*字面量和动态语法稍有不同
+				<comp some-prop="1"></comp>		// 传递了一个字符串 "1"
+				<comp :some-prop="1"></comp>	// 传递实际的数字
+	
+	Props绑定类型：
+		<child :msg="parentMsg"></child>		// 默认为单向绑定
+		<child :msg.sync="parentMsg"></child>	// 双向绑定
+		<child :msg.once="parentMsg"></child>	//单次绑定
+		*如果prop是一个对象或数组，是按引用传递。不管使用哪种绑定方式，都将是双向绑定
+	
+	Props验证：
+		props:{			// 此时props是一个对象
+			propA: Number,
+			propB:{
+				type: String,					// 类型(原生构造器：String, Number, Boolean, Function, Object, Array)
+				required: true,					// 是否必须项
+				default: 'thyiad',				// 默认值(如果是Object, 默认值需由一个函数返回)
+				validator: function(value){		// 验证
+					return value === 'thyiad';	
+				},
+				coerce:function(val){
+					return val+'';				// 将值强制转换为字符串
+					return JSON.parse(val);		// 将JSON字符串转换为对象
+				}
+			}
+		}
+	
+	父子组件通信：
+		this.$parent		// 子组件访问父组件
+		this.$root			// 访问根实例
+		this.$children		// 父组件的所有子元素
+		*不建议在子组件中修改父组件的状态
+		
+	自定义事件：
+		$on()				// 监听事件
+		$emit()				// 触发事件
+		$dispatch()			// 派发事件，沿着父链冒泡
+		$broadcast()		// 广播事件, 向下传递给所有的后代
+		使用：
+			子组件中绑定函数派发事件：
+				methods:{
+					notify:function(){
+						this.$dispatch('child-msg',this.msg);
+					}
+				}
+			父组件中定义事件：
+				events:{
+					'child-msg':function(msg){
+						this.messages.push(msg);
+					}
+				}
+			*更直观的声明方式：
+				<child v-on:child-msg='handleIt'></child>		// 直观的为父组件定义事件(child-msg), 并且触发父组件的handleIt函数, 子组件只关注触发事件
+		
+	子组件索引：
+		<child v-ref:profile></child>
+		var child = parent.$refs.profile;
+		
+	使用Slot分发内容：
+		单个Slot:
+			父组件的内容将被抛弃，除非子组件包含<slot>.
+			如果只有一个没有特性的slot, 整个内容将被插到它所在的地方, 替换slot.
+				父组件：
+				<child>
+					<p>parent content</p>
+				</child>
+				子组件模板：
+				<div>
+					<h1>child content</h1>
+					<slot>
+						如果父节点没有设置内容，这里才会被显示
+					</slot>
+				</div>
+		命名Slot：
+			父组件模板：
+				<child>
+					<p slot='one'>One</p>
+					<p slot='two'>two</p>
+					<p>Default A</p>
+				</child>
+			子组件模板：
+				<div>
+					<slot name='one'></slot>
+					<slot></slot>					// 默认slot, 找不到匹配内容的回退插槽, 如果没有默认的slot, 不匹配内容将被抛弃
+					<slot name='two'></slot>
+				</div>
+		
+		动态组件：
+			可以在不同组件之间切换：
+				new Vue({
+					el:'body',
+					data:{
+						currentView:'home',
+					},
+					components:{
+						home:{},
+						posts:{},
+						archive:{},
+					}
+				});
+				父组件：
+					<component :is='currentView' keep-alive></component>		// component是Vue保留的元素
+					*keep-alive用来把切换出去的组件保留在内存中, 可以保留它的状态避免重新渲染
+			activate钩子：
+				用以在切入前做一些异步操作：
+					activate:function(done){
+						var self = this;
+						loadDataAsync(function(data){
+							self.someData=data;
+							done();
+						});
+					}
+			transition-mode
+				指定列两个动态组件之间如何过渡：
+					<component :is='currentView' transition='fade' transition-mode='out-in'></component>
+					*默认进入与离开平滑地过渡, 可以指定另外两种模式：in-out, out-in (先进入or先离开)
+			
+		组件和v-for:
+			<child v-for='item in items' :item='item' :index='$index'></child>
+			*因为组件的作用域是孤立的, v-for里的item无法直接传递给组件, 必须像上面一样使用props传递数据
+		
+		异步组件
+		资源命名约定
+		递归组件
+		片段实例
+			*推荐模板只有一个根节点(使用template选项时)
+		内联模板
+			组件把它的内容当做它的模板
+			<child inline-template></child>
+			*不推荐
+		
+19.深入响应式原理
+	·如何追踪变化
+		*使用Object.defineProperty设置getter/setter
+	·变化检测问题
+		*不能检测到对象属性的添加或删除
+		*vm.$set('b', 2);
+		 Vue.set(object, key, value);
+	·初始化数据
+		*推荐在data对象上声明所有的响应属性
+	·异步更新队列
+		*默认异步更新DOM, 下次事件循环时清空队列, 执行必要的DOM更新
+		*Vue.nextTick(callback);
+	·计算属性的秘密
+		*计算属性是有缓存的, 除非显示设置为不缓存
+			computed:{
+				attr:function(){
+					return Date.now()+this.msg;
+				}
+			}
+			TO:
+			computed:{
+				attr:{
+					cache: false,
+					get: function(){
+						return Date.now()+this.msg;
+					}
+				}
+			}
+			*但只是在JS中访问是这样的, 数据绑定仍是依赖驱动的。
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
+	

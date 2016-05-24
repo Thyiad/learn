@@ -1,0 +1,207 @@
+1.活动的声明周期：
+	OnCreate -> OnStart -> OnResume -> OnStop -> OnDestroy
+										  -> OnRestart -> OnStart
+								
+2.活动之间传递值：
+	Bundle	传递简单的值，比如字符串之类的
+		OnSaveInstanceState			活动被销毁之前触发
+									所有设置了ID属性的控件默认都将会保存信息
+									home、back不会触发该事件
+		OnRestoreInstanceState		OnCreate之后触发
+	自定义对象
+		OnRetainNonConfigurationInstance
+		LastNonConfigurationInstance
+	* 屏幕方向切换后，当前活动将重新创建一个新的实例(也就是说旧实例的实例属性都被清掉了，只有静态属性会被保留下来)
+	
+3.三个设置版本：
+	Target Framework			目标版本，也就是采用这个版本去编译
+	Minimum Android Version		最低允许运行版本
+	Target Android Version		期待的运行版本，一般也就是Target Framework
+	
+4.在指定版本上运行某些功能：
+	if(Android.OS.Build.Version.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+		builder.SetCategory(Notification.CategoryEmail);
+		
+5.Android libray的版本设置：
+	引用库：应用的编译版本应该 >= 引用库的编译版本
+	创建库：库的编译版本应该 = 应用的最低版本
+	
+6.处理横竖屏的两种方式：
+	自动，使用不同的layout：
+		layout目录下面建立一个layout-land的目录，表明里面放置的是屏幕横立时的layout
+		* drawable与此相同
+	手动，检测当前方向：
+		WindowManager.DefaultDisplay.Rotation
+		竖向：SurfaceOrientation.Rotation0 或者 SurfaceOrientation.Rotation180
+		横向：90，270
+		为控件设置不同的RelativeLayout.LayoutParams
+
+7.阻止横竖屏导致的重新开始，重复的OnCreate：
+		活动上添加以下属性：
+			ConfigurationChanges=Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize
+		重载 OnConfigurationChanged 方法：
+			OnConfigurationChanged(Android.Content.Res.Configuration newConfig){
+				 base.OnConfigurationChanged (newConfig);
+				 if(newConfig.Orientation == Android.Content.Res.Orientation.Portrait){}
+			}
+	
+8.描画
+	Drawable Resources
+		放置在Resources/drawable文件夹下
+		ShapeDrawable、StateListDrawable、LayerDrawable、TransitionDrawable、LevelListDrawable、ScaleDrawable/ClipDrawable、InsetDrawable、BitmapDrawable
+	Canvas
+	
+9.动画
+	View Animations
+		根节点：alpha、rotate、scale、translate、set
+		动画类型：AcclerateInterpolator/DecelerateInterpolator-加速/减速 BounceInterpolator-最后弹起 LinearInterpolator-恒定速度
+	Property Animations
+		ValueAnimator、ObjectAnimator、AnimationSet
+		ValueAnimator.OfInt、ValueAnimator.OfFloat、ValueAnimator.OfObject
+	Drawable Animations
+		多个画面之间进行顺序切换，类似于幻灯片，放置于/Resource/drawable 目录下
+		
+10.安卓资源
+	有以下资源目录：
+		animator
+		anim
+		color
+		drawable
+		layout
+		menu
+		raw
+		values
+		xml
+		
+11.手机的屏幕尺寸原来指的是对角线。。。
+	ppi:每英寸像素数 - Pixel per inch, 设备的点密度
+	dpi:每英寸多少点 - dot per inch, 印刷品点密度
+		dpi＝（√（横向分辨率^2+纵向分辨率^2））/屏幕尺寸
+	dip/dp:设备独立像素 - Density-independent pixel
+		dp = pixels/(dpi/160)
+		*指定物理宽度能显示的像素数量
+		*抽象意义上的像素，安卓上假定的默认显示设备是160dpi
+		*这个公式计算出的像素，最后在各分辨率的屏幕上宽度都一样
+		*密度越高，能显示的像素就越多，占用的物理宽度就越少
+		* 即同一图片在低密度屏上显得很大，而在高密度屏上很小
+		
+12.布局
+											ldpi	mdpi	hdpi
+	Launcher、menu							36*36	48*48	72*72
+	tab、Dialog、ListView、StatusBar		24*24	32*32	48*48
+	API Level 13(Android 3.2)以上推荐使用dp来使用不同的布局：
+		例如：layout-sw700dp
+		典型的手机		320dp
+		5寸平板/手机	480dp	三星note
+		7寸平板			600dp
+		10寸平板		720dp
+	13以下使用small/normal/large/xlarge来区分，对应关系：
+		small	426*320
+		normal	470*320
+		large	640*480
+		xlarge	960*720
+		* 单位为dp
+	布局基准：
+		只为需要的屏幕进行设计
+		使用dp而不是pixel
+		避免使用AbsoluteLayout，使用LinearLayout，RelativeLayout与GridLayout
+		选择一个默认方向
+		使用Layout参数
+			wrapcontent, fillparent, 样式使用dp参数
+			
+13.区域化参数
+	values文件夹名区分
+	values、values-de、values-es
+	* 区域化比较耗时，所以很多程序都不提供
+	* 3个基准：layouts越少越好，默认区域要测试完整(程序连默认的资源都找不到时会崩溃)，只做需要的区域化	
+		
+14.Assets 用来读取未经过加工的数据
+		string content;
+		using (StreamReader sr = new StreamReader (Assets.Open ("read_asset.txt")))
+		{
+			content = sr.ReadToEnd ();
+		}
+	Resources下面归属于资源系统管理
+	
+15.服务-Started Services、Bound Services
+	Started Services分为3类：
+	自己内部用的并可以并发同时访问的、外部程序可调用的、队列顺序执行的
+	前两个运行在主线程中，做耗时操作时仍需自己再开线程
+	后者运行在新开的线程中，无需自己手动再开线程
+	* 后者继承自IntentService，并且需事先父类带string的构造函数：
+	* public MyIntentService:base("MyIntentService"){}
+	OnCreate
+	OnStartCommand
+		返回StartCommandResult枚举值，Sticky使用空Intent重启，RedeliverIntent 使用最后的Intent重启
+	OnDestroy
+	* OnBind 返回IBinder(Bound Service需要)
+	* 类以Service属性修饰
+	* 需要在AndroidManifest.xml中声明：<service android:name="demoservice.DemoService"></service>
+	
+	开启与关闭服务：
+	StartService、StopService(Context中)
+	StopSelf、StopSelfResult(Service中)
+	
+	其他应用可启动的服务：
+	* 需要用IntentFilter在类上修饰属性，同时需要在AndroidManifest.xml中声明
+	开启：StartService (new Intent ("com.xamarin.DemoService"));
+	关闭：StopService (new Intent ("com.xamarin.DemoService"));
+
+16.	发送一条顶部通知：
+		var nMgr = (NotificationManager)GetSystemService (NotificationService);
+		
+		var notification = new Notification (Resource.Drawable.Icon, "Message from demo service");
+		var pendingIntent = PendingIntent.GetActivity (this, 0, new Intent (this, typeof(DemoActivity)), 0);
+		notification.SetLatestEventInfo (this, "Demo Service Notification", "Message from demo service", pendingIntent);
+		
+		nMgr.Notify (0, notification);
+	发送一条顶部不消失的通知：
+		StartForeground(Service中的方法)
+		StopForeground
+	发送一条一闪而逝提醒通知：
+		Toast.MakeText (this, "The demo service has started", ToastLength.Long).Show();
+	service中需要使用Handler：
+		var myHandler = new Handler ();
+		myHandler.Post(() => {
+			Toast.MakeText (this, "Message from demo service", ToastLength.Long).Show();
+		});
+	* 还有其他两种跟UI交互的方式：
+		Android.App.Application.SynchronizationContext.Post()
+		System.Threading.SynchronizationContext.Current.Post()
+		
+17.多媒体
+	音频
+	播放	MediaPlayer
+	录音	MediaRecorder
+	通知
+	底层版	AudioTrack(播放)、AudioRecord(录音)
+		
+18.后台运行		
+	StartedService
+	BoundService
+	HybridService
+		本地：
+		StartService();
+		BroadcastReceiver
+		远程：
+		Messenger
+		AIDL(支持多线程)
+		
+19.Fragments有3个子类：
+	ListFragment
+	DialogFragment
+	PreferenceFragment
+	* 安卓3.0以下，兼容包对前两个做了支持，最后一个没有做支持
+	
+20.列表的使用
+	调用安卓的方法时，需要使用Android.Runtime下面的类型，这样再初始化后再改变，在托管代码中才可见
+		var badSource  = new List<int> { 1, 2, 3 };
+		var badAdapter = new ArrayAdapter<int>(context, textViewResourceId, badSource);
+		badAdapter.Add (4);
+		if (badSource.Count != 4) // true
+	
+	
+		
+		
+		
+		

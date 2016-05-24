@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>DataType</title>
+    <script type="text/javascript">
+        var tmp = function add(num1, num2)
+        {
+            arguments[1]=10;
+
+        };
+		var req = new XMLHttpRequest();
+		
+        function thisTest()
+        {
+            function any()
+            {
+                return this;
+            }
+			
+        }
+
+        function sum(){
+            //alert(this);
+        }
+        sum.prototype.abc="textabc";
+        function applySum()
+        {
+            alert("applySum this:"+this);
+            return sum.apply(this);
+        }
+
+		function test(){
+			function A(){}
+			var a= new A();
+			var b=A.prototype;
+			A.prototype={};
+			alert(b.constructor);
+			var bo= (a.constructor===b.constructor);
+			alert(a instanceof b.constructor);
+		}
+		
+        function load()
+        {
+			test();
+			return;
+            var o=new sum();
+            /*Object.defineProperty(sum.prototype,"prop",{
+                value:"111",
+                enumerable:true
+            })*/
+            /*Object.defineProperty(o,"toStr",
+                    {
+                        value:"toStringYo!"
+                    });
+            sum.prototype.abc="toStringHa!";
+            alert(sum.prototype.abc);
+            delete sum.prototype.abc;
+            alert(sum.prototype.abc);*/
+            o.toStr="xyz";
+            for(var pro in o)
+            {          Node.ATTRIBUTE_NODE
+                 if(pro == "toStr")
+                 {
+                     alert("Ys Found it!");
+                 }
+                 else if(pro == "prop")
+                 {
+                     alert("Ys Found prop");
+                 }
+                else if(pro == "abc")
+                 {
+                     alert("Ys Found abc");
+                 }
+            }
+            /*var s=new sum();
+            alert(sum.constructor);
+            alert(sum.constructor.constructor);
+            alert(sum.prototype.abc);
+            alert(sum.prototype.constructor);
+            alert(s.constructor);
+            alert(s.__proto__.constructor);
+            alert(s.__proto__.abc);
+            alert(s.prototype);*/
+           /* document.getElementById("result").innerHTML+=(Math.random().toString()+"<p></p>");
+            document.getElementById("result").innerHTML+=(Math.random()+"<p></p>");
+            document.getElementById("result").innerHTML+=(Math.random()+"<p></p>");
+            document.getElementById("result").innerHTML+=(Math.random()+"<p></p>");
+            document.getElementById("result").innerHTML+=(Math.random()+"<p></p>");
+            document.getElementById("result").innerHTML+=(Math.random()+"<p></p>");*/
+            //var values=[1,2,3,4,5,6];
+            //alert(Math.max.apply(Math,values));
+           /* eval("alert(Math.max(values));");
+            var so=some();
+            eval("alert(typeof so)")  ;
+            alert("hello world".substring(6,0));
+            alert("hello world".slice(6,7));
+            alert("hello world".substr(6,1));
+            var number=new Number("25");//构造函数
+            var tp=typeof number;
+            alert(tp);*/
+            //var start=new Date();
+            /*start.setTime(12323242141242)    ;
+            alert(start.toDateString());
+            //alert(start);
+            alert(start.getDate())
+            start.setMonth(0);*/
+           /* document.getElementById("result").innerHTML+=("toDateString: "+start.toDateString()+"<p></p>");
+            document.getElementById("result").innerHTML+=("toTimeString: "+start.toTimeString()+"<p></p>");
+            document.getElementById("result").innerHTML+=("toLocaleDateString: "+start.toLocaleDateString()+"<p></p>");
+            document.getElementById("result").innerHTML+=("toLocaleTimeString: "+start.toLocaleTimeString()+"<p></p>");
+            document.getElementById("result").innerHTML+=("toUTCString: "+start.toUTCString()+"<p></p>");
+            document.getElementById("result").innerHTML+=("toGMTString: "+start.toGMTString()+"<p></p>");*/
+            /*alert("toDateString: "+start.toDateString());
+            alert("toTimeString: "+start.toTimeString());
+            alert("toLocaleDateString: "+start.toLocaleDateString());
+            alert("toLocaleTimeString: "+start.toLocaleTimeString());
+            alert("toUTCString: "+start.toUTCString());
+            alert("toGMTString: "+start.toGMTString());*/
+            /*var colors=["red","blue",'yellow'];
+            var newColor = colors.slice(-3, -4);
+            var newnewColor=colors.slice(-10,-2);*/
+            /*var tmp1=new tmp(1,2);
+            var tmp2=new tmp(1,2);
+            alert(tmp1 == tmp2);
+            alert(tmp1 === tmp2);*/
+           /* var reg=new RegExp("\b\w*\b");
+            alert("something very vell1\r\n".match(reg));*/
+            /*var text="abcdefg";
+            alert(text.length);
+            text="一些人一些事";
+            alert(text.length);
+            var num = 123;
+            console.log(num.valueOf());
+            console.log(num.valueOf());
+            var v=parseInt("070");
+            console.log(v);
+            var v=Boolean(true);
+            console.log(v);*/
+        }
+        function cli(){
+        	var tmp = document.createElement('script');
+        	tmp.type= "text/javascript";
+			tmp.innerText = 'alert("1");';
+            document.getElementsByTagName("head")[0].appendChild(tmp);
+            // new Image().scr
+            // new Function
+        }
+    </script>
+</head>
+<body onload="load()">
+    <!--<div id="result" onclick="cli()">dddddddddff</div>
+	<a href="BOM.html">bom</a>
+	<a href="./BOM.html">bom2</a>
+	<a href="1/1.html">1</a>
+	<a href="./1/1.html">12</a>-->
+	<input type="button" value="btninput"/>
+	 <input type ="button" name =" btninput" id =" btn" onclick ="btnClick() " />
+	<button>te</button>
+</body>
+</html>

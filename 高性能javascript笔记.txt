@@ -1,0 +1,332 @@
+    ----------------------------------------------------------- 第一章 加载和执行 -------------------------------------
+1.脚本位置
+	浏览器在遇到<script>标签时会等待脚本下载完并执行完才会继续渲染页面
+		因为js代码有可能会改变dom结构，所以需要等待js的执行完成
+		遇到<script>标签 -> 下载脚本 -> 执行脚本 -> 继续渲染
+		旧浏览器：逐个下载，逐个执行
+		新浏览器：并发下载，顺序逐个执行
+	so: 脚本尽量放在靠近</body>的底部
+		尽可能合并脚本(下载一个比下载多个快)
+2.延迟的脚本
+	defer:立刻下载，等到onload事件被触发前才执行(仅IE4.0+和Firefox3.5+支持)
+	动态创建<script>节点:添加到页面时开始下载，下载完成立刻执行
+		* 下载完成的事件：readystatechange(IE)、onload(其他浏览器)
+	XHR脚本注入：XMLHttpRequest来获取js文件内容，再动态创建<script>节点
+		* 必须处于相同域，不适用大型Web应用
+3.推荐的方式
+	先添加动态加载所需的代码，然后加载其他代码：
+		<script type="text/javascript" src = "loader.js"></script>
+		<script type="text/javascript">
+			loadScript("the-rest.js"),function(){
+				Application.init();
+			}
+		</script>
+		放置</body>闭合标签前，保证DOM结构已经创建完毕，无需其他的时间，例如window.onload来检测页面是否准备好
+4.类库
+	LazyLoad.js:
+		<script type="text/javascript" src = "lazyload-min.js"></script>
+		<script type="text/javascript">
+			LazyLoad.js(["first.js","second.js"]),function(){
+				Application.init();
+			}
+		</script>
+	lab.js:
+		<script type="text/javascript" src = "lab.js"></script>
+		<script type="text/javascript">
+			$LAB.script("first.js").wait()	// 如果需要按序执行则需要加上wait()
+				.script("second.js")
+				.wait(function(){
+						Application.init();
+				});
+		</script>
+	
+--------------------------------第二章 数据访问---------------------------------------
+1.作用域链和标识符解析
+	内部属性[[Scope]] --- 作用域链  --- 0 --- 活动对象([[Scope]]属性中所包含的对象，即函数范围内的变量)
+									--- 1 --- 全局对象(this, window, document 等等全局变量)
+2.so 尽量把链深处的变量存储到局部变量里，介以提升性能
+	* 采用优化过的js引擎不存在这种问题，老版的IE、Firefox和Safari都有问题
+
+3.改变作用域链：
+		with(document){...}	//with把document推进了作用域链的第一层，但是导致访问局部变量路径变远了，所以不推荐
+		try{}catch(ex){}	//catch里面把异常对象推入了作用域链的头部
+
+4.访问对象也一样，首先在实例中查找，然后再去原型链中查找
+	so 如果需要访问多次，那么缓存对象属性可以提升性能
+	
+--------------------------------第三章 DOM编程---------------------------------------
+1.尽量少访问DOM，把运算留在ECMAScript这一端处理
+
+2.innerHTML属性和类似document.createElement()、document.createTextNode()的原生DOM方法性能差不多
+
+3.cloneNode()比createElement要稍快一点
+
+4.HTML集合
+	document.getElementsByName();
+	document.getElementsByClassName();
+	document.getElementsByTagName();
+	HTML集合是动态的，类数组，提供一个length属性
+	* 访问length属性时会重新执行一次查询的过程
+	so，缓存length属性很有必要
+	
+5.只返回元素节点
+	children					childNodes
+	childElementCount			childNodes.length
+	firstElementChild			firstChild
+	lastElementChild			lastChild
+	nextElementSibling			nextSibling
+	previousElementSibling		previousSibling
+	
+6.选择器API
+	原生DOM方法：querySelectorAll();
+	
+7.重绘与重排
+	构建DOM树与渲染树 --- 绘制页面元素
+	重排：
+		添加、删除DOM元素
+		元素位置改变
+		元素尺寸改变
+		内容改变(例如文本改变、图片被另外一个不同尺寸的图片替代)
+		页面渲染器初始化
+		浏览器窗口尺寸改变
+	浏览器通过队列化修改并批量执行来优化重排过程，但以下属性会强制刷新队列：
+	offsetTop, offsetLeft, offsetWidth, offsetHeight
+	scroll...
+	client...
+	getComputedStyle()(currentStyle in IE)
+	以上属性需要返回最新的布局信息，所以浏览器需要执行队列中的"待处理变化"并触发重排以返回正确的值
+	so 以上属性尽量少使用，并且使用这些属性的位置应该在修改布局信息的后面，中间的话会导致多次重排
+
+8.最小化重绘和重排
+	·合并多次所有的改变一次处理
+	·批量修改DOM
+		脱离文档流
+		应用多重改变
+		带回文档
+	三种方式：隐藏元素 --- 修改 --- 重新显示
+				使用文档片段(document fragment)
+				拷贝 --- 修改拷贝 --- 替换原始(replaceChild(new, old))
+	
+9.缓存布局信息
+
+10.让元素脱离动画流
+	绝对定位页面上的动画元素，将其脱离文档流
+	让元素动起来，只重绘了该元素，会临时覆盖部分页面
+	动画结束时恢复定位，只下移一次文档的其他元素
+
+11.元素很多时应避免使用:hover这个CSS伪选择器
+
+12.事件委托
+	只绑定最外围的元素点击事件，判断来源是否是目标
+
+--------------------------------第四章 算法和流程控制---------------------------------------
+1.for-in循环的性能只有其他循环的1/7,
+	so 尽量不要使用for-in来遍历对象的属性名
+
+2.少量条件用if-else, 大量条件用switch-case
+
+3.列表查找比循环查找要快
+	so, 数据放置一个Array中, 通过位置来查找
+	
+4.尽量减少循环
+
+5.存在重复的计算结果时，可以使用缓存
+
+--------------------------------第五章 字符串和正则表达式---------------------------------------
+1.字符串连接
+	把基础字符串及放置左边可以提升性能
+	* 因为除IE外，其他浏览器会尝试为左侧的字符串分配更多的内存，然后简单地将第二个字符串拷贝至它的末尾
+	
+2.Array.prototype.join();
+	String.prototype.concat();	//concat比普通的+和+=以及join慢一点
+
+3.正则表达式的编译很快，只需要注意别在循环中重复编译正则表达式就行
+	while(/regex1/.test(str1))
+	
+4.只是检测位置不适用正则表达式
+	例如检测是否以;结尾：
+		/;$/ --- str.charAt(str.length-1)== ";";
+	其他函数有slice、substr、substring、indexOf和lastIndexOf
+	
+5.去除首尾空格
+	用两个子表达式综合效率要高一些，尤其是在处理长字符串时
+	str.replace(/^\s+/,"").replace(/\s+$/,"");
+	* 其他有一次性处理完的，但多少有各方面的性能问题
+		比方说/^\s+|\s+$/，每个字符串都会去匹配这两个分支条件
+
+--------------------------------第六章 快速响应的用户界面---------------------------------------
+1.js的执行不应超过100毫秒(用户体验中能忍受的页面阻塞时间最大值)
+
+2.定时器的推荐最小值为25毫秒
+	* windows系统的最小识别为15毫秒，设置一个小于15毫秒的定时值，IE会锁定
+	* 在小于10毫秒时，各浏览器各系统均会有不同的表现
+	
+3.可以通过定时器来依次执行多个任务
+	* 将一个任务分割成多个任务，用定时器来执行
+	
+4.Web Workers
+	Worker没有绑定UI线程，适用于纯数据处理，与网页代码通过事件接口进行通信
+	网页代码：
+		var worker = new Worker("code.js");
+		worker.onmessage = faunction(event){
+			// ...
+		}
+		worker.postMessage("Thyiad");
+	worker代码(code.js)：
+		importScripts("file1.js", "file2.js");
+		self.onmessage = function(event){
+			self.postMessage("Hello, " + event.data + "!");
+		}
+		
+--------------------------------第七章 AJAX---------------------------------------
+1.常用的三种技术是：XHR、动态脚本注入和multipart XHR
+
+2.XHR
+	readyState的值
+		3	正在与服务器交互
+		4	整个响应已接收完毕，可进行操作
+	* GET常用来请求数据，POST则用来发送数据
+		一个GET请求只会发送一次数据包，而一个POST请求会发送两次数据包(一个装载头一个装载正文)
+		应该在参数接近或超过2048个字符时，才应该使用POST获取数据，因为IE限制URL长度
+	* 不能跨域请求数据
+
+3.动态脚本注入
+	动态创建一个script元素，设置src属性为不同域的URL
+	* 返回的响应消息必须是可执行的JavaScript代码
+	
+4.Multipart XHR
+	一次请求多个资源，从readyState值为3时开始设定一个定时器监听处理数据(需要自己定义数据格式并处理)
+	* 这种方式资源不会被缓存
+	* IE6、7不支持readyState为3的状态和data:URL
+
+5.Beancons - 信标
+	通过创建一个Image，设定src来回传数据
+		var beacon = new Image();
+		beacon.src=url+'?'+params.join('&');
+		beancon.onload = function(){	// 通过监听image的load事件来处理简单返回时间
+			if(this.width === 1){		// 如果不需要返回数据，那么响应中应该发送一个 204 No Content 状态码(即：不带消息正文)
+			}							// 以阻止客户端继续等待永远不会到来的消息正文
+			else{}
+		}
+		
+6.数据格式
+	XML		不推荐，数据量大解析又慢
+	JSON	推荐，数据轻便解析又快
+	JSON-P	返回的文本作为js代码直接执行(用eval直接调用)
+	HTML	不推荐，既缓慢又臃肿
+	自定义	同JSON，适用的情景下速度还会比JSON更快点
+	
+7.缓存数据
+	用GET请求数据、响应中发送 Expires 头信息：Expires: Mon, 28 Jul 2015 23:30:00 GMT	// 告诉浏览器缓存此响应到7月
+	本地数据存储：使用对象的属性存储缓存(键存url，值存返回数据)
+	* 本地存储最适用移动设备，大多移动设备的浏览器都很小或没有缓存
+	
+--------------------------------第八章 编程实践---------------------------------------
+1.避免双重求值
+	尽量不使用eval和Function构造函数，以避免双重求值带来的性能消耗
+	同样的，应该给setTimeout()和setInterval()传入函数而不是字符串作为参数
+	
+2.使用直接量创建对象和数组 - 效率更高
+
+3.不要重复工作
+	当需要检测浏览器时，可使用延迟加载或条件预加载
+	延迟加载：
+		function addHandler(target, eventType, handler){
+			if(target.addEventListener){
+				addHandler = function(target, eventType, handler){
+					target.addEventListener(eventType, handler, false);
+				}
+			}
+			else{
+				addHandler = function(target, eventType, handler){
+					target.attachEvent("on"+eventType, handler);
+				}
+			}
+			
+			addHandler(target, eventType, handler);
+		}
+	条件预加载：
+		var addHandler = document.body.addEventListener ?
+			function(target, eventType, handler){
+					target.addEventListener(eventType, handler, false);
+				} :
+			function(target, eventType, handler){
+					target.attachEvent("on"+eventType, handler);
+				};
+
+4.使用速度快的部分
+	位操作
+		toString()方法把数字转换为二进制形式的字符串：
+			var num = 25;
+			alert(num.toString(2));		//"11001"
+		是否为2的整数：
+			var num = 25;
+			if(num & 1){	// 奇数&1 => 1
+			}
+			else{}			// 偶数
+		位掩码：
+			var OPTION_A = 1, OPTION_B = 2, OPTION_C = 4, OPTION_D = 8, OPTION_E = 16;
+			var options = OPTION_A | OPTION_C | OPTION_D;
+			if(options & OPTION_A){	//选项A是否在列表中
+				// ...
+			}
+			
+5.原生方法
+	尽量使用原生方法，比如数学计算(Math)和CSS选择器(querySelector()、querySelectorAll())
+	
+--------------------------------第九章 构建并部署高性能JavaScript应用---------------------------------------
+1.Apache Ant
+
+2.合并多个JavaScript文件
+
+3.预处理JavaScript文件
+	在js代码中添加宏定义(#define, #undef)和条件编译(#if, #ifdef, #ifndef)
+
+4.JavaScript压缩
+	JSMin				http://www.crockford.com/javascript/jsmin.html
+	YUI Compressor		http://developer.yahoo.com/yui/compressor
+	Closure Compiler	http://code.google.com/closure/compiler/
+	Packer				http://dean.edwards.name/packer/
+
+5.JavaScript的HTTP压缩
+	Accept-Encoding HTTP头：值为gzip、compress、deflate和identity
+		服务器会选择最合适的编码方法，通过Content-Encoding HTTP头来告知浏览器
+		
+6.缓存JavaScript文件
+	* Expires HTTP 响应头
+	* 客户端存储机制(js自己控制)
+	* HTML5 离线应用缓存(manifest属性，mime type为text/cache-manifest)
+	
+7.处理缓存问题
+	推荐使用时间戳后缀
+	
+8.CDN
+	
+--------------------------------第十章 工具---------------------------------------
+1.原生分析
+	new Date();	//通过Date相减
+	
+2.YUI Profiler
+	
+3.FireBug
+
+4.Console API
+	profile()、profileEnd()
+		console.profile("regexTest");
+		regexTest();
+		console.profileEnd();
+		* profileEnd()会阻塞后续执行，所以可以将profileEnd()调用封装在setTimeout中
+		
+5.Page Speed
+	对如何重构进行分析建议，比如哪些脚本在load之前没有用到过，可以延迟加载
+	* FireBug插件
+	
+6.Fiddler
+	HTTP调试代理工具，整个网络过程的Timeline进行分析，哪块占用时间多需要优化
+	
+7.YSlow
+	分析后的优化建议工具  
+	* FireBug插件
+		
+8.dynatrace Ajax Edition
+	同Fiddler的作用，可以监控整个过程的时间，更能深入到特定的事件

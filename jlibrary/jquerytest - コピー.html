@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="jquery-1.9.1.js"></script>
+    <script type="text/javascript">
+        function onload(){
+		//var tttttt=document.getElementById('test').getBoundingClientRect();
+		//var testObj={
+		//	push: [].push,
+		//	sort: [].sort,
+		//	splice: [].splice
+		//} 
+		///alert("");
+		///	function sub(){}
+		//	var b=new sub();
+		///	var tt=["d","e"];
+		//	var obj=[];
+		//	[].push.call(testObj, tt);
+		//	b.__proto__=testObj;
+		//	var s=b.__proto__;
+			//var ret=[];
+			//[].push.call( , arr );
+		///	var obj=Object("contents");
+		///	var isin=7 in obj;
+		//	var a =document.getElementById('test')
+		//	document.getElementById('test').scrollWidth; 
+			function evtFun(e){
+				alert('msg');
+			}
+			var div=document.getElementById("test");
+			var btn=document.getElementById("btn");
+			btn.addEventListener("click",function(){alert("按钮冒泡阶段")}, false);
+			btn.addEventListener("click",function(){alert("按钮捕获阶段")}, true);
+			div.addEventListener("click", function(){alert("div冒泡阶段")}, false);
+			div.addEventListener("click",evtFun,true);
+			//div.addEventListener("click", function(e){alert("div捕获阶段")}, true);
+        }
+    </script>
+</head>
+<body onload="onload()">
+	<div id="test" style="padding:10px;width:100px;height:100px;">test
+	<input id="btn" type="button" value="clickMe">
+	</div>
+</body>
+</html>

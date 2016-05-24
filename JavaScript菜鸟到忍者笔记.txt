@@ -1,0 +1,55 @@
+--------------------------------第二章 选择器、修饰器--------------------------------
+1.过滤器(:)
+	$('#celebas tbody tr:even')
+	
+2.css
+	css('font-size')					// 获取css
+	css('background-color','#dddddd')	// 设置css
+	addClass('class_name');				// 添加类
+	removeClass('class_name');			// 删除类
+	click(function(){});				// 添加click事件
+	$('#btn').click(function(){
+		$(this).hide();					// this关键字，转换到jQuery对象
+	});
+	hide();								// 隐藏
+	show();								// 显示
+	toggle();							// 切换可见性
+	val('Hide');						// 设置value属性值
+	$('<button />')
+		.insertAfter('#disclaimer');	// 在指定元素后面插入元素
+	insertBefore();						// 在指定元素后面插入元素
+	prependTo();
+	appendTo();
+	remove();
+	remove(':contains("Singer")');		// 删除内容或子元素内容包含Singer的元素
+	html();
+	text();								// 有参数就设定，没参数则返回
+	fadeOut();							
+	fadeIn();
+	slideToggle();						// 向上折叠，向下展现
+	slideUp();
+	slideDown();
+	mouseover(function(){});
+	mouseout(function(){});
+	next();								// 下一个同级元素
+	
+--------------------------------第三章 动画、滚动和调整大小--------------------------------
+1.animate({padding:'20px',fontSize:'30px'},2000);	// 指定时间内动画到指定css
+	animate({padding:'+=15px'}, 200);				// 追加的方式，对应减少的方式为-=
+	
+2.scroll(function(){});			// 监听元素的滚动条事件
+	scrollTo(0, 'slow');				// 滚动到指定位置
+	
+3.jquery.jscrollpane.js			// 自定义的滚动条
+
+4.resize(function(){});			// 监听元素的大小改变事件
+	
+--------------------------------第四章 图片和滚动显示--------------------------------
+1.ColorBox		// jQuery幻灯片插件
+
+2.Jcrop			// 裁剪图片的插件
+
+3.easing		// 提供更多动画效果选项的插件
+
+4.
+	

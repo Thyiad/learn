@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>DOM Test</title>
+    <script type="text/javascript">
+		console.log(this);
+        function load()
+        {
+			 function xxx(){
+				}
+				var load;
+				var xxx;//undefined, 未定义, 所以仍然是方法
+				alert(xxx);
+				xxx=123;
+				alert(xxx);
+			/*var div=document.getElementById('result');
+			var appid=div.dataset.appid;
+			var name=div.dataset.name;
+			var test=div.dataset.test;
+			
+			div.dataset.appid='123456';
+			div.dataset.name="Michael";
+			
+			if(div.dataset.name){
+				alert("Hello, "+div.dataset.name);
+			}*/
+			var head=document.head;
+			//alert(head);
+			var div=document.getElementById('result');
+			var appid = div.dataset['appid'];
+			alert(appid);
+			div.dataset['appid']='123';
+			alert(div.dataset.appid);
+			div.dataset.newData="321";
+        }
+		function scrolltest()
+		{
+			//document.getElementById("bt").scrollIntoView(false);
+			document.getElementById("bt").focus(false);
+			alert(document.head.title)
+		}
+    </script>
+</head>
+<body onload="load()">
+    <div id="result" data-name="xx" data-appid="432" width="600" height="600" style="backaground-color:red">inner<input type="button" id="bt" onclick="scrolltest()" value="click me" style="
+    height: 600px;
+    width: 600px;
+"></div>
+</script>
+</body>
+</html>

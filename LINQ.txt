@@ -1,0 +1,72 @@
+Linq
+// 单序列操作
+Where()
+OfType()
+Cast()
+OrderBy()	// 升序
+ThenBy()	// 升序，不能位于第一个排序
+OrderByDescending()	// 降序
+ThenByDescending()	// 降序
+Select()
+Take()
+Skip()
+TakeWhile()
+SkipWhile()
+Reverse()
+DefaultEmpty()	// 当序列为空时，添加一个默认值
+Distinct()	// 剔除重复元素
+GroupBy()	// 返回一个IEnumerable<IGrouping<TKey, TSource>>, 一个Key对应多个值
+// 多序列操作
+Intersect()	// 两个列表的交集
+Except()	// 第一个列表不存在第二个列表中的元素
+Concat()	// 并集, 不剔除重复元素
+Union()		// 并集, 剔除重复元素
+Zip()		// 基于位置操作两个列表, 以短的为准(比如返回：(x, y)=> String.Format("{0}, {1}", x, y))
+// 转换序列操作
+ToArray();
+ToList();
+ToDictionary();
+ToLookUp();
+// 取元素
+ElementAt();
+ElementAtOrDefault();
+First();
+FirstOrDefault();
+Last();
+LastOrDefault();
+Single();
+SingleOrDefault();
+// 返回标量值
+Count();
+LongCount();
+Max();
+Min();
+Average()
+Sum();
+Aggregate();	// 返回自定义的聚合, 例如: array.Aggregation(0, (total, x) => total + (x * 2)); 0是初始值
+Contains();	// 是否包含元素
+Any();	// 是否存在满足表达式的元素, 无参数则判断序列是否有元素存在
+All();	// 是否所有元素都满足表达式
+// 静态方法
+Enumerable.Empty();	// 创建一个空序列, 例如Enumerable.Empty<string>();
+Range();	// 只能用于数字, 用来生成连续数字序列
+Repeat();	// 同Range(), 只能用于数字, 不过是用于生成重复的数字
+
+多线程
+lock(obj){// ...}
+等同于
+Monitor.Enter(obj);
+try{// ...}
+finally{Monitor.Exit(obj);}
+WaitHandle
+	Mutex			WaitOne();	ReleaseMutex();
+	Semaphore		new Semaphore(int leave, int total);	WaitOne();	Release();		
+	EventWaitHandle
+		AutoResetEvent	WaitOne();	//WaitOne()后会自动Reset();
+		ManualResetEvent WaitOne();	Set();	Reset();
+		
+linq多线程：plingq查询
+
+ParallelEnumerable：Enumerable的并行版本
+	AsParallel(普通linq调用该方法)
+	

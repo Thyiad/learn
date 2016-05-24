@@ -1,0 +1,350 @@
+1.DISTINCT 用于剔除重复的值， 如果后跟多个列， 则要求所有列的值都相同才会被剔除。
+	SELECT DISTINCT ven_id, prod_price FROM Products;
+	
+2.限制数量，各种数据库的实现不相同
+  SQL Server和Access使用TOP关键字：
+	SELECT TOP 5 prod_name FROM Products;
+  DB2使用其特定的语法：
+    SELECT prod_name FROM Products FETCH FIRST 5 ROWS ONLY;
+  Oracle基于ROWNUM来计算行：
+    SELECT prod_name FROM Products WHERE ROWNUM<=5;
+  MySQL, MariaDB, PostgreSQL或者SQLite, 需要使用LIMIT子句：
+	SELECT prod_name FROM Products LIMIT 5;
+	指定开始处为OFFSET关键字：
+	  SELECT prod_name FROM Products LIMIT 5 OFFSET 3;
+	MySQL和MariaDB对OFFSET做了简化版支持：
+	  SELECT prod_name FROM Products LIMIT 3,5;	-- 偏移值在前面, 行数限制值在后面
+	
+3.注释跟代码一样，使用 -- 和/* */ 来支持行内注释以及范围注释。
+
+4.ORDER BY 用来排序
+	·必须保证ORDER BY是最后一条字句
+		SELECT prod_name FROM Products ORDER BY prod_name;
+	·可以使用 非选择列 进行排序
+		SELECT prod_name FROM Products ORDER BY prod_id;
+	·可以按多个列排序
+		SELECT prod_name FROM Products ORDER BY prod_id, prod_name;
+	·可以按列位置进行排序
+		SELECT prod_name, prod_id, prod_price 
+		FROM Products 
+		ORDER BY 2,3;	-- 按第2列和第3列进行排序, 必须是选择的列, 这里就是prod_id和prod_price
+	·列名和位置可以混合使用进行排序
+		SELECT prod_name, prod_id
+		FROM Products
+		ORDER BY 1, vend_id;	-- 按第1列和vend_id列进行排序, 这里就是prod_name和vend_id
+	·默认是升序, 可以自己指定排序方式, ASC和DESC, 全称是 ASCENDING和DESCENDING, 均可使用 -- 亲测MySQL和SqlServer不支持全称
+		SELECT prod_name, prod_id
+		FROM Products
+		ORDER BY 1 ASC, vend_id;	
+		/*
+			ASC只影响 prod_name, vend_id仍是默认的升序
+			多列不同排序方式, 需要分别指定, 比如以上可以指定为：
+			ORDER BY 1 ASC, vend_id DESC;
+		*/
+	
+5.WHERE子句操作符
+	=	   		大于 		
+	<>			不等于
+	!=			不等于
+	<			小于
+	<=			小于等于
+	!<			不小于
+	>			大于
+	>=			大于等于
+	!>			不大于
+	BETWEEN		在指定的两个值之间		-- 和 AND 连用
+		SELECT prod_name, prod_price
+		FROM Products
+		WHERE prod_price BETWEEN 5 AND 10;
+	IS NULL		为NULL值
+		SELECT cust_name
+		FROM CUSTOMERS
+		WHERE cust_email IS NULL;
+	
+6.组合WHERE字句
+	AND
+	OR
+	IN
+	NOT			放在其他条件的前面
+		WHERE NOT vend_id = 'DLL01'					-- 比如说判断等于, 就放在这个判断之前
+		WHERE NOT vend_id IN ('DLL01', 'BRS01')		-- 判断不存在某个范围, 可以这样放在判断前, 也可以放在IN前
+		WHERE vend_id NOT IN ('DLLL01' 'BRS01')		-- 放在IN前
+		
+7.LIKE操作符(通配符, 技术上严格来说应该叫谓词)
+	通配符只能用于文本字段
+	%			匹配任意个任意字符		-- 相当于正则表达式里面的.*
+										-- 书上说Access等数据库采用空白填补字段的内容, 对于百分符可能会有影响,
+										-- 比如规定有50个字符, 但是存储的文本为Dog toy, 那么查出来就会在该文本后附加43个空白, %toy就无法匹配到该项
+										-- 不过亲测MySQL5和SqlServer2008并无该影响
+	_			匹配单个任意字符		-- 相当于正则中的.
+	[]			匹配指定的字符集		-- 同正则中的[] 仅SqlServer和Access支持, MySQL亲测不支持
+	[^]			匹配非指定的字符集		-- 同正则中的[] 仅Sqlserver, Access中为[!]
+	
+	·尽量避免使用通配符, 因为通配符的效率比其他操作符要低。
+	·尽量不要放在搜索模式的开始处, 因为把通配符置于搜索模式的开始处时, 搜索起来是最慢的。		-- 搜索模式由字面值和通配符组成, 相当于正则中的匹配字符串,即整个匹配字符, 例如：'DLL01%'
+	
+8.计算字段(列是数据库的列, 字段即为计算字段)
+	拼接字段,各数据库使用的操作符不同：
+	+			Access、SqlServer
+	||			DB2、Oracle、PostgreSQL、SQLite、Open Office Base
+	Concat		MySQL、MariaDB			-- MySQL和MariaDB使用Concat函数, 使用方式为 Concat(param1, param2, ...) 
+	
+	·列别名通过 AS 关键字赋予。
+	·AS 关键字是可选的。(在大多数DBMS中, 亲测MySQL和SqlServer中是可选的)不过最好使用它, 这样语义明确。
+	·别名可以是一个单词, 也可以是一个字符串。如果是一个字符串, 那么应该括在引号中。多单词的可读性高, 但会给客户端带来各种问题, 因此不推荐。
+	·别名最好不要取表中实际的列名, 虽然合法, 但是在许多DBMS中可能会出错。	-- 亲测MySQL中正常, 而SqlServer中则是别名设置失败, 显示 无列名。
+	·Access中不允许按别名进行排序	-- 即：不能 ORDER BY 别名
+	
+	算术操作符：
+	+			加
+	-			减
+	*			乘
+	/			除
+	SELECT语句可以用来测试函数和计算。只要省略了FROM字句, 那么就是简单地执行函数和表达式。
+	例如： SELECT 2*3;SELECT Now();
+	
+9.函数
+	提取字符串：
+		MID()			Access
+		SUBSTR()		PostgreSQL、SQLite
+		SUBSTRING()		MySQL、SQL Server
+	类型转换：
+		多个函数		Access、Oracle	-- 每种类型的转换有一个函数, 比如：to_number(), to_date(), to_char()
+		CAST()			DB2、PostgreSQL、MySQL	-- MySQL的使用形式为CAST(value as type), type必须是以下值之一：
+												-- BINARY, CHAR(长度 可选), DATE, TIME, DATETIME, DECIMAL-浮点数, SIGNED-整数, UNSIGNED-无符号整数
+		CONVERT()		MariaDB、MySQL、SQL Server	-- MySQL与SqlServer的参数顺序相反, 分别为：
+													-- CONVERT(value, type), CONVERT(type, value)
+	当前日期：
+		NOW()			Access、MySQL
+		CURRENT_DATE	DB2、PostgreSQL
+		GETDATE()		SQL Server
+		DATE()			SQLite
+	文本处理函数：
+		LEFT()			返回字符串左边的字符	-- 使用方式为：LEFT('abcdef',3), 这里将得到 abc
+		RIGHT()			返回字符串右边的字符
+		LENGTH()		返回字符串的长度		-- 不同DBMS的使用方式有所不同
+		DATALENGTH()							-- 亲测MySQL支持LENGTH(), 而SQL Server则同时支持DATALENGTH()和LEN()
+		LEN()
+		LOWER()			将字符串转为小写		-- Access使用LCASE()
+		UPPER()			将字符串转为大写		-- Access使用UCASE()
+		LTRIM()			清除字符串左边的空格
+		RTRIM()			清除字符串右边的空格
+		TRIM()			清除字符串两边的空格
+		SOUNDEX()		返回字符串的SOUNDEX值, 也就是发音值, 进行发音比较	-- 亲测对中文的支持不行, 两个相同的汉字, 才会判定匹配成功, 也就是判断是否相等。
+																			-- 书上说对英文可以匹配发音类似的单词。亲测无该效果。
+	提取日期的成分：
+		DATAPART()						SQL Server、Access		-- 使用方式为DATAPART('YYYY', GETDATE()),	第一个参数是要提取成分的缩称, 第二个参数是日期。
+		YEAR()、MONTH()、DAY()			MySQL、MariaDB			-- 获取不同的成分对应有不同的函数, 使用方式为YEAR(NOW()),	参数是日期。
+		DATA_PART()						PostgreSQL				-- 使用方式为DATA_PART('year', CURRENT_DATE),	同DATAPART的区别在于缩称不一致罢了。
+		
+		·Oracle没有直接的提取函数, 不过to_char()方法拥有类似于DATAPART的功能, 例如：
+		to_char(timestamp 'now', 'YYYY')						-- 这里将返回字符串2014, 第一个参数为时间, 第二个参数是要提取成分的缩称
+		to_number(to_char(timestamp 'now', 'YYYY'))				-- DATAPART()返回的是数字, 如果需要相同效果, 那么就还需要使用数字转化函数：to_number()
+		·SQLite中的小技巧：
+		strftime('%Y', DATE())			-- STRFTIME方法可以用来提取出特定的日期部分, 第一个参数为要提取成分的缩称, 第二个参数是日期
+	
+	数值处理函数：
+		ABS()			返回一个数的绝对值
+		COS()			返回一个角度的余弦
+		EXP()			返回一个数的指数值
+		PI()			返回圆周率
+		SIN()			返回一个角度的正弦
+		SQRT()			返回一个数的平方根
+		TAN()			返回一个角度的正切
+	
+10.汇总数据
+	聚集函数：
+		AVG()			返回某列的平均值	-- 忽略值为 NULL 的行
+		COUNT()			返回某列的行数		-- 指定列名时忽略值为 NULL 的行, COUNT(*)不忽略
+		MAX()			返回某列的最大值	-- 忽略值为 NULL 的行
+		MIN()			返回某列的最小值	-- 忽略值为 NULL 的行
+		SUM()			返回某列之和		-- 忽略值为 NULL 的行
+		
+		MAX()和MIN()也可用于非数值类型列, 此时将返回排序最后一行的值和排序最前一行的值
+	聚集不同值：
+		AVG(DISTINCT 列名)			-- DISTINCT 放在参数的起始处, 将只对不同值进行计算
+									
+		Access不支持这种用法, 需要使用一个子查询来将DISTINCT值返回：
+			SELECT AVG(prod_price)
+			FROM (SELECT DISTINCT prod_price FROM products)
+		
+11.分组数据
+	GROUP BY: 根据指定的列进行排序, 分组
+	·可以 GROUP BY 多列												-- 例如：GROUP BY prod_id, prod_name 
+	·GROUP BY列不能为聚集函数, 可以为列和表达式						-- 即不能为AVG()等聚集函数, 但可以是列和 +-*/ 等运算表达式										
+	·有的DBMS中要求SELECT中的列列必须是GROUP BY中指定的列名之一		-- 亲测SqlServer中必须如此, MySQL中无此要求
+																	-- 例如：SELECT prod_id, prod_name FROM products GROUP BY prod_id;	在SqlServer中无法运行, 而MySQL能正常运行
+	·GROUP BY列不能为长度可变的数据类型								-- 大多数SQL均是如此。例如 Text 类型, 亲测SqlServer和MySQL都不能将其作为 GROUP BY 列														
+	·GROUP BY列为NULL的行将并为一组返回	
+	
+	HAVING：对分组进行操作, WHERE同HAVING行为一样, 但是作用的对象不同, WHERE用于分组前的数据过滤, 而HAVING用于分组后的数据过滤
+	
+	顺序：SELECT	FROM	WHERE	GROUP BY	HAVING		ORDER BY
+
+12.子查询
+	查询中嵌套查询			-- 例如：SELECT		WHERE cust_name = (SELECT		)
+	·子查询用括号进行嵌套
+	·要查询的列名在当前多表中同时存在会导致混淆时需要使用完全限定名	-- 例如：WHERE Orders.cust_id = Customers.cust_id
+	
+13.联接
+	·如果不用WHERE限定两张表的联接条件, 将会将第一个表中的每一行分别于第二个表中的每一行配对, 而不管它们在逻辑上是否能配对
+		例如：SELECT vend_name, prod_name FROM Vendors, Products;	-- 这个返回的结果叫做笛卡儿积, 又称叉联接
+	
+	INNER JOIN			内联接										-- 两个表之间的相等测试, 使用方式为：FROM	INNER JOIN	ON 
+		例如：SELECT vend_name, prod_name, prod_price 
+			  FROM Vendors INNER JOIN Products 
+			  ON Vendors.vend_id = Products.vend_id;
+	·可以使用简单的等值语法, 也可以使用 INNER JOIN语法				-- 简单的等值语法就是通过AND来联接等值条件, INNER JOIN则需要多层嵌套, 比如分别为：
+																	-- FROM Vendors, Products, OrderItems WHERE Vendors.vend_id = Products.vend_id AND Products.prod_id =OrderItems.prod_id;
+																	-- FROM (Vendors INNER JOIN Products ON Vendors.vend_id = Products.vend_id) INNER JOIN OrderItems ON Products.prod_id = OrderItems.prod_id;
+	·SQL本身不限制联接约束中表的数目, 但是实际上许多DBMS都有限制
+	·联接的性能比子查询高
+	·聚集函数可以和联接一起使用										-- 即：SELECT列和HAVING子句中
+	
+14.表别名
+	·表别名可以用于SELECT列表、WHERE子句、ORDER BY子句、GROUP BY子句等各处
+	·Oracle不支持AS, 只需要简单地指定列名即可	-- 例如： Customers c
+	
+14.自联结
+	有时需要根据自身多条件来进行查找, 需要使用别名, 例如：
+		SELECT c1.cust_id, c1.cust_name, c1.cust_contact
+		FROM Customers AS c1, Customers AS c2
+		WHERE c1.cust_name = c2.cust_name
+			AND c2.cust_contact = 'Jim Jones';
+	
+15.外联接
+	LEFT OUTER JOIN
+	RIGHT OUTER JOIN	-- SQLite不支持
+	FULL OUTER JOIN		-- Access、MariaDB、MySQL、Open Office Base和SQLite不支持
+	
+16.组合查询
+	简化从多个表中检索数据的工作
+	UNION			-- 组合多个SELECT语句, 剔除重复的结果行
+	UNION ALL		-- 组合多个SELECT语句, 不剔除重复的结果行
+	
+	·每个SELECT语句的列、表达式或聚集函数必须相同	-- 可以使用别名, 顺序无要求
+	·列数据类型必须兼容								-- 可以不必完全相同, 但必须是DBMS可以隐式转换的数据类型, 比如说不同的数值类型或不同的日期类型
+
+17.插入数据
+	INSERT INTO		VALUES		-- INTO在有的DBMS中可省略, 亲测MySQL和SqlServer可省略
+	例如：INSERT INTO Customers(cust_id, cust_name) VALUES('1000000006', 'Toy Land');		-- 此处省略了部分列, 指定多少列就需插入多少个值。跟位置相对应。省略的列必须可为NULL或表定义中有设定默认值。
+	
+	检索数据, 插入到已存表
+	INSERT INTO		SELECT		-- 插入数据, 数据是从其他表查询出来的
+	例如：INSERT INTO Customers(cust_id, cust_name) SELECT cust_id, cust_name FROM custnew;
+	
+	检索数据, 插入到新表(DB2不支持)
+	SELECT	INTO				-- 亲测, SqlServer支持这种用法, 估计Access也支持
+	例如：SELECT cust_id, cust_name INTO custcopy FROM customers;
+	CREATE TABLE	AS SELECT	-- 书上说这个是MariaDB、MySQL、Oracle、PostGreSQL和SQLite的用法。亲测MySQL支持
+	例如：CREATE TABLE custcopy AS SELECT cust_id, cust_name FROM customers;
+	
+18.更新数据
+	UPDATE [TABLE_NAME] SET [SET_COL_VALUE] WHERE 			-- 设置值用逗号分隔, 例如：[COL_NAME1] = [COL_VALUE1], [COLE_NAME2] = [COL_VALUE2]
+	删除数据
+	DELETE FROM [TABLE_NAME] WHERE 
+	更快地删除
+	TRUNCATE TABLE 			-- 删除所有行, 这个语句的速度更快, 因为 TRUNCATE 语句不记录数据的变动
+	
+	·如果不指定 WHERE 条件, 那么将更新或删除整张表
+	
+19.创建表
+	CREATE [TABLE_NAME] (COL_NAME COL_TYPE NULL_ORNOT DEFAULT_VALUE);	-- 设置列属性用逗号分隔, 例如：(order_num	INTEGER		NOT NULL	DEFAULT 1, order_date	DATETIME	NULL)
+	更新表
+	ALTER TABLE [TABLE_NAME]
+		-- 添加列：ADD vend_phone CHAR(20)
+		-- 删除列：DROP COLUMN vend_phone
+		各DBMS都不相同,
+		MySQL使用 ALTER TABLE custcopy CHANGE cust_id id INT;				-- 重命名及修改列信息
+		SqlServer使用 SP_RENAME 'custcopy.cust_id', 'id', 'COLUMN'			-- 重命名
+						ALTER TABLE custcopy ALTER COLUMN id INT NOT NULL	-- 修改列信息
+	删除表
+	DROP TALBE [TABLE_NAME]
+	
+20.创建视图
+	CREATE VIEW [VIEW_NAME] AS [SELECT语句]
+	
+21.存储过程
+	各DBMS都不相同：
+	SqlServer：
+	CREATE PROCEDURE [PROCE_NAME] [@参数名] [参数类型, 例如CHAR(10), 多参数以逗号分隔]
+	AS
+	DECLARE @order_num INTEGER	-- 定义变量
+	[一些增删查改操作]
+	RETURN @order_num			-- 返回数据
+	EXECUTE PROCEDURE			-- 调用存储过程
+	
+	MySQL：
+	CREATE PROCEDURE [PROCE_NAME()]
+	CALL PROCE_NAME()			-- 调用存储过程
+	
+	
+22.一些全局变量
+	@@IDENTITY			-- 自增标量, 比如, 刚执行过一次插入操作, 那么这个值就是表的自增标量值。(一般是主键ID)
+	@@ERROR				-- 是否有错误发生, 比如 @@ERROR<>0 即表示有错误发生
+	@@FETCH_STATUS		-- 常用在游标读取数据中, 在FETCH语句(读取数据操作)成功时值等于0
+	
+23.事务
+	各DBMS有所不同：
+	SqlServer：
+	BEGIN TRANSACTION				-- 开始事务
+	SAVE TRANSACTION deletel		-- 设置保留点
+	ROLLBACK TRANSACTION deletel	-- 回滚到指定的保留点
+	COMMIT TRANSACTION				-- 提交事务
+	ROLLBACK						-- 回滚整个事务
+	
+	MySQL：
+	START TRANSACTION				-- 开始事务(BEGIN = START TRANSACTION)
+	SAVEPOINT deletel				-- 设置保留点
+	ROLLBACK TO deletel				-- 回滚到指定的保留点
+	COMMIT							-- 提交
+	ROLLBACK						-- 回滚
+	
+24.游标
+	各DBMS存在差异, 以下是MySQL和SqlServer的语法：
+	创建：
+	DECLARE [CURSOR_NAME] CURSOR FOR [SELECT语句]
+	使用：
+	SqlServer：
+	DECLARE @cust_id CHAR(10),									-- 定义接受游标数据的变量
+			@cust_name CHAR(50)
+	OPEN CustCursor												-- 打开游标
+	FETCH NEXT FROM CustCursor									-- 第一次读取数据,(存放到变量中去)
+		INTO @cust_id, @cust_name
+	WHILE @@FETCH_STATUS = 0									-- 只要读取操作不失败, 就一直尝试读取
+	BEGIN
+	INSERT INTO test.t VALUES (@cust_id, @cust_name);			-- 一些想要的操作
+	FETCH NEXT FROM CustCursor
+		INTO @cust_id, @cust_name
+	END
+	CLOSE CustCursor											-- 关闭游标
+	DEALLOCATE CustCursor								-- 释放内存
+	
+	MySQL:
+	DECLARE @cust_id CHAR(10),									-- 定义接受游标数据的变量
+			@cust_name CHAR(50)
+	DECLARE done INT DEFAULT FALSE;								-- 定义遍历数据结束标志
+									
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;		-- 将结束标志绑定到游标
+	OPEN CustCursor												-- 打开游标
+	read_loop:LOOP												-- 开始循环
+		FETCH cur INTO @cust_id, @cust_name
+		IF done THEN											-- 如果遍历结束, 退出循环
+			LEAVE read_loop;
+		END IF;
+		INSERT INTO test.t VALUES (@cust_id, @cust_name);		-- 一些想要的操作
+	END LOOP;
+	CLOSE CustCursor;											-- 关闭游标
+
+25.约束
+	ALTER TABLE [TABLE_NAME] ADD CONSTRAINT [CONSTRAINT_NAME] PRIMARY KEY([COL_NAME])		-- 添加主键约束
+	ALTER TABLE [TABLE_NAME] ADD CONSTRAINT [CONSTRAINT_NAME] FOREIGN KEY ([COL_NAME]) REFERENCES [REF_TABLE_NAME] ([REF_COL_NAME]);	-- 添加外键约束
+	UNIQUE	-- 唯一约束
+	CHECK	-- 检查约束
+	
+26.索引
+	索引之所以有用是因为恰当的排序
+	CREATE INDEX [INDEX_NAME] ON [TABLE_NAME] ([COLE_NAME])
+
+	
+	

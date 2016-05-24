@@ -1,0 +1,15 @@
+1. sum(case when 条件 then 结果 else end)
+例：	select   sum(case   when   收费项目= '房租 '     then   收费金额   else   0   end)   as   房租, 
+				  sum(case   when   收费项目= '水电费 '   then   收费金额   else   0   end)   as   水电费, 
+				  sum(case   when   收费项目= '杂费 '   then   收费金额   else   0   end)   as   杂费 
+	from   表
+	
+2.索引和数据：相当于目录和正文的作用
+	聚集索引：目录和正文都按一定规则排序，比如汉字在字典中是按拼音排序的
+		一个表只能有一个聚集索引，因为只能按一种排序方式进行排列
+	非聚集索引：目录是目录，正文是正文，比如字典的偏旁部首排序并不等同于汉字在字典中的顺序
+	
+3.SELECT rstime,
+(select Count(1) from tName as a where result='Win' and a.rstime=tName.rstime) as Win,
+(select Count(1) from tName as a where result='Lose' and a.rstime=tName.rstime) as Lose,
+from tName group rstime;

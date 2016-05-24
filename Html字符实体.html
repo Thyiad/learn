@@ -1,0 +1,39 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>HTML实体</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<style type="text/css">
+#dd {
+	font-family:arial; font-size: 29pt;
+}
+span {
+	margin: 10px;border: 1px #ccffff solid;
+}
+</style>
+</head>
+<body>
+<div>在HTML中，某些字符是预留的(比如<或>)。如果希望正确显示预留字符，那么就必须使用字符实体。<br/>
+字符实体类似这样: &entity_name;或者&#entity_number;<br/>
+实体名记忆方便，而实体数字的支持性比较好，格式分别是&{content};和&#{content};<br/>
+即：以&或&#开头并以;结尾。</p></div>
+<script type="text/javascript">
+for(var i=1; i<=40000; i+=2000)
+	document.write('<input type="button" value="'+i+'-'+(i+1999)+'" onclick="bb('+i+','+(i+1999)+')" />');
+function bb(a,b)
+{
+	var s = a+"-"+b+"<br />";
+	for(var i=a; i<=b; i++)
+	{
+		s += '<span title="'+i+'\n'+i.toString(16)+'">&#'+i+';</span>';
+		if(i%15==0)
+			s += '<br />';
+	}
+	document.getElementById("dd").innerHTML = s;
+}
+</script>
+<div id="dd"></div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+1.typeof用来检测一个变量是否已经定义，用来检测一个对象是否已经定义或者是否已经赋值，而不是用来检查对象的类型。 检测类型应该使用Object.prototype.toString方法， 将返回类似于[object Object]的字符.
+2.instanceof用来比较两个操作数的构造函数，如果是用来比较内置类型，将用处不大.
+3.setTimeout和setInterval接受字符串作为它们的第一个参数, 这个字符串总是在全局作用域中执行.
+function foo(){
+	
+}
+
+function bar(){
+	function foo(){
+	
+	}
+	setTimeout('foo()', 1000);
+}
+bar();
+4.暴力清除所有定时器：
+for(var i= 1; i < 1000; i++){
+    clearTimeout(i);
+}
+如果定时器调用返回的ID大于1000, 这个定时器不会被清除.

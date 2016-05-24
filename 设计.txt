@@ -1,0 +1,36 @@
+单页网站的资源
+单页网站的资源成百上千，还包括模版；我们这里重点关注表现突出的几个。
+
+http://keithclark.co.uk/articles/pure-css-parallax-websites/
+PureCSSParallax Scrolling：Keith Clark的这篇文章阐释了如何通过纯CSS打造视觉差滚动效果。如果你不想用Javas cript（或者不懂）的话，这是个很好的选择。
+
+http://prinzhorn.github.io/skrollr/
+Skrollr：“为剩下的人准备的视觉差滚动”。这是个独一无二的库，适用于移动端和桌面。不需要jQuery，只有原生Javas cript。
+
+http://markdalgleish.com/projects/stellar.js/
+Stellar.js：Stellar.js是另一个简单易用的视觉差滚动库。它提供了很多设置选项和iOS支持。
+
+http://graphicburger.com/one-page-website-wireframes/
+One Page Website Wireframes：如果你不确定如何构建你的网站，这个单页网站线框图集是很好的出发点。免费下载。这里还有第二集可供下载。
+
+https://onepagelove.com/
+One Page Love：One Page Love是首屈一指的单页网站集合，里面有超过5000个网站案例，并且一直在更新。他们还主打大量模版和其他资源。
+
+http://startbootstrap.com/template-categories/one-page/
+Start Bootstrap：Start Bootstrap集成了海量的免费单页网站Bootstrap主题。主题适合机构、自由职业者、作品集、着陆页等等。
+
+One Page Love Templates：除了丰富的网站集合，One Page Love也提供免费和收费的模版。
+http://www.onepagemania.com/
+One Page Mania：One Page Mania提供独特的网站和模版集合，供你下载或购买。
+
+https://maxleap.cn/zh_cn/index.html
+
+
+
+
+
+
+
+
+
+

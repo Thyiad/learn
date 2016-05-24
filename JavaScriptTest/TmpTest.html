@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <!-- <script>
+
+        function load()
+        {
+		var o=Object.prototype;
+			// 假设A的prototype是f,首先，f是一个Object，里面只有一个cosntructor属性,该属性指向A
+            function A(){} 
+			function B(){}
+			var ax=new A();
+			A.prototype=B.prototype={};
+			var ay=new A(), b=new B();
+			//var ix= ax instanceof Object;
+			var ix= ax instanceof A; //ix-object(constructor为A, 
+			var iy= ay instanceof A;
+			//var iyB= ay instanceof B;
+			var ib= b instanceof B;
+        }
+    </script> -->
+	<script>
+		 var obj={name:'123'};
+		 var obj2 ={name:'ppp'}
+
+		function test() {
+			alert(this.name);
+		}
+		
+		var func= test.bind(obj);
+		func();
+		func.call(obj2);
+	
+	</script>
+</head>
+<body>
+     <style type="text/css">
+        .p{
+            position:relative;
+            left:50%;
+            float:left;
+        }
+        .c{
+            position:relative;
+            float:left;
+            right:50%;
+        }
+    </style>
+    <div class="p" onclick="alert(&quot;1&quot;);">
+        <h1 class="c">Test Float Element Center</h1>
+    </div>
+	<script>
+		function foo(a, b, c) {};
+		foo.prototype.method = function() {
+			function test() {
+				// this 将会被设置为全局对象（译者注：浏览器环境中也就是 window 对象）
+				alert(Object.prototype.toString.call(this));
+			}
+			test();
+		}
+		var ff= new foo();
+		ff.method();
+		//foo.method();
+	</script>
+</body>
+</html>

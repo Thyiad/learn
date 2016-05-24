@@ -1,0 +1,53 @@
+1.IE7及更早版本, unshift()方法总是返回undefined而不是数组的新长度。
+2.IE8及之前版本, 在catch语句中捕获的错误对象会被添加到执行环境的变量对象, 而不是catch语句的变量对象中(即使是在catch块的外部也可以访问到错误对象).
+3.Safari3以前版本的for-in语句中存在一个bug，该bug会导致某些属性被返回两次.
+4.IE8及更早版本, substr()方法传递负值的情况时存在问题,它会返回原始的字符串。
+5.IE8是第一个实现Object.defineProperty()方法的版本,但实现不彻底:只能在DOM对象上使用这个方法,只能创建访问器属性.
+	连用defineProperty()方法来设置原型的属性都会报错！！什么鸟玩意儿！！一个半成品也敢拿出来！~
+6.唯独IE8遍历不出来:
+	对于在原型中设置了enumerable=false, 而实例中又覆盖设置enumerable=true的属性来说, for-in循环能遍历出来.
+7.IE8及之前版本,不支持Object.keys(), Object.getOwnPropertyNames()方法.
+8.IE8及以前版本, 使用delete删除window属性的语句时, 会抛出错误. 
+9.IE8以前版本, 修改hash属性不会再浏览器的历史记录中生成一条新纪录, 而只会在用户单击包含hash的URL时才会被更新.
+10.因为IE8及之前版本的宿主对象(DOM是宿主对象)是通过COM而非JScript实现的，所以在IE8及之前版本中的DOM方法都将返回"object".
+	比如document.getElementById, document.createElement
+11.IE中的ActiveX对象与普通js的两个差异：
+	不能把函数作为属性访问：
+	var xhr=new ActieXObject("Microsoft.XMLHttp");
+	if(xhr.open){					//会发生错误, 而js中可以这样访问
+	}
+	typeof将返回"unknown":
+	var type = typeof xhr.open;		//将返回"unknown"
+12.IE8及更早版本存在一个bug, 如果某个实例属性与标记为[[DontEnum]]的某个原型属性同名, 那么该属性将不会出现在for-in循环中。
+13.IE8及更早版本NodeList实现为一个COM对象, 所以不能像使用js对象那样使用这种对象：
+	var arrayOfNodes=Array.prototype.slice.call(sommeNode.childNodes, 0);
+14.IE8及以前版本会把<!DOCTYPE>解析成一个注释, document.doctype的值始终为null.
+15.IE7及之前版本, document.getElementById(), 不区分ID的大小写, 
+    如果有表单元素的name与该ID相等,并且位于该ID要素的前面, 将返回这个表单元素
+	<input type="text" name="testid">
+	<div id="testid"></div>
+16.IE9及之前版本不不能访问Node类型以及HTML元素类型(HTMLElement等等).
+17.IE8及之前版本能通过属性方式访问自定义特性. 而更高版本及其他浏览器无法访问.
+	<div id='div' data_myAttr='customAttr'></div>
+	div.data_myAttr;				//IE8及之前版本能访问
+18.IE7及之前版本通过getAttribute()返回的不是字符串而是对象, IE8修复了该问题.
+19.IE6及之前版本不支持removeAttribute().
+20.IE7及更早版本, 在遍历attributes时会返回HTML元素所有能拥有的特性. 此时, 需要判断每个特性节点的specified属性, 是否被设定.
+21.IE8及更早版本, 可以为document.createElement()方法传递整个元素标签.
+   IE7及更早版本, 可以用这种方法规避很多问题, 只传递tag的用法会导致很多问题:
+   不能设置动态创建的input和iframe元素的name特性.(书上提到了iframe, 网上提到了input, 但是我测试下来是可以设置的.. 不知道是不是因为是在IE10下开IE7模式的缘故)
+   不能通过表单的reset()方法重设动态创建的input元素
+   动态创建的type特性为reset的button元素重设不了表单
+   动态创建的一批name相同的单选按钮彼此毫无关系. (本来应该用来表示同一选项的不同值.)
+22.IE8及更早版本, 无法使用createTextNode的方式为script和style元素动态添加脚本及样式.
+	script可以通过script.text, style可以通过style.styleSheet.cssText来添加脚本及样式,
+	cssText如果设置为空或者重复设置, 则有可能导致浏览器崩溃.(不过在IE8下测试了一番,倒是没崩溃，哇！~)
+23.IE8及更早版本, 元素之间的空格不会反回文本节点, 而其他浏览器都会返回文本节点.
+	所以有关Node类型的操作: childNodes和firstChild等属性的行为不一致. 
+	所以HTML5新增了个元素版的:childElementCount, first
+24.IE8及更早版本的chilren属性中也会包含注释节点, IE9+则只返回元素节点
+25.IE8及更早版本的框架不支持contentDocument属性
+26.IE8及更早版本不支持style.cssFloat(标准的float样式驼峰写法, 避免与js关键字float发生冲突), 独家支持styleFloat, IE9+两者都支持.
+27.IE6及更早版本将<body>元素视为在Web浏览器的视口中滚动的元素, 正常的为<html>元素. 也就是分别为document.body和document.documentElement.
+28.IE8及更早版本认为文档的左上角坐标是(2,2), 标准为(0,0), 导致通过getBoundingClientRect()方法获取到得矩形对象就会比实际值往右下偏移2像素.
+29.IE8及更早版本不支持 DOM事件流.

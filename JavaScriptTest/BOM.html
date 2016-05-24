@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BOM test</title>
+    <script>
+        function navigatorTest(){
+            document.writeln("浏览器名称: "+window.navigator.appCodeName+"<p>");
+            document.writeln("次版本名称: "+navigator.appMinorVersion+"<p>");
+            document.writeln("完整的浏览器名称: "+navigator.appName+"<p>");
+            document.writeln("浏览器版本: "+navigator.appVersion+" (一般不与实际的浏览器版本对应)"+"<p>");
+            document.writeln("浏览器编译版本: "+navigator.buildID+"<p>");
+            document.writeln("是否启用cookie: "+navigator.cookieEnabled+"<p>");
+            document.writeln("CPU类型: "+navigator.cpuClass+"<p>");
+            document.writeln("是否启用Java: "+navigator.javaEnabled()+"<p>");
+            document.writeln("浏览器主语言: "+navigator.language+"<p>");
+            document.writeln("在浏览器中注册的MIME类型数组: "+navigator.mimeTypes+"<p>");
+            document.writeln("是否联网: "+navigator.onLine+"<p>");
+            document.writeln("不知是啥: "+navigator.opsProfile+"<p>");
+            document.writeln("计算机的操作系统或CPU: "+navigator.oscpu+"<p>");
+            document.writeln("浏览器所在的系统平台: "+navigator.platform+"<p>");
+            document.writeln("浏览器中安装的插件信息的数组: "+navigator.plugins+"<p>");
+            //document.writeln("设置用户的首选项: "+navigator.preference()+"<p>");
+            document.writeln("产品信息: "+navigator.product+"<p>");
+            document.writeln("产品的次要信息: "+navigator.productSub+"<p>");
+            //document.writeln("针对特定的MIME类型将一个站点注册为处理程序: "+navigator.registerContentHandler()+"<p>");
+            //document.writeln("针对特定的协议将一个站点注册为处理程序: "+navigator.registerProtocolHandler()+"<p>");
+            document.writeln("安全策略的名称(已经废弃, 为了向后兼容而保留 Netscape4): "+navigator.securityPolicy+"<p>");
+            document.writeln("操作系统的语言: "+navigator.systemLanguage+"<p>");
+            //document.writeln("是否允许变量被修改(taint)(已经废弃, 为了向后兼容而保留下来(Netscape 3)): "+navigator.registerProtocolHandler()+"<p>");
+            document.writeln("浏览器的用户代理字符串: "+navigator.userAgent+"<p>");
+            document.writeln("操作系统的默认语言: "+navigator.userLanguage+"<p>");
+            document.writeln("借以访问用户个人信息的对象: "+navigator.userProfile+"<p>");
+            document.writeln("浏览器的品牌: "+navigator.vendor+"<p>");
+            document.writeln("有关供应商的次要信息: "+navigator.vendorSub+"<p>");
+        }
+        function screenTest(){
+            document.writeln("屏幕的像素高度减去系统部件高度之后的值: "+screen.availHeight+"<p>");
+            document.writeln("availWidth: "+screen.availWidth+"<p>");
+            document.writeln("availTop: "+screen.availTop+"<p>");
+            document.writeln("availLeft: "+screen.availLeft+"<p>");
+            document.writeln("height: "+screen.height+"<p>");
+            document.writeln("width: "+screen.width+"<p>");
+            document.writeln("top: "+screen.top+"<p>");
+            document.writeln("pixelDepth: "+screen.pixelDepth+"<p>");
+            document.writeln("colorDepth: "+screen.colorDepth+"<p>");
+        }
+        function historyTest(){
+            history.go(-1);
+            setTimeout(function(){history.go(1)},1000)
+        }
+        (function() {
+            var t=this;
+        })();
+        function onload(){
+            //navigatorTest();
+            //screenTest();
+            //location.hash="http://www.baidu.com";
+            //window.frames[]
+            var a=["尺寸: 4 GB", "颜色: 蓝黑", "尺寸: 16 GB", "颜色: 黑红", "尺寸: 8 GB", "颜色: 白黑", "尺寸: 32 GB"] ;
+            var c=[];
+            a.forEach(function(item){
+                insertIntoC(item,c);
+            });
+            alert(c);
+
+            function insertIntoC(value, target){
+                var trim=value.replace(' ','');
+                var splits=trim.split(':');
+                var index=checkExistKey(splits[0],c);
+                if(index !== -1){
+                    c[index]=c[index]+','+splits[1];
+                }
+                else{
+                   c[c.length]=trim;
+                }
+            };
+
+            function checkExistKey(key, array){
+                var index=-1;
+                array.forEach(function(item,ind){
+                    if(item.indexOf(key) === 0){
+                        index = ind;
+                    }
+                })
+
+                return index;
+            }
+            var b=["尺寸:4GB,16GB,8GB,32GB","颜色:蓝黑,黑红,白黑"];
+        }
+    </script>
+</head>
+<body onload="onload()">
+    <input type="button">
+</body>
+</html>

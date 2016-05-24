@@ -1,0 +1,12 @@
+1.Safari3以前版本会枚举被隐藏的属性.
+2.<!--第一条注释-->
+  <html>
+	<body>
+	</body>
+  </html>
+  <!--第二条注释-->
+  IE8及之前版本, Safari3.1及更高版本, Opera和Chrome只为第一条注释创建节点, 不会为第二条注释创建节点. 
+  即只创建位于<html>前面的注释节点, 结果就是该注释节点称为document.childNodes中的第一个节点.
+  IE9及更高版本会为所有的注释创建注释节点.
+  Firefox和Safari3.1以前版本会完全忽略这两条注释.
+3.Safari 2.x及更早版本在没有完全实现某些DOM功能的情况下，document.implementation.hasFeature()方法也返回true.

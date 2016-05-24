@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:x="http://www.w3.org/1999/xhtml">
+<!-- comment -->
+<head>
+    <meta charset="utf-8"/>
+    <title>DOM Test</title>
+    <script type="text/javascript">
+		function eval(t)
+		{
+			window.clipboardData.setData("Text",t);
+		}
+        function load()
+        {
+			/*var ens = document.createElementNS("http://www3.w3org/2000/svg","svg");
+			ens.prefix="s";
+			//alert(document.body.namespaceURI);
+			//alert(document.body.isDefaultNamespace("http://www.w3.org/1999/xhtml"));
+			var attr=document.createAttribute("random");
+			attr.value="r";
+			ens.setAttributeNode(attr);
+			//alert(attr.namespaceURI);
+			ens.removeAttributeNode(attr);
+			ens.setAttributeNodeNS(attr);
+			alert(attr.isDefaultNamespace(ens.namespaceURI));
+			//alert(attr.namespaceURI);
+			document.body.appendChild(ens);
+			var re=document.getElementById("result")
+			var clone=re.cloneNode(true);
+			document.body.appendChild(clone);
+			alert(typeof re.setUserData);
+			alert(clone.isSupported("HTML", "2.0"));
+			alert(clone.isSupported("html", "2.0"));
+			clone.setUserData("newXX", "newOO");
+			*/
+			/*f=document.getElementById("myframe");
+			a = window.frames[0];
+			b=window.frames["myframe"];
+			document.frames;*/
+			//var style = document.getElementById("result").style;
+			//var cssStyleRule=style.parentRule;
+			//var sty=cssStyleRule.style;
+			//alert(style.cssFloat);
+			//alert(style.styleFloat);
+			//var result=document.getElementById("result");
+			//var computedStyle = document.defaultView.getComputedStyle(result, null);
+			//alert(computedStyle.backgroundColor);
+			//alert(computedStyle.border);
+			//alert();
+			//alert(encodeURI('unescape'));
+			//alert(decodeURI('\u7500\u6e00\u0065\u7300\u6300\u6100\u7000\u6500'));
+			//for(i=0; i<document.all.length; i++) {
+			//	alert(document.all(i).tagName);
+			//}
+			
+			var sheet = document.styleSheets[0];
+			var rules=sheet.cssRules;
+			var bgColor=rules[0];
+			var style= document.getElementById("result").style;
+        }
+		
+		function scrolltest()
+		{
+			//document.getElementById("bt").scrollIntoView(false);
+			document.getElementById("bt").focus(false);
+			alert(document.head.title)
+		}
+		function clic(){
+			var val=document.getElementById('txt').value;
+			
+			//var ss=decodeURI(val);
+			var newss=unescape(val);
+			alert(newss);
+			//var uncom=uncompile(newss);
+			//var result=unescape(uncom);
+			//eval(result);
+			//window.clipboardData.setData("Text",newss);
+			//eval(ss);
+		}
+    </script>
+	<style>
+			div.result{
+				background-color:red;
+					}
+	}
+	</style>
+</head>
+<body onload="load()">
+    <div id="result" xx="oo" data-name="xx" data-appid="432" width="600" height="600" class="result">inner<input type="button" id="bt" onclick="scrolltest()" value="click me" style="
+    height: 600px;
+    width: 600px;
+"><input type="button" onclick=clic()><input type="text" id="txt" /></div>
+<iframe id="myframe" name="myframe" width="100" height="300"></iframe>
+<!--<span style="color: #ff0000;font-size: 50px;">
+&#10102;&#10103;&#10104;&#10105;&#10106;&#10107;&#10108;&#10109;&#10110;&#10111;<br />
+&#10122;&#10123;&#10124;&#10125;&#10126;&#10127;&#10128;&#10129;&#10130;&#10131;
+</span>
+<span style="display:inline-block;width:15px;height:15px;line-height:15px;border-radius:8px;background:#820000;font-size:16px; color:#FFF; text-align:center">1</span>
+--></body>
+</html>

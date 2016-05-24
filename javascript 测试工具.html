@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>javascript测试工具</title>
+    <link type="text/css" rel="stylesheet" href="javascript%20测试工具/style.css">
+</head>
+<body>
+<div id="wrapper">
+    <div id="source" class="div">
+        <fieldset>
+            <h1>Source</h1>
+            <div id="line"></div>
+            <textarea id="sourceArea" placeholder="// Write your code here" rows="24" class="bottomClear"></textarea>
+            <ul>
+                <li><a href="javascript:;" onclick="executeCode()">执行代码</a></li>
+                <li><a href="javascript:;" onclick="FormatCode()">格式化</a></li>
+                <li><a href="javascript:;" onclick="pack_js(0)">普通压缩</a></li>
+                <li><a href="javascript:;" onclick="pack_js(1)">eval压缩</a></li>
+                <li><a href="javascript:;" onclick="decode()">eval还原</a></li>
+                <li><a href="javascript:;" onclick="empty()">清空</a></li>
+				<li><a href="javascript:;" onclick="mydecode()">16进制还原</a></li>
+            </ul>
+            <textarea id="logArea" placeholder="// Here receive log" rows="6"></textarea>
+        </fieldset>
+    </div>
+</div>
+<script src="javascript%20测试工具/Base.js" type="text/javascript"></script>
+<script src="javascript%20测试工具/JsFormat.js" type="text/javascript"></script>
+<script src="javascript%20测试工具/HtmlFormat.js"></script>
+<script src="javascript%20测试工具/ActionHandler.js"></script>
+<script type="text/javascript">
+	var $sourceArea = document.getElementById("sourceArea");
+	$sourceArea.addEventListener("keydown", function(e){
+		if(e.keyCode === 9){
+			var $index = $sourceArea.selectionStart, $srcvalue = $sourceArea.value;
+			if($index === $srcvalue.length){
+				$sourceArea.value+="    ";
+			}
+			else{
+				$sourceArea.value = $srcvalue.substr(0,$index)+"    "+$srcvalue.substr($index,$srcvalue.length-$index);
+				$sourceArea.selectionStart = $index+4;
+				$sourceArea.selectionEnd = $index+4;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	},false)
+</script>
+</body>
+</html>

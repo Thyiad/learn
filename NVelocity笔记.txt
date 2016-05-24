@@ -1,0 +1,27 @@
+NVelocity使用文档笔记
+1.设置变量：
+#set($foo="Velocity")	//为双引号，使单引号有效需要修改velocity.properties的stringliterals.interpolate=false
+
+2.注释：
+单行：##
+多行：#*    ...    *#
+注释块：#**
+		@author
+		@version 5
+	   *#
+	   通常用来存放作者及版权信息
+
+3.没有定义的值让其出现空值：
+value="$!email"			//否则将输出value="$email"
+
+4.如果RHS是一个null，VTL将指向一个已经存在的引用：
+#set($criteria=["name", "address"])
+#foreach($criterion in $criteria)
+	//#set($result=false)可以通过预先定义的方式来解决
+	#set($result=$query.cr.critera($criterion))
+	#if($result)
+		Query was successful
+	#end
+#end
+
+5.

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+		#wrapper{
+			width: 1246px;
+			height: 728px;
+			float: left;
+			background-image: url(img/bg_wrapper.png)
+		}
+		#content{
+			width: 536px;
+			height: 465px;
+			  margin-left: 228px;
+			  margin-top: 152px;
+			background-image: url(img/bg_content.png);
+		}
+			#wrapper #content{
+			opacity: 0;
+			transition: all 1s ease;
+			transform: rotate(0deg) scale(0.1);
+			
+			/*-moz-transition: all 1s ease;
+			-webkit-transition: all 1s ease;
+			-o-transition: all 1s ease;
+			-ms-transform: rotate(0deg) scale(0.1);
+			-moz-transform: rotate(0deg) scale(0.1);
+			-webkit-transform: rotate(0deg) scale(0.1);
+			-o-transform: rotate(0deg) scale(0.1);*/
+			}
+		
+		#wrapper:hover #content {
+			transform: rotate(720deg) scale(1.0);
+			opacity: 1;
+			
+			-ms-transform: rotate(720deg) scale(1.0);
+			-moz-transform: rotate(720deg) scale(1.0);
+			-webkit-transform: rotate(720deg) scale(1.0);
+			-o-transform: rotate(720deg) scale(1.0);
+		}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div id="content">
+
+			</div>
+		</div>
+	</body>
+
+</html>

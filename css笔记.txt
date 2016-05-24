@@ -1,0 +1,67 @@
+1.meta标签
+	<meta name=”viewport” content=”width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;” />
+	<meta name=”format-detection” content=”telephone=no” />
+	<meta name=”apple-mobile-web-app-capable” content=”yes” />	// 苹果是否全屏显示，对应window.navigator.standalone属性
+	<meta name=”apple-mobile-web-app-status-bar-style” content=”black” />	// 还有值default、black-translucent，分别是默认、半透明
+
+2.	h1#content			// 联写，id为content的h1
+	id>class>div		// 选择器优先级，id>class>类型
+	
+3.!important			// !important标记的优先级更高，例如：	
+																background-color:red;!important
+																background-color:green;				// 默认后面一个优先级更高，但是!important提升了上一行的重要性
+
+4.默认两种对象类型：
+	block	块状对象，默认占据整行
+	in-line	行间对象(又称内联元素)，允许下一个对象与之同行显示
+	
+5.居中
+	margin:0px auto;	// 第一个参数为上下间距，第二个参数为左右间距，auto为左右平分间距，即居中
+	
+6. margin叠加：
+	·重叠时将按最大的计算
+		上下两个div, 上设置下边距为10px, 下div设置上边距为20px, 最后两个之间的距离为20px而不是30px 
+	·如果设置了float则margin会叠加
+		上下两个div都设置了边距和float
+		
+7.内边距和边框不增加宽度：
+	box-sizing:border-box
+	
+8.疑问：
+	<div1 float>
+	<div2>
+	连续两个div div2为relative时，div2才能显示出来(背景色之类的)，奇怪！！
+	
+--------------------------------------------------------------------- 第二章 选择器 -------------------------------------------------------------------------------
+1.css选择器：
+	元素选择：元素标签
+	分组选择：逗号
+	通配符：*
+	id/class
+		同时包含2个class:.class1.class2
+	属性:p[att]
+		多个属性：p[att1][att2]
+	子级:p > span
+		加>表示只搜寻子集，不加则表示搜索所有子孙节点
+	相邻：p + span
+	
+--------------------------------------------------------------------- 第七章 基本视觉格式化 --------------------------------------------------
+1.元素可以按两种方式分类：
+   正常流、浮动元素、定位元素
+   替换元素、非替换元素、行内元素、块级元素、
+
+2.块级元素的宽度计算方式：
+	margin-left + border-left + padding-left + width + padding-right + border-right + margin-right
+	*最终长度一定要等于包含块的长度，如果长度过分受限，则自动调整margin-right
+	
+3.text-align: justify 			// 设置各行文本与内容区宽度相等	
+	
+	
+	
+	
+
+
+
+
+
+

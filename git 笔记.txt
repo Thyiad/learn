@@ -1,0 +1,60 @@
+git init
+git add <file>					// 把修改放到暂存区
+git commit						// 把暂存区的修改提交到分支
+git status
+git diff 						// -- <file> 查看文件差异
+git log							// --pretty=oneline, --graph 查看分支合并图
+git reset						// --hard <versionNum> || <HEAD^ HEAD~100> 回退到指定版本, 版本号只要前几位就可以了
+git reflog						// 命令的历史记录
+git checkout					// -- <file> 丢弃工作区的修改(不能撤销暂存区), 不加file就是切换分支
+								    *git reset HEAD <file> 撤销暂存区的修改
+git rm <file>					// 删除文件并提交到工作区
+git remote add origin <.git>	// 关联远程库	
+git push -u origin master		// 推送到远程master库，-u可选，用以绑定默认的远程库
+git clone <.git>				// 克隆库
+git branch dev					// 创建分支
+git checkout <-b|-d> dev		// 切换分支，-b 创建并切换分支，-d 删除分支, -D强行删除(未合并过的分支)
+git branch						// 列出所有分支，在当前分支前标记*号
+git merge <--no-ff> dev			// 合并指定分支到当前分支，--no-ff 禁用 Fast forward, 用以保留分支的历史
+git stash						// 储藏工作现场
+								    *bug修复步骤: git stash, git checkout master, git checkout -b issue-101,  modify and commit
+git stash list					// 查看stash列表
+git stash apply	<stash@{0}>		// 恢复stash
+git stash drop					// 删除stash
+git stash pop					// 恢复并删除stash
+git remote						// 查看远程库的信息，-v显示更详细的信息
+git pull						// 抓取远程分支
+git checkout -b n origin/n		// 在本地创建和远程分支对应的分支
+git branch --set-upstream n o/n	// 建立本地分支和远程分支的关联
+git tag <name> <commitid>		// 打一个新标签, commitid可选(给指定commit打标签, 空为最新)
+git tag -a|-s <name> -m "desc"	// -a指定标签名，-m指定说明文字, -s使用私钥签名(PGP签名)
+git tag							// 查看所有标签
+git show <name>					// 查看标签信息
+git tag -d <tagname>			// 删除标签
+								    *如果标签已推送到远程, 还需要从远程删除：git push origin :refs/tags/<tagname>
+git push origin <tagname>		// 推送标签
+git push origin --tags			// 推送所有尚未推送的标签
+
+git config --global color.ui <b>		// 设置git是否显示颜色
+.gitignore								// 该文件用来设置要忽略的文件
+git config --global alias.st status		// 设置status别名, 同设置checkout, commit, branch
+											*实用的 log 别名：git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+											*每个仓库的git配置文件放在.git/config文件中，当前用户的git配置文件放在用户主目录的.gitconfig中
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

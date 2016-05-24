@@ -1,0 +1,9 @@
+html5总结
+描画：canvas
+通信：Web Sockets
+离线检测：navigator.onLine
+应用缓存：appcache， 以前用的扩展名是manifest，现在改推荐用这个
+存储：Cookie， Storage， sessionStorage，localStorage，IndexedDB,
+地理位置：geolocation, File, FileReader
+web计时：window.performance
+后台js：Web　Worker

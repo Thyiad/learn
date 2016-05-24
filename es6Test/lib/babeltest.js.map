@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/babeltest.js"],"names":[],"mappings":";;AAAA,MAAM,GAAN,CAAU;AAAA,SAAM,OAAK,CAAX;AAAA,CAAV","file":"babeltest.js","sourcesContent":["input.map(item=>item+1);"]}

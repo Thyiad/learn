@@ -1,0 +1,133 @@
+----------------------------------------------MongoDB 教程--------------------------------------------------
+1.db                        	// 显示当前
+
+2.use local               		// 使用数据库，如果不存在就创建
+
+3.show dbs
+
+4.db.collection.insert	
+		
+5.db.collection.save     		// save如果指定_id字段，就是更新该_id的数据
+
+6.db.col.update({'title':'MongoDB 教程'},{$set:{'title':'MongoDB'}})
+
+7.db.collection.remove
+
+8.db.collection.find()
+	* {"fieldName":"fieldValue"}
+	* {"fieldName ":{$lt:50}}          		// lt; lte; gt; gte; ne
+	* {$or:[{key1:value1},{key2:value2}]} 
+	* {"key1":{$gt:50}, $or:[{},{}]}    	// and 和or连用
+	* {"fieldName":($type : 2)}
+
+9.所有的类型：
+	1		Double
+	2		String
+	3		Object
+	4		Array
+	5		Binary data
+	6		Undefined				// 已废弃
+	7		Object id
+	8		Boolean
+	9		Date
+	10		Null
+	11		Regular Expression
+	13		JavaScript
+	14		Symbol
+	15		JavaScript(with scope)
+	16		32-bit integer
+	17		Timestamp
+	18		64-bit integer
+	255		Min key					// Query with -1
+	127		Max key
+	
+10.limit和skip
+	find.limit(10).skip(1)			// 查出前10条，跳过第一条
+	
+11.sort
+	find().sort({"fieldName":1})	// 1为升序，-1为降序
+	
+12.ensureIndex
+	db.collection.ensureIndex({fieldName:1})	// 1按升序创建索引，-1按降序创建索引
+	
+13.aggregate
+	db.collection.aggregate([{$group:{showFieldName1:"$fieldName", showFieldName2:{$sum:1}}}])
+	*聚合的表达式：$sum, $avg, $min, $max, $push, $addToSet, $first, $last	//
+	
+14.aggregate中的管道操作
+	aggregate([{first}, {second}])
+	*$project, $match, $limit, $skip, $unwind, $group, $sort, $geoNear
+	*project用来指定查询出来的列，默认包含_id	// {$project:{_id:0, title:1, author:1}}
+	
+15.副本集设置
+	rs.initiate()
+	rs.conf()
+	rs.add()
+	
+16.分片
+	Query Routers
+	Config Server
+	Shard Server
+	
+17.备份与恢复
+	mongodump -h dbhost -d dbname -o dbdirectory
+	mongorestore -h dbhost -d dbname --directoryperdb dbdirectory
+	
+18.监控
+	mongostat.exe
+	mongotop.exe
+	
+	
+----------------------------------------------MongoDB 高级教程--------------------------------------------------
+1.关系
+	两个文档通过 _id 关联
+	
+2.引用
+	{ $ref : collection, $id : _id, $db : db }				// db是可选的
+
+3.覆盖索引查询
+	*即仅查询出索引字段
+	
+4.查询分析
+	explain、hint
+	*explain分析索引的使用、查询的统计等等、hint用来强制使用指定索引
+	
+5.原子操作
+	findAndModify({query: {}, update: {}})					// 查询并更新
+	原子操作常用命令：
+		$set			// 指定一个键并更新键值，不存在则创建
+		$unset			// 删除一个键
+		$inc			// 增减某个数字字段
+		$push			// 追加到某个数组字段
+		$pushAll		// 同push，但可以追加多个
+		$pull			// 从数组字段中删除某个值
+		$addToSet		// 追加到数组字段，但是会保证数组的唯一性，不会有重复数据
+		$pop			// 删除数组的第一个或最后一个，-1为第一个，1为最后一个
+		$rename			// 修改字段名
+		$bit			// 位操作
+	
+6.高级索引
+	·索引数字字段		// 为数组字段添加索引时，会同时为该数组中的所有值添加索引
+	·索引子文档字段		// 为子文档的字段添加索引
+	
+7.索引限制
+	索引是存储在内存中的
+	索引不能被以下查询使用：正则及非操作符 
+	·集合中索引不能超过64个
+	·索引名的长度不能超过125个字符
+	·一个符合索引最多31个字段
+	
+8.MapReduce
+
+9.全文检索
+	db.collection.ensureIndex({fieldName:"text"})
+	
+10.正则表达式
+	
+	
+	
+	
+	
+	
+	
+	

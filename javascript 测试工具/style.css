@@ -1,0 +1,64 @@
+
+#source fieldset{
+    background-color: rgb(227, 216, 203);
+    padding: 0pt;
+    width: 97%;
+    margin: 1.5%;
+    box-shadow: 0pt 0pt 10px rgba(0, 0, 0, 0.35), 0pt 0pt 10px rgba(169, 84, 84, 0.75);
+}
+
+#source fieldset h1{
+    font-family:  sans-serif;
+    font-size: 100%;
+    font-style: normal;
+    background-color: slategray;
+    color: white;
+    margin: 0pt;
+    padding: 0.35em;
+    text-align: center;
+}
+
+#source fieldset textarea{
+    background-color: #ffffff;
+    border: 1px solid rgb(231, 222, 204);
+    font-family: monospace;
+    margin: 2%;
+    width: 95%;
+    padding-left: 0.5em;
+}
+
+#source fieldset textarea.bottomClear{
+    margin-bottom: 0;
+}
+
+ul{
+    padding: 0;
+    margin: 0 0 0 2%;
+}
+ul li{
+    list-style: none;
+    float: left;
+    line-height: 30px;
+    width: 108px;
+    height: 30px;
+    font-family:  sans-serif;
+    font-size: 100%;
+    font-style: normal;
+    color: white;
+}
+ul li:hover{
+}
+ul li a{
+    color: #000000;
+    width: 97px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    background-color: lightsteelblue;
+}
+ul li a:hover{
+    color: white;
+    background-color:cornflowerblue;
+}

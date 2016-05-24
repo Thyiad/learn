@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+   <style>
+   
+html, body {
+    height:100%
+}
+
+
+#overlay { 
+    position:absolute;
+    z-index:10;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background-color:#f00;
+    filter:alpha(opacity=10);
+    -moz-opacity:0.1;
+    opacity:0.1;
+    cursor:pointer;
+
+} 
+
+.dialog {
+    position:absolute;
+    border:2px solid #3366CC;
+    width:250px;
+    height:120px;
+    background-color:#ffffff;
+    z-index:12;
+}
+
+</style>
+<input type='file'>
+    <script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function() { init() })
+
+function init() {
+    $('#overlay').click(function() { closeDialog(); })
+}
+
+function openDialog(element) {
+    //this is the general dialog handler.
+    //pass the element name and this will copy
+    //the contents of the element to the dialog box
+
+    $('#overlay').css('height', $(document.body).height() + 'px')
+    $('#overlay').show()
+    $('#dialog').html($(element).html())
+    centerMe('#dialog')
+    $('#dialog').show();
+}
+
+function closeDialog() {
+    $('#overlay').hide();
+    $('#dialog').hide().html('');
+}
+
+function centerMe(element) {
+    //pass element name to be centered on screen
+    var pWidth = $(window).width();
+    var pTop = $(window).scrollTop()
+    var eWidth = $(element).width()
+    var height = $(element).height()
+    $(element).css('top', '130px')
+    //$(element).css('top',pTop+100+'px')
+    $(element).css('left', parseInt((pWidth / 2) - (eWidth / 2)) + 'px')
+}
+
+
+</script>
+</head>
+<body onload="">
+	<a href="javascript:;//close me" onclick="openDialog($('#content'))">show dialog A</a>
+
+<a href="javascript:;//close me" onclick="openDialog($('#contentB'))">show dialog B</a>
+
+<div id="dialog" class="dialog" style="display:none"></div>
+<div id="overlay" style="display:none"></div>
+<div id="content" style="display:none">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nisl felis, placerat in sollicitudin quis, hendrerit vitae diam. Nunc ornare iaculis urna. 
+</div>
+
+<div id="contentB" style="display:none">
+    Moooo mooo moo moo moo!!! 
+</div>
+</body>
+</html>

@@ -1,0 +1,960 @@
+    ----------------------------------------------------------- 第三章 基本概念 -------------------------------------
+1.严格模式, 在顶部启用以下代码：
+"use strict";
+IE10+, Firefox4+, Safari5.1+, Opera12+, Chrome
+
+2.省略 var 关键字将定义全局变量， 例：
+function test()
+{
+	message="hi"; //全局变量
+}
+test();
+alert(message);
+只要调用过一次test()函数, 这个变量就有了定义。
+
+3.	5种简单数据类型： Undefined, Null, Boolean, Number, String
+	1种复杂数据类型： Object
+	typeof将返回数据类型的字符串： undefined, boolean, string, number, object(值为null也将返回object), function
+	
+4. undefined是派生自null值的， 所以：
+alert(null == undefined);	//true
+
+5.Boolean的值只有两个字面值：true和false (小写，区分大小写的)
+	var message="Hello world!"
+	转换型函数： Boolean（message）;
+	转换规则如下：
+	true:非空字符串, 非零数字值(包括无穷大), 任何非空对象(object), n/a(或N/A, 是not applicable的缩写)
+	false:""(空字符串), 0和NaN, null, undefined
+	
+6.var floatNum=1.0 该值会被转换为整数
+	科学计数法：
+	var floatNum=3.125e7	//等于31250000
+	var floatnum=3.125e-7	//等于=0.0000003125
+	
+7.浮点数的最高精度是17位小数，但是计算的精确度远不如整数：
+	0.1+0.2=0.30000000000000004
+
+8.NaN --> 非数值, 是Not a Number的缩写, 表示这不是数值。
+  NaN与任何值都不相等, 包括NaN本身：
+  var b = NaN == NaN;	//false
+  判断是否是非数值, 用isNaN()函数来判断。
+  参数如果是boolean型, 那么也是能被转化成数值的：
+
+9.数值转换 有Number() parseInt() 和 parseFloat()
+  共通点：都会忽略前导零(前导0，单独0则正常换算成0)：
+  0800 --> 800
+  转型函数Number()的规则：
+	1.Boolean型的， true为1， false为0
+	2.Number型的， 只是简单的传进传出
+	3.特殊类型：
+		null, 为0
+		undefined, 为NaN
+	4.空字符串为0
+	5.如果字符串是16进制格式， 则转换为大小相同的十进制整数
+	6.不符合则为NaN
+	7.如果是对象， 则先转化对象的valueOf()函数值，如果返回NaN则继续转化对象的toString()方法返回值。
+	Number("")					//0
+	Number(null)				//0
+	Number("Hello Thyiad")		//NaN
+	Number(undefined)			//NaN
+	Number("00123")				//123
+  转型函数parseInt()的规则：
+    1.找到第一个非空字符， 如果不符合（不是数字或者正负号，对于parseInt()函数来说，点号也是非法的），则返回NaN
+	2.找到第一个数字后， 继续找， 直到找到不符合的字符， 返回中间符合的数值
+	3.不指定解析方式， 会自己进行识别转换整数格式：
+		以0x开头且后跟数字字符，会解析成16进制
+		以0开头且后跟数字字符，会解析成8进制(比如"070",转换成8进制后是56. 不过这是在ECMAScript3的情况下,
+		而ECMAScript5则会认为前导0无效(至于转换结果, 书上说是会为0, 但是测试下来, 在浏览器中会按十进制解析为70 --> 这个是对的, 应该说的是3代为0, 5代才为70), 
+		所以为了避免转换出错, 推荐始终指定解析方式 --> parseInt("070", 10))
+	parseInt("")	//NaN
+	转型函数parseFloat()的规则:
+	1.只识别认定第一个小数点有效。
+	2.只解析十进制。 16进制会被解析成0.(因为16进制以0x开头)
+	3.如果没有小数点，会解析成整数返回。
+    parseFloat("123blue")			//123
+	parseFloat("1.2.3.4.5.6")		//1.2
+	parseFloat("09.8765")			//9.8765
+	parseFloat("0xA")				//0
+	parseFloat("1.2")				//1.2
+	parseFloat("3.125e7")			//31250000
+
+10.String类型的length属性,输出字符串的长度,
+	但是书上说如果字符串中包含双字节字符,那么length属性可能不会精确地返回字符串中的字符数目(不过测试下来并没有发现错误的地方)
+	-->原来它指的是说汉字之类的双字节字符应该返回2, 不过js还是很人性化的返回了1(一个字符,不管它是双字节还是单字节)
+
+11.toString()函数, 唯独null和undefined没有此函数。
+	Number的toString()函数还可以传递基数参数,默认为10进制：
+	var num=10;
+	num.toString(2);	//1010
+	num.toString(8);	//12
+	num.toString(10);	//10
+	null和undefined可以使用转型函数String()来转换,最终得到字面量。而其他的则会调用toString()方法。、
+
+12.Object类型的共通方法：hasOwnProperty(), isPrototypeOf(), propertyIsEnumerable()
+	hasOwnProperty()方法检测一个属性是否存在于实例中
+
+13.递增和递减(--, ++), 前置和后置有非常大的区别：前置将先执行递增减操作再执行其他操作，而后置则会在其他语句之后执行。
+
+14.一元加和减操作符(+,-), 都相当于调用Number函数, 不同的是-表示Number函数转换之后的负数。
+
+15.二进制操作符：
+	按位非(~):返回二进制数值的反码. 本质为求得数值的负值再减一。
+	按位与(&):按位对齐, 只要有一个为0则为0,都为1才为1.
+	按位或(|):按位对齐, 只要有一个为1则为1,都为0才为0.
+	按位异或(^):按位对齐, 相同则为0, 相异则为1.
+
+16.字符串相比, 实际比较的是两个字符串中对应位置的每个字符的字符编码值。 大写字符的字符编码全部小于小写的字符编码。
+	字符串和数值相比, 会把字符串转换为数值再相比，如果转换后的值为NaN, 任何操作数与NaN进行比较都将返回false:
+	"B"<"a";	//true
+	"b"<"c";	//false
+	"23"<"3";	//true
+	"23"<3;		//false
+	"a"<3;		//false
+	"a">=3;		//false
+	
+17.相等和不相等操作符(==, !=)中, 比较两个操作数转换到同一类型(强制转换)之后是否相等:
+	null和undefined是相等的。
+	NaN与任何值都不相等(包括NaN自身)。
+	全等和不全等操作符(===, !==)中, 比较两个操作数未经转换就是否相等。
+	推荐使用全等和不全等操作符。
+	
+-----------------------------第四章 变量、作用域和内存问题---------------------------
+	
+1.函数的命名参数, 在函数体中可以通过arguments对象来进行访问, 其中有两个注意点：
+	function add(num1, num2)
+	{
+		arguments[1]=10;	//每次都将把num2修改为10. 但是影响是单向的, 修改num2并不会影响arguments[1]的值。
+							//如果num2并未传值, 那么num2始终为undefined, 修改arguments[1]并不会影响num2的值。
+		//...其他的代码逻辑
+	}
+	
+2.垃圾收集有标记清除和引用计数两种方式,目前用的都是标记清除,而引用计数存在很多问题
+	早期的IE(<9)和Navigator(<4.0)都有这种问题.
+	Navigator从4.0开始放弃引用计数方式。
+	IE的BOM和DOM对象使用C++以COM对象的形式实现,而COM对象的垃圾回收是引用计数策略。
+	
+--------------------------------第五章 引用类型---------------------------------------
+1.Object类型：
+	var o=new Object();o.name="thyiad";o.age=23;	//Object构造函数
+	var o={};o.name="thyiad";o.age=23;				//对象字面量表示法
+	var o={name:"thyiad","age":23};					//不会调用Object构造函数(Firefox3+,早期的会)
+	访问方式可以通过:o[param]及o.param来访问
+	方括号的优势：
+	o["my name"];	//可以出现空格
+	var para="my name";
+	o[para];		//可以引用变量
+	通常,建议使用点号表示,除非必须使用变量。
+	
+2.Array类型:
+	var colors=new Array();
+	var colors=Array();
+	var colors=[];				//对象字面量表示法,同样不会调用Array构造函数(Firefox3+,早期的会)
+	var colors=new Array(30);
+	var colors=Array(30);
+	var colors=["blue", "red"];	//末尾不能有逗号("red",), 否则IE中会为colors创建3个值(第三个为undefined)
+	length属性不是只读的,修改它的值可以改变数组的值(移除指定length之后的值或增大数组的长度,新增加的值为undefined)
+	
+3.ECMAScript5中新增了Array.isArray()方法来确认这个值是不是数组。
+
+4.Array的toString()方法默认以逗号分隔,可以使用join()函数:
+	var colors=["red", "blue", "green"];
+	alert(colors.join("|"));	//数组项以'|'分隔:red|blue|green
+	
+5.Array的类似堆栈方法：
+	push();		//推入一个值到末端,返回数组在推入之后的长度
+	pop();		//移除末端项,返回值为末端项
+	unshift();	//插入一个值到起始端, 返回数组在插入之后的长度
+	shift();	//移除起始项,返回值为起始项	(IE7-有误,将返回undefined)
+	
+6.sort()方法接受一个比较函数,比较函数接收两个参数：
+		function compare(value1, value2){
+			if(value1<value2){
+				return -1;	//前面则返回负数
+			}else if(value1=value2){
+				return 0;	//相等则返回0
+			}
+			else if(value>value2){
+				return 1;	//后面则返回正数
+			}
+			
+			//如果是数值可以直接
+			return value1-value2;
+		}
+		
+7.concat(param1, param2, ...)	//连接,返回新数组						
+  slice(startIndex, endIndex)	//取出指定部分,返回新数组
+  splice(startIndex, delCount, insert1, insert2, insert3, ...)	//参数1指定位置，参数2为要删除的项数,后续的参数被插入到指定位置
+	splice(0, 2)	//删除
+	splice(0, 0, "insert1","insert2","insert3")	//插入
+	splice(0, 1, "insert1")						//替换
+
+8.indexOf(),lastIndexOf()	//IE9+
+	
+9.迭代方法,接受一个运行函数及该函数的作用域对象.运行函数接受3个参数(值,位置,数组对象本身):	//IE9+
+  iterationMethod(function(item,index,array)
+  {
+	return item > 2; 
+  });
+  有以下方法：
+  every()	//每一项都运行函数,都返回true,则返回true
+  filter()	//每一项都运行函数,返回由返回true组成的数组
+  forEach()	//每一项都运行函数,无返回值
+  map()		//每一项都运行函数,返回由函数返回值组成的数组
+  some()	//每一项都运行函数,有一个函数返回true，则返回true
+  
+10.reduce(),reduceRight(),接受一个运行函数及初始值(可选).运行函数接收4个参数(prev,cur,index,array):	//IE9+
+  默认cur从第二个开始(prev为数组的第一个值,如果接受了初始值,则cur从第一个值开始).
+  运行函数的返回值作为第一个参数自动传递给下一次运行
+  
+11.RegExp也有字面量和构造函数的声明方式(其中构造函数方式传入的声明参数需要双重转义)：
+	var expression=/ pattern /flags;					/\.at/gim
+	var expression=new RegExp(patternStr, flagsStr);	new RegExp("\\.at", "gim")
+	拥有的属性：global,ignoreCase,lastIndex,multiline,source
+	拥有的方法：exec(),test()
+	拥有的静态属性:input($_),lastMatch($&),lastParen($+),leftContext($`),multiline($*),rightContext($')
+	其中,IE和Opera未实现multiline属性，所以最好对所有的表达式是否使用多行模式进行单独设定
+	
+12.函数声明(funtion sum(){})和函数表达式(var sum=function(){})的区别:
+	前者在声明前后都可访问(解析器有一个函数声明提升的过程), 而表达式则必须在声明后才能访问。
+	
+13.arguments.callee.caller
+	参数的callee属性指向当前函数的指针
+	函数的caller属性保存调用该函数的函数的引用
+	arguments也有caller属性,但是值为undefined
+	
+14.apply(), call(), bind()
+	第一个参数都为传入作用域对象, 
+	apply的第二个参数接收arguments或Array. call需要把参数全部列举出来. bind无.
+	toString和toLocalString以及valueOf都只返回函数代码(具体返回代码根据浏览器实现有差异)
+	
+15.var number=Number("25");		//转型函数
+	var tp=typeof number;	//"number"
+	var number=new Number("25");//构造函数
+	var tp=typeof number;	//"object"
+	
+16.Number: toFixed(), toExponential()都是格式化数字,传入参数指定输出结果的小数位数.分别表示字符串表示和指数表示(e表示法1e+2).
+
+17.String: charAt(), charCodeAt(), concat() 相当于+,但是concat可以接收多个参数,
+	slice(startIndex, endIndex)		endIndex需大于startIndex, 否则返回空字符串; 参数为负数时, 总是转换为长度与负数之和。		
+	substring(startIndex, endIndex)	endIndex无需大于startIndex, 总是返回低位置到高位置之间的字符串;参数为负数时, 总是转换为0。
+	substr(startIndex, length)		返回从startIndex开始指定长度的字符串; 参数为负数时,　第一个参数转换为长度与负数之和, 第二个参数总是转换为零。
+	toLowerCase(),toLocaleLowerCase(),toUpperCase(),toLocaleUpperCase()	
+	match(), search(), replace()	
+		match效果同RegExp对象的exec,参数为正则表达式.
+		search接受字符串或正则表达式,始终从头往后查找, 返回第一个匹配项的索引.
+		replace接受字符串或正则表达式,默认只替换第一个,如果需替换所有,则需要给传入的正则表达式设定全局标志(/g).
+	localeCompare(), fromCharCode()
+		localeCompare比较在字母表中的顺序,在前面,返回负数;在后面,返回正数;相等,返回0;
+		var stringValue="yellow";
+		stringValue.localeCompare("brick");		//1
+		stringValue.localeCompare("yellow");	//0
+		stringValue.localeCompare("zoo");		//-1
+		fromCharCode同charCodeAt执行的是相反的操作。
+
+18.Global对象:
+	encodeURI(), encodeURIComponent()
+	encodeURI用于对整个URI进行编码, 本身属于URI的特殊字符并不会进行编码(比如 ： / ? #).
+	而encodeURIComponent会对任何非标准字符进行编码.
+	var uri="http://www.thyiad.com/illegal value.html#start";
+	encodeURI(uri);				//http://www.thyiad.com/illegal%20value.html#start	--> 只编码了空格
+	encodeURIComponent(uri);	//http%3A%2F%2Fwww.thyiad.com%2Fillegal%20value.html%23Start	--> 编码了所有非标准字符
+	decodeURI(), decodeURIComponent()		//相应的解码方式, encodeURI不会解码所有字符(: / ? #的编码),decodeURIComponent可以解码所有字符.
+	这4个方法用于替换ECMA-262第三版废弃的escape()和unescape()方法,URI能编码所有Unicode字符,而原来的只能正确地编码ASCII字符。
+	一定要用URI方法,摒弃escape方法。
+	
+19.Math对象:
+	min(param1, param2, ...), max()		返回一组参数中最小或最大值.
+	var values=[1,2,3,4,5,6];
+	Math.max.apply(Math, values);	//apply 第二个参数为arguments或Array. 枚举其值作为参数传入给max.
+	ceil(), floor(), round()			向上舍入,向下舍入,四舍五入.
+	Math.floor(Math.random()*可能值的总数+第一个可能的值);	//从某个整数范围内随即选择一个值
+	
+----------------------------------------------第六章 面向对象的程序设计-----------------------------------------------------
+1.数据属性:
+	[[Configurable]],[[Enumerable]],[[Writable]],[[Value]]
+	默认都为true,为了修改默认的特性,需要使用Object.defineProperty()方法:
+	var person={};
+	Object.defineProperty(person, "name", {
+		writable:false,		//设置为只读
+		value:"Nicholas"	//外界无法通过person.name="xxx"来赋值了。
+	});
+	不能重复定义该属性,会报错.
+	defineProperty()方法定义出来的属性, enumerable, writable 以及configurable的缺省值为false.
+	
+2.访问器属性:
+	[[Configurable]], [[Enumerable]], [[Get]], [[Set]]
+	此前有两个非标准方法:_defineGetter_()和_defineSetter_()
+	
+3.定义多个属性: Object.defineProperties().
+
+4.读取属性的特性: Object.getOwnPropertyDescriptor().
+	var descriptor=Object.getOwnPropertyDescriptor(person, "name");		//续上例中的person
+	descriptor.writable,	//false
+	descriptor.value		//Nicholas
+	只能用于实例属性, 原型属性的描述符必须在原型对象上调用该方法.
+	
+5.in, 对象能访问指定属性时将返回true. 而无论该属性存在于实例中还是原型中.
+		function Person(){};
+		Person.prototype.name="Nicholas";
+		var person1=new Person;
+		person1.age=29;
+		alert("name" in person1);	//true
+		alert("age" in person1);	//true
+	对于在原型中设置了enumerable=false, 而实例中又覆盖设置enumerable=true的属性来说, for-in循环能遍历出来.
+
+6.Object.keys()方法取得对象上所有可枚举的实例属性
+	Object.getOwnPropertyNames()方法取得所有实例属性, 而不管它是否可枚举
+	
+7.isPrototypeOf()方法来确定是否为实例对象的原型:
+	alert(Person.prototype.isPrototypeOf(person1));		//true
+														//参数只能为实例对象, 如果传入构造函数Person, 将返回false
+  Object.getPrototypeOf()返回对象的原型:
+    Object.getPrototypeOf(person1);		//Person.prototype
+
+8.实例属性添加一个同名属性, 将会隐藏原型中的对应属性.
+	将访问实例属性, 而不管这个属性是基本类型值还是引用类型值.
+
+9.instanceOf操作符判断的是该实例的原型链上面是否存在该类型的原型对象, 如果存在则返回true.
+	准确来说是拿实例的原型链上的__proto__属性与类型的prototype属性对比， 如有相等的则返回true.
+
+10.ECMAScript5新增Object.create()方法, 用以规范原型式继承.
+
+--------------------------------------------第七章 函数表达式-------------------------------------------------------
+1.闭包会携带包含它的函数的作用域, 因此会比其他函数占用更多的内存. 所以需慎重使用闭包.
+
+2.闭包中保存的是整个变量对象, 访问任意一个变量, 返回的将是整个变量的最后一个值.
+
+--------------------------------------第八章 window对象---------------------------------------
+1.全局变量不能通过delete删除, 直接在window对象上定义的属性可以.
+var age=29;
+window.color="red";
+delete window.age;		//false
+delete window.color;	//true
+						//IE < 9 时会出错
+
+2.窗口关系及框架
+	window.frames[index], window.frames["name"]			//获取该页面的指定框架	
+	top始终指向最外围的框架, 也就是整个浏览器窗口
+	parent
+	self
+			
+3.screenLeft, screenTop, screenX, screenY.
+	无法跨浏览器取得窗口左边和上边的精确坐标值.
+	moveTo和moveBy用来设定浏览器的位置, 都是被浏览器禁用的.
+
+4.innerWidth, innerHeight, outerWidth, outerHeight
+	outer返回浏览器窗口的尺寸(IE9+)
+	inner返回视图区的尺寸(减去边框宽度)
+	document.documentElement.clientWidth, document.documentElement.clientHeight
+	IE6标准模式下支持以上属性, 混杂模式要用body.clientWidth, body.clientHeight
+
+5.resizeTo(), resizeBy() 调整浏览器大小, 是被浏览器禁用的.
+
+6.setTimeout("alert('Hello world!')", 1000);						//传递字符串
+	setTimeout(function(){alert("Hello world!");}, 1000);			//传递函数
+	字符串可能导致性能损失, 所以不建议以字符串作为第一个参数.
+	setTimeout调用的代码都是在全局作用域中执行的, 因此函数中this的值指向window对象.
+	clearTimeout()用来取消超时计划:
+	var id=setTimeout();
+	clearTimeout(id);
+
+7.setInterval(function, time)
+	clearInterval()用来取消间歇调用:
+	var id=setInterval();
+	clearInterval(id);
+	最好不要使用间歇调用, 因为有可能虽然当前调用开始了, 但是上一个调用却还未结束.
+	
+8.window.print(); window.find();
+
+9.location既存在window中又存在document中, 指向同一个对象
+	window.location === document.location
+	
+10.设置location或location.href的值, 后台会以该值调用assign()方法, 同显示调用assign()方法的效果完全一样.
+	location.assign("http://www.baidu.com");
+	window.location="http://www.baidu.com";
+	location.href="http://www.baidu.com";
+	location.replace();	//会改变浏览器位置, 但不会在历史记录中生成新纪录.
+	location.reload(true);	//重新加载, 如果传递true则从服务器重新加载. 否则有可能从缓存中加载(自从上次请求以来并没有改变过)
+	
+11.插件检测
+	navigator.plugins[index].name.toLowerCase().indexOf(name);		//比较插件名字与欲查找的插件名是否匹配
+	IE中的插件是以COM对象的方式实现的, 而COM对象使用唯一标识符来标识, 如Flash的标识符是ShockwaveFlash.ShockwaveFlash
+	new ActiveXObject(name);										//如果不抛出错误则已安装该插件
+	
+12.注册处理程序
+	navigator.registerContengHandler("application/rss+xml", "http://www.somereader.com?feed=%s", "some reader");
+	①要处理的MIME类型, ②可以处理该MIME类型的页面的URL, ③应用程序的名称, %s则表示RSS源URL
+	navigator.registerProtocolHandler("mailto", "http://www.somemailclient.com?cmd=&s", "some mail client");
+
+13.screen
+	screen.availWidth, screen.availHeight
+	
+14.history
+	history.go(-1), history.go(1), history.go(2)		//history的go方法用来跳转, 正负数表示向前向后跳转 指定的整数个页面.
+	history.back();										//等同于history.go(-1);
+	hisotry.forward();									//等同于history.go(1);	
+	history.length;										//如果length === 0, 那么就可以确定是否该页面时用户打开窗口后的第一个页面
+	
+--------------------------------------------------第九章 客户端检测-------------------------------------------------------------------------
+1.能力检测：检测浏览器是否支持某个特性.
+	//普通的检测指定的属性或方法是否存在
+	function isSortable(object){
+		return !!object.sort;
+	}
+	//更妥当的应该是检测typeof是否为函数
+	function isSortable(object){
+		return typeof object.sort === "function";
+	}
+	//在IE8及之前版本中, 仅IE支持的ActiveX对象中, typeof的行为也不标准
+	//所以更妥当的是使用下面这个函数:(同时检测function, object 以及unknown)
+	function isHostMethod(object, property){
+		var t=typeof object[property];
+		return t=='function' ||
+				(!!(t=='object' && object[property])) ||	//书上的, 个人感觉不需要判断 && object[property], 都已经 =='object'了就肯定会存在了呀！不存在会是undefined
+				t=='unknown'
+	}
+	
+2.怪癖检测：识别浏览器的特殊行为(一般来说, 个别浏览器的特定版本的bug).
+	IE8及更早版本, 如果定义的属性与标记为[[DontEnum]]的某个原型同名, 那么该实例属性不会出现在for-in循环中.
+	Safari 3以前版本, 会枚举被隐藏的属性.
+
+3.用户代理检测:navigator.userAgent
+	尽量不要使用这一种, 优先级排在前两者之后.
+	用户代理字符串存在电子欺骗.
+	
+---------------------------------------------------------------第十章 DOM---------------------------------------------------------------------
+1.Node类型
+	DOM1级中定义了一个Node接口, 该接口将由DOM中的所有节点类型实现. 
+	在js中为Node类型. 除了IE, 其他浏览器中都能访问到该类型.
+	//每个节点中都有nodeType属性, 表明节点类型
+	nodeType属性的值:							//Node类型中定义了12个数值常量来对应值
+	Node.ELEMENT_NODE=1;
+	Node.ATTTRIBUTE_NODE=2;
+	Node.TEXT_NODE=3;
+	Node.CDATA_SELECTION_NODE=4;
+	Node.ENTITY_REFERENCE_NODE=5;
+	Node.ENTITY_NODE=6;
+	Node.PROCESSING_INSTRUCTION_NODE=7;
+	Node.COMMENT_NODE=8;
+	Node.DOCUMENT_NODE=9;
+	Node.DOCUMENT_TYPE_NODE=10;
+	Node.DOCUMENT_FRAGMENT_NODE=11;
+	Node.NOTATION_NODE=12;
+	//因为在IE9及之前版本中不能访问Node类型, 所以为了兼容性, 还是直接比较值的好, 比如：
+	var t = document.nodeType;					//9
+	
+2.childNodes属性：
+	节点的childNodes属性保存的是一个NodeList对象,
+	NodeList也可以像使用Array那样来访问其中的值(someNode.childNodes[0]), 还可以通过item方法(someNode.childNodes.item(0)),
+	重要的是这个NodeList是实时更新的, 是基于DOM结构动态执行查询的结果.
+	
+3.其他反应关系的属性：
+	parentNode;
+	firstChild;
+	lastChild;
+	previousSibling;
+	nextSibling;
+  操作节点方法：
+	appendChild();							//同一个节点只能出现在文档的一个地点,	下面的作用为挪移第一个子节点至最后一个子节点.
+												var returnNode=someNode.appendChild(someNode.firstNode);
+	insertBefore(newNode, refNode);			//相当于取代refNode的位置, refNode及后续的节点往后移, refNode为null则等同于appendChild(从后插入).
+	replaceChild(newNode, oldNode);
+	cloneNode(isDeep);						//深复制复制节点及其整个子节点树, 浅复制复制节点本身
+	
+4.document.documentElement					//指向<html>元素
+  document.firstChild						//如果只包含<html>元素, 则此3个会相等
+  document.childNodes[0]
+  document.body								//指向<body>元素
+  document.doctype							//指向<!DOCTYPE>, DOM中的类型为DocumentType
+  IE8及以前版本会把<!DOCTYPE>解析成一个注释, document.doctype的值始终为null.
+  IE9及Firefox会解析<!DOCTYPE>成一个DocumentType, 并且作为文档的第一个子节点.
+  Safari, Opera和Chrome会解析<!DOCTYPE>成一个DocumentType, 但是不作为文档的子节点.
+  
+5.document.getElementByTagName()									//返回的是一个动态集合
+	该集合为HTMLCollection, 可以通过方括号和item()语法来访问：
+	<img src="..." name="myImage">
+	var images=document.getElementByTagName("img");
+	images[0]														//在后台, 如果是数字则调用item, 如果是字符串则调用namedItem
+	images.item(0)
+	images.namedItem("myImage");									//如果元素有设定name属性, 如果有多个元素, 则只会取得第一项
+  
+6.DOM一致性检测
+  可以检测的类型: Core, XML, HTML, Views, StyleSheets, CSS, CSS2, Events, UIEvents, MouseEvents, MutationEvents, HTMLEvents, Range, Traversal, LS, LS-Async, Validation
+	document.implementation.hasFeature('name','version');
+  缺点在于，这个方法由实现者控制。例如, Safari 2.x及更早版本会在没有完全实现某些DOM功能的情况下也返回true.
+  
+7.在文档加载结束后(onload方法中)再调用document.write(), 那么输出的内容将会重写整个页面.
+
+8.Element类型.
+	tagName和nodeName都返回要素的标签名, 且值为大写.(xml及xhtml中会与源码保持一致)
+	
+9.HTML元素(继承Element类型, 种种HTML元素div, body, frame).
+	常用特性:id, title, className
+	操作特性:getAttribute(), setAttribute(), removeAttribute()
+	特性的名称不区分大小写, ID和id代表的都是同一个特性. 
+	HTML5规范, 自定义特性应该加上data-前缀进行标识.
+	<div id='div' data-myattr='myattr' attri='attri'></div>	//访问时通过div.dataset['myattr']或div.dataset.myattr, 但是在IE中不行(包括IE10). firefox6+, chrome支持
+	getAttribute()返回的是字符串, 通过属性访问返回的是对象.
+	div.attri;									//在IE9及更高版本无法访问(这才是对的..标签中设定的自定义属性在脚本中不可访问)
+	div.att='att'; div.att;						//在IE中一直可以..(这是对的, 脚本中设定的自定义属性在脚本中可访问)
+   
+10.atrributes属性.
+	attributes属性保存的是一个NamedNodeMap,与NodeList类似, 也是一个动态集合
+	NamedNodeMap对象所拥有的方法:
+		getNamedItem(name);
+		removeNamedItem(name);
+		setNamedItem(name);
+		item(pos);
+	
+11.getElementsByTagName()方法.
+	元素也支持该方法, 指明在该元素节点下面搜索指定标签的子元素. 
+	包括各子节点的子节点, 会全部经过遍历.
+	
+12.Text类型.
+	nodeType=3
+	nodeName="#text"
+	nodeValue 和 data均为节点所包含的文本	//设定文本, 传递的参数文本会被html(或xml, 取决于文档类型)编码, 比如 "Some <strong>other</strong> message"
+	parentNode是一个Element
+	length = nodeValue.length = data.length
+	不支持子节点
+	操作文本的方法:
+	appendData(), deleteData(), insertData(), replaceData(), splitText(), substringData()
+	document.createTextNode()			//传递的文本参数也将会被html编码
+	两个相邻的同胞文本节点, 会连起来显示, 中间不会有空格. 
+	normalize() 合并多个相邻的同胞文本节点(父节点调用)
+	浏览器解析文档时永远不会创建相邻的文本节点. 这种情况只会出现在dom操作中.
+	
+13.Comment类型.
+	nodeType=8
+	nodeName="#comment"
+	同Text类型相似, 可以通过nodeValue或data属性来取得注释的内容. 拥有除splitText()之外的所有字符串操作方法.
+	
+14.CDATASection类型.
+	nodeType=4;
+	nodeName="#cdata-section";
+	nodeValue的值是CDATA区域中的内容;
+	CDATASection类型只针对基于XML的文档, 表示的是CDATA区域, 因此大多数浏览器会把CDATA区域错误地解析为Comment或Element.
+	
+15.DocumentType类型.
+	仅name属性是有用的
+	nodeType=10
+	nodeName="doctype"
+	
+16.DocumentFragment类型
+	nodeType=11;
+	nodeName="#document-fragment";
+	用来当做仓库用, 避免浏览器反复渲染:
+	var fragment=document.createDocumentFragment();
+	fragment.appenChild(xxx);
+	fragment.appenChild(xxx);
+	Element.addpenChild(fragment);
+	
+17.Attr类型
+	nodeType=11;
+	html元素的属性, 很少直接引用这个.常用的是getAttribute(), setAttribute(), removeAttribute():
+	var attr=document.createAttribute("align");
+	attr.value="left";
+	element.setAttributeNode(attr);
+	element.attributes["align"].value;
+	element.getAttributeNode("align").value;
+	element.getAttribute("align");
+  
+18.NodeList, NamedNodeMap及HTMLCollection:
+	这3个集合都是动态的, 始终保存着文档的最新,最准备的信息. 
+	他们的每一次访问都会对DOM文档进行一次实时的查询,
+	所以, 应该尽量减少对他们的访问次数. 
+	如果频繁的访问又不需要取得最新信息, 那么可以考虑将他们的值缓存起来.
+  
+---------------------------------------------------------------第十一章 DOM扩展---------------------------------------------------------------------  
+1.querySelector(), querySelectrorAll(), matchesSelector()
+	前两个document, element都有该方法, match只适用于element.
+
+2.子元素操作(跟节点操作对应, 一个返回Node, 一个返回Element):
+	childElementCount,
+	firstElementChild,
+	lastElementChild,
+	previousElementSibling,
+	nextElementSibling,
+	
+3.类操作:
+	getElementsByClassName(),
+	classList属性:
+	add(value);
+	contains(value),
+	remove(value),
+	toggle(value),
+	
+4.document.activeElement	//默认时, 文档加载期间为null, 刚加载完成时为body
+  document.hasFocus()
+	
+5.document.readyState	//两个可能的值: loading, omplete
+  document.compatMode	//用来检测渲染页面的模式是标准还是混杂: CSS1Compat, BackCompat
+ 
+6.document.head			//引用文档的<head>元素, 只有Chrome和Safari5支持, 不过测试下来IE9+也是支持的, Firefox23.0.1也支持
+	可以结合这个属性以及另一种后备办法一起使用:
+	var head = document.head || document.getElementByTagName("head")[0];
+	
+7.document.charset			//字符集属性
+  document.defaultCharset	//根据默认浏览器及操作系统的设置, 当前文档默认的字符集应该是什么
+  
+8.自定义数据属性：
+	以data-前缀, 访问和设值通过dataset.name或dataset[name]:
+	<div id='div' data-appid='appid'> </div>
+	var div=document.getElementById('div');
+	var appid = div.dataset.appid;
+	appid=div.dataset['appid'];
+	命名具有驼峰化：
+	<div id='div' data-appid-newid='newid'> </div>
+	访问时为div.dataset.appidNewid, 设值和添值尽皆如此.
+	目前仅Firefox6+和Chrome支持. IE10都不支持.
+	
+9.innerHTML				//返回该元素的所有子节点对应的HTML标记
+  outerHTML				//返回该元素及所有子节点对应的HTML标记
+  insertAdjacentHTML	//在指定位置插入HTML文本
+	element.insertAdjacentHTML("beforebegin", "<p>Hello world!</p>");	//在该元素之前插入一个元素(同辈相邻)
+	element.insertAdjacentHTML("afterbegin", "<p>Hello world!</p>");	//在该元素的开始标记之后插入一个元素(子)
+	element.insertAdjacentHTML("beforeend", "<p>Hello world!</p>");		//在该元素结束标记之前插入一个元素(子)
+	element.insertAdjacentHTML("afterend", "<p>Hello world!</p>");		//在该元素之后插入一个元素(同辈相邻)
+  内存与性能：在插入大量HTML标记时使用这些方法比多次调用DOM操作(先创建节点再指定关系)的效率要高的多. 因为在设置innerHTML或outerHTML时, 就会创建一个HTML解析器, 这个解析器是在
+  浏览器级别的代码(通常是C++)基础上运行的. 同时创建和销毁HTML解析器也会带来性能损失, 所以设置innerHTML和outerHTML属性的次数需要被控制在合理的范围内, 不要过多调用.
+	
+10.scrollIntoView()		//如果传入true或空那么调用元素的顶部会与视口顶部平齐, 如果传入false那么调用元素的底部会与视口底部平齐
+
+11.专有扩展
+   document.documentMode	IE的专有扩展, 指明IE在使用哪种文档模型, 可能值为: 5 7 8 9 10
+   强制浏览器使用哪种模式渲染页面, 可以使用X-UA-Compatible或等价的<meta>标签:
+   <meta http-equiv="X-UA-Compatible" content="IE=IEVersion">
+   IEVersion可以有以下值:Edge(始终最新), EmulateIE10(如果有文档类型声明, 就以10标准模式渲染, 否则将文档模式设置为IE5), EmulateIE9, EmulateIE8, EmulateIE7, 9, 8, 7, 5
+   
+12.children属性
+	为HTMLCollection的实例, 全部为元素.
+	
+13.contains属性
+	检测是否包含某个节点
+	DOM3 的 compareDocumentPosition()也能确定节点间的关系, IE需要9+
+	返回一个表示该关系的位掩码, 相对于参考节点(调用该方法的节点):1(无关), 2(前), 4(后), 8(祖先, 不只是父), 16(后代, 不只是子):
+	var result = document.documentElement.compareDocumentPosition(document.body);
+	alert(!!(result & 16));
+	
+14.innerText	//将子节点全部删掉, 用一个文本节点替换
+	Firefox不支持innerText, 但是支持作用类似的textContent属性(DOM3规定的一个属性).
+	关于textContent属性, IE需要9+
+	innerText会忽略行内的样式和脚本, 但是textContent会将样式, 脚本等所有内容全部返回.
+   outerText	//将该元素删掉, 用一个文本节点替换
+   
+15.scrollIntoViewIfNeeded(alignCenter);		//该元素在视口中不可见的情况下, 才滚动浏览器窗口或容器元素
+   scrollByLines(lineCount);
+   scrollByPages(pageCount);
+   scrollIntoView()和scrollIntoViewIfNeeded()的作用对象是元素的容器, 而scrollByLines()和scrollByPages()影响的则是元素自身.
+   //这3个方法都只有Safari和Chrome支持, 但是, scrollByLines和scrollByPages始终没测试出来是个什么效果
+	
+---------------------------------------------------------------第十二章 DOM2和DOM3---------------------------------------------------------------------   
+1.Node类型对XML的支持：
+	<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml">
+		<xhtml:body xhtml:class="home">		//有时为了避免不同语言间的冲突, 也需要使用命名空间来限定特性
+		</xhtml:body>
+	</xhtml:html>
+  DOM2：
+	node.localName;		//节点名称(不含命名空间前缀)
+	node.namespaceURI;	//命名空间URI(未指定时为null)
+	node.prefix;		//命名空间前缀(未指定时为null)
+  DOM3:
+	node.isDefaultNamespace(namespaceURI);	//是否是当前节点的默认命名空间
+	node.lookupNamespaceURI(prefix);		//返回给定prefix的命名空间
+	node.lookupPrefix(namespaeURI);			//返回给定namespaceURI的前缀
+	isDefaultNamespace需要是父节点中定义了该命名空间则该节点的命名空间继承默认为父节点的命名空间
+	lookup必须要是该节点中定义的才能搜索的到结果, 例如前面就必须是html节点, 才能搜索到, body节点就无法搜索到任何结果
+  
+2.Document类型的变化:
+	document.createElementNS(namespaceURI, tagName);			//创建指定tag, 指定命名空间的新元素
+	document.createAttributeNS(namespaceURI, attributeName);	//创建指定name, 指定命名空间的新元素
+	document.getElementsByTagNameNS(namespaceURI, tagName);		//创建指定tag, 指定命名空间的新元素
+	
+3.Element类型的变化:
+	getAttributeNS(namespaceURI, localName)
+	getAttributeNodeNS(namespaceURI, localName)
+	getElementsByTagNameNS(namespaceURI, localName)
+	hasAttributeNS(namespaceURI, lcoalName)
+	removeAttributeNS(namespaceURI, localName)
+	setAttributeNS(namespaceURI, qualifiedName, value)
+	setAttributeNode(attNode)			//设置属于命名空间namespaceURI的特性节点
+	
+4.NamedNodeMap类型的变化:
+	getNamedItemNS(namespaceURI, localName)
+	removeNamedItemNS(namespaceURI, localName)
+	setNamedItemNS(node)						//添加node, 这个node已经事先制定了命名空间信息
+	
+5.DocumentType:
+	DOM2中新增了3个属性: publicId, systemId, internalSubset. 不过这3个极少用到
+	
+6.Document.importNode:
+	var newNode = document.importNode(oldNode, deep);		//从另一个文档中导入节点到当前文档, deep指示是否复制子节点
+  document.defaultView;			//指向拥有给定文档的窗口或框架, IE中有个等价的属性parentWindow(opera也支持该属性)
+
+7.document.implementation.createDocumentType(docTypeName, publicId, systemId);
+  document.implementation.createDocument(namespaceURI, docTagName, docType);	//其中docType是createDocumentType创建出来的新的文档类型
+  document.implementation.ceateHTMLDocument(title);								//返回一个新的完整的HTML文档, 包括html, head, title, body
+  
+8.Node类型的变化:
+	isSupported("featureName", "version");			//同document.implementation.hasFeature()类似, 检测当前节点是否具有指定能力:
+	var support = document.body.isSupported("HTML", "2.0");		//是否支持DOM2级的HTML特性(由于取决于浏览器的实现, 也许并不一致, 所以最好使用能力检测)
+	DOM3比较节点:
+	isSameNode(), isEqualNode()						//是否相同(同一个对象), 是否相等(类型相同, 属性相等, 子节点相等, 等等)
+	DOM3添加额外数据:									
+	setUserData("key", "value", function):			//为指定key添加指定value, 传入的函数可以处理复制-1, 导入-2, 删除-3, 重命名-4(不过, 貌似还没有一个浏览器支持该方法啊)
+	document.body.setUserData("name", "Thyiad", function(operation, key, value, src, dest){});
+
+9.框架的变化:
+	HTMLFrameElement和HTMLIFrameElement
+	DOM2:
+	frame.contentDocument;	//以前无法直接通过元素取得这个文档对象, 只能通过frames集合, IE8及之前版本不支持contentDocument, 而ff和chrome不支持document.frames, 都支持window.frames
+	contentWindow.document=contentDocument	//所有浏览器都支持contentWindow属性
+	
+10.元素的样式(ele.style - CSSStyleDeclaration):
+	标准模式下, 度量值必须制定一个度量单位, 例:
+	myDiv.style.width="20";		//在混杂模式下可行(默认设定为20px), 标准模式下会被忽略(因为没有指定单位)
+	
+	cssText										//style特性中的css代码
+	cssText										//style特性中的css代码
+	length										//元素应用的css属性的数量
+	parentRule									//样式所属的CSSRule对象, 
+	getPropertyCSSValue(propertyName)			//返回指定属性的CSSValue对象
+	getPropertyPriority(propertyName)			//如果给定属性设置了!important, 则返回"important"; 否则, 返回空字符串
+	getPropertyValue(propertyName)				//返回给定属性的字符串值
+	item(index)									//返回给定位置的CSS属性的名称
+	removeProperty(propertyName)				//从样式中删除指定属性
+	setProperty(propertyName, value, priority)	//给指定属性设置值, 以及优先级(important或空字符串)
+	
+	document.defaultView.getComputedStyle(element, falseElement)
+	
+11.操作样式表(document.cssStyleSheets - CSSStyleSheet):
+	disabled									//样式表是否被禁用
+	href										//href属性, 样式表的地址
+	media										//支持的媒体类型集合, IE中为media特性值
+	ownerNode									//对应的样式表节点, IE不支持
+	parentStyleSheet							//如果该样式表是通过@import导入的, 那么这个属性指向导入它的样式表的指针
+	title										//title属性
+	type										//type属性, 样式表类型的字符串, css而言是type/css
+	cssRules									//样式表中包含的样式规则的集合. IE对应的为rules
+	ownerRule									//如果是通过@import导入的, 那么指向导入的规则
+	deleteRule									//删除规则, IE为removeRule
+	insertRule									//插入规则. IE为addRule, IE的addRule上限是添加4095次
+
+12.CSS规则(CSSRule)
+	cssText(只读, style.cssText可写), parentRule(IE不支持), parentStyleSheet(IE不支持), selectorText, style, type(规则类型, 样式规则为1, IE不支持)
+	
+13.元素大小
+	偏移量: 
+		offsetParent		//包含元素, 也就是最近的具有大小的父元素 
+		offsetTop			//当前元素的上外边框与offsetParent的上内边框之间的距离
+		offsetLeft			//当前元素的左外边框同offsetParent的左内边框之间的距离
+		offsetHeight		//当前元素的内容区高度(height样式)+元素的上下内边距+横向滚动条的高度+当前元素上下边框宽度
+		offsetWidth			//当前元素的内容区宽度(widht样式)+纵向滚动条的宽度+当前元素的左右边框宽度
+	客户区大小: 			始终为视口大小				
+		clientHeight 		//当前元素的内容区高度(height样式)+元素上下内边距
+		clientWidth			//当前元素的内容区宽度(width样式)+元素的左右内边距
+	滚动大小:			chrome为文档内容大小, ff为视口的尺寸,但是最小值为文档内容大小, IE8-同ff
+		scrollHeight		//当前元素的内容区高度(height样式)+元素的上下内边距
+		scrollWidth			//当前元素的内容区宽度(width样式)+元素的左右内边距
+		scrollLeft			//当前元素的左侧不可见内容的像素宽度
+		scrollTop			//当前元素的上侧不可见内容的像素高度
+		
+14.确定元素大小(getBoundingClientRect)
+	每个元素都有一个getBoundingClientRect()方法, 该方法返回一个矩形对象, left, top, right, bottom分别对应相对于视口的位置.
+	还有width, height, 共6个属性, right=left+width, bottom=top+height.
+	IE8及之前版本认为起始左上角坐标为(2,2). 正常为(0,0).
+
+15.NodeIterator	
+	构造方法: document.createNodeIterator(root, whatToShow, filter, entityRefExps);	//搜索起点的节点, 访问哪些节点, 过滤器, 是否扩展实体引用(该参数在html中无效)
+	whatToShow的类型:
+	NodeFilter.SHOW_ALL				//显示所有
+	NodeFilter.SHOW_ELEMENT			//显示元素节点
+	NodeFilter.SHOW_TEXT			//显示文本节点
+	NodeFilter.SHOW_COMMENT			//显示注释节点
+	NodeFilter.SHOW_DOCUMENT		//显示文档节点
+	NodeFilter.SHOW_DOCUMENT_TYPE	//显示文档类型节点
+	其他的还有Attribute, entity等属性, 但是对html页面没有用
+	filter可以是一个自定义的NodeFilter对象或者功能类似节点过滤器的函数：
+	var filter={	
+		// 自定义的对象只有一个acceptNode方法, 返回应该访问还是拒绝的标志
+		// FILTER_ACCEPT代表访问该节点, FILLTER_SKIP代表跳过该节点, FILTER_REJECT代表跳过该节点及该节点的子节点
+		acceptNode: function(node){			
+			return node.tagName.toLowerCase() == "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILLTER_SKIP;
+		}
+	}
+	var filter= function(node){
+		// 或者仅仅是个函数, 返回应该访问还是拒绝的标志
+		return node.tagName.toLowerCase() == "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILLTER_SKIP;
+	}
+	遍历方法: nextNode(), previousNode()
+	
+16.TreeWalker
+	构造方法: document.createTreeWalker(root, whatToShow, filter, entityRefExps)	//与createNodeIterator的参数相同
+	遍历方法: parentNode(), firstChild(), lastChild(), nextSibling(), previousSibling()
+
+17.Range
+	构造方法: document.createRange()
+	属性和方法：
+		startContainer				//起始节点的父节点
+		startOffset					//起始节点在父节点中的偏移量, (也就是前面有多少个子节点就是多少偏移量, 等于索引值), 如果父节点是文本节点, 那么偏移量就是跳过的字符数
+		endContainer				//终止节点的父节点
+		endOffset					//终止节点在父节点中的偏移量, (也就是包括终止节点在内前面有多少个子节点, 等于索引值+1)
+		commonAncestorContainer		//起始节点和终止节点的共同父节点, 即既包括起始节点又包括终止节点的第一个父节点
+		
+		selectNode(node);			//选择指定节点, (包括子节点)
+		selectNodeContents(node);	//选择指定节点下的子节点
+		
+		setStartBefore(node)		//
+		setStartAfter(node)
+		setEndBefore(node)
+		setEndAfter(node)
+		
+		setStart(node, offset)		// node为起始节点的父节点, offset为起始节点在父节点中的偏移量(借此设定起始节点)
+		setEnd(node, offset)		// node为终止节点的父节点, offset为终止节点在父节点中的偏移量(借此设定终止节点)
+	
+		deleteContents();			//删除范围内的内容
+		extractContents();			//移除范围内的内容, 返回值是一个文档片段, 可以插入到文档中的其他地方
+		cloneContents();			//克隆范围内的内容, 返回值也是一个文档片段
+		
+		insertNode(node);			//向范围的开始处插入一个节点
+		surroundContents(node);		//提取范围的内容插入到指定节点中, 并且在范围的原始位置处插入该节点
+		
+		collapsed(isStart);			//折叠范围, 参数指示是否折叠到起始处(其实就是范围内什么都没有, 那么这个范围就是折叠的)
+		collapsed;					//该属性指示是否是折叠的
+		
+		compareBoundaryPoints(type,range);	//比较范围, 参数分别为比较方式和范围, 返回值分别为 -1(小于), 0(等于), 1(大于)
+		方式的参数有以下几种:
+			Range.START_TO_START(0);		//比较两个范围的起点
+			Range.START_TO_END(1);			//比较第一个范围的起点和第二个范围的终点
+			Range.END_TO_END(2);			//比较两个范围的终点
+			Range.END_TO_START(3）；			//比较第一个范围的终点和第二个范围的起点
+			
+		cloneRange();
+		
+		range.detach();	//与文档分离
+		range=null;		//解除引用(分离然后解除引用是推荐的方式, 从而让垃圾回收机制回收其内存)
+		
+18.textrange(IE8及更早版本中的范围)
+	构造方法: document.body.createTextRange();	//body, button, input, textArea都可以调用createTextRange()方法来创建文本范围
+	属性及方法:
+		findText(text, direction);			//参数分别为要查找的文本和查找的方向(负数表示从当前位置往回搜索, 正数则表示向前搜索), 返回值为一个bool值,指示是否查找成功, 如果找到了那么范围的文档内容就是该文本.
+		moveToElementText(node);			//选中指定元素的所有文本, 包括html标签(当然了, 不含该指定节点的html标签)
+		
+		move(unit, num);					//折叠当前范围(折叠到起点), 然后将范围移动指定的单位数量
+		moveStart(unit, num);				//将起点移动指定的单位数量
+		moveEnd(unit, num);					//将重点移动指定的单位数量
+		expand(unit);						//将范围规范化, 将范围内属于部分选中的文本全部选中, 第二个参数将被忽略(例如expand("word"), 将整个单词包含在范围内)
+		移动单位有以下值:
+			"character"						//逐字符移动
+			"word"							//逐单词移动
+			"sentence"						//逐句子(句号, 问号, 叹号结尾的字符)移动
+			"textedit"						//移动到当前范围选区的开始或结束位置(与该文本范围属于哪个要素创建的有关, 也就是说如果是body创建的, 那么就是整个body的范围内.)
+											  移动的目标位置将依据第二个参数(负数则移动至选区开始处, 0不动, 正数则移动至结尾处),例如: textrange.moveEnd('textedit',1);
+								  
+		parentElement();					//同DOM的commonAncestorContainer属性类似.(同时包含起始节点和终止节点的父节点)
+		htmlText;							//该范围的全部内容, 包括html和文本.(只读)
+		text;								//范围内的内容文本.(可设置)
+		pasteHTML();						//范围内的内容将被替换成指定的HTML.(倘若范围内包含HTML代码, 不应该使用这种方式, 范围内原本的HTML可能是格式不正确的HTML, 将会产生错误)
+		
+		collapse(isStart);					//折叠范围, 参数指示折叠到起点还是终点.(true为起点, false为终点)
+		boundingWidth;						//范围的宽度.(以像素为单位)
+		
+		compareEndPoints(type, range);		//范围比较, 同DOM的compareBoundaryPoints()方法类似
+		方式的值有以下几种:
+			"StartToStart"
+			"StartToEnd"
+			"EndToEnd"
+			"EndToStart"
+		isEqual(range);						//判断两个范围是否相等
+		inRange(range);						//判断指定范围是否在当前范围内
+		
+		duplicate();						//克隆范围, 返回类型是范围
+		
+--------------------------------------------------------------------------第十三章 事件---------------------------------------------------------------------------------------------
+1.事件流
+	浏览器发展之初, IE设定的是事件冒泡, Netscape设定的是事件捕获
+	事件捕获为由外至里, 事件冒泡为由里至外
+	DOM事件流则规定了三个阶段: 事件捕获, 处于目标和事件冒泡
+
+2.事件处理程序
+	html事件处理程序: 直接在html页面中添加代码: onclick="alert('clicked')"
+	DOM0级事件处理程序: 代码中添加: btn.onclick=function(){alert(this.id)};
+	DOM2级事件处理程序: btn.addEventListener("click", function(){alert(this.id)}, false);	//最后一个参数指示是否是在捕获阶段调用事件处理程序, false则在冒泡阶段调用
+	*如果是处于目标阶段, 那么为该目标添加的事件不区分捕获与冒泡, 直接按添加顺序依次执行
+	*一般都是添加到冒泡阶段, 以最大限度地兼容各浏览器
+	IE8及更早只支持事件冒泡, 实现了这两个方法attachEvent()和detachEvent()
+	*IE的attachEvent方法下, 事件处理程序会在全局作用域中运行, 而且需要在事件名称前面加上on：
+	*attachEvent("onclick", function(){alert("clicked")});
+	
+3.事件对象	
+	DOM中的事件对象：
+	bubbles						是否冒泡
+	cancelable					是否可以取消事件的默认行为
+	currentTarget				当前正在处理事件的那个要素
+	defaultPrevented			是否已经取消了事件的默认行为
+	detail						与事件相关的细节信息(int)
+	eventPhase					事件处理程序的阶段： 1为捕获阶段 2为处于目标阶段 3为冒泡阶段
+	preventDefault()			取消事件的默认行为
+	stopImmediatePropagation()	取消事件的进一步捕获或冒泡, 同时阻止任何事件处理程序被调用 
+	stopPropagation()			取消事件的进一步捕获或冒泡, 如果bubbles为true, 则可以使用这个方法
+	target						事件的目标元素
+	trusted						为true表示是由浏览器生成的, 为false表示是开发人员自己生成的
+	type						事件的类型
+	view						与事件关联的视图, 等同于发生事件的window对象
+	
+	ie中的事件对象：
+	cancelBubble				设置为true就可以取消事件冒泡, 等同于DOM中的stopPropagation()
+	returnValue					设置为false就可以取消事件的默认行为, 等同于DOM中的preventDefault()
+	srcElement					事件的目标, 等同于DOM中的target
+	type						事件的类型
+	
+4.事件类型	
+	UI事件, 焦点事件, 鼠标事件, 滚轮事件, 键盘事件, 文本事件, 合成事件变动事件
+	UI事件： load, unload, abort, error, select, resize, scroll
+	
+	焦点事件: blur(不冒泡), DOMFocusIn(冒泡), DOMFocusOut(冒泡), focus(不冒泡), focusin(冒泡), focusout(冒泡)
+	// DOM3已把DOMFocusIn和DOMFocusOut废弃, IE与Opera, IE宣告胜利
+	focusout->focusin->blur->DOMFocusOut->focus->DOMFocusIn
+	
+	鼠标与滚轮事件:click, dblclick, mousedown, mouseenter, mouseleave, mousemove, mouseout, mouseover, mouseup	//只有mouseenter和mouseleave不冒泡
+	鼠标位置: clientX, clientY, pageX, pageY, screenX, screenY
+	修改键: shiftKey, ctrlKey, altKey, metaKey
+	mouseout和mouseover事件还有一个relatedTarget属性
+	button属性: 0表示中间按钮, 1表示左边按钮, 2表示右边按钮
+	IE8及之前版本有0-7八个值,  还有altLeft, ctrlLeft, offsetX, offsetY, shiftLeft
+	mousewheel: IE: 下滚为-120的倍数, 上滚为120的倍数
+	DOMMouseScroll:	FireFox专有:下滚为3的倍数, 上滚为-3的倍数 
+	
+	键盘与文本事件：keydown, keypress, keyup, textInput
+	keydown和keyup的keyCode， keypress的charCode
+	
+	复合事件： compositionstart, compositionupdate, compositionend
+	
+	变动事件: DOMSubtreeModified, DOMNodeInserted, DOMNodeRemoved, DOMNodeInsertedIntoDocument, DOMNodeRemovedFromDocument, DOMAttrModified, DOMCharcterDataModified, 
+	有很多在DOM3已被废弃
+	removeChild()和replaceChild()对应触发顺序: DOMNodeRemoved, DOMNodeRemovedFromDocument
+	appendChild(), replaceChild()和insertBefore()对应触发顺序: DOMNodeInserted, DOMNodeInsertedIntoDocument, DOMSubtreeModified
+	
+	HTML5事件: contextmenu, beforeunload, DOMContentLoaded, readystatechange, pageshow, pagehide(Firefox和Opera的往返缓存特性), hashchange
+	
+	设备事件: orientationchange, MozOrientation, deviceorientation, devicemotion
+	触摸与手势事件: touchstart, touchmove, touchend, touchcancel  事件拥有属性:touches 
+	
+	性能: 事件处理程序数量过多(可以使用事件委托, 多个要素的事件处理程序指定为同一个), 删除要素前先移除事件处理程序, 卸载页面前先移除事件处理程序
+		后两种情况(删除元素或卸载页面)下, 在有的浏览器并不会销毁元素的事件处理程序, 尤其是IE, 导致内存占用积多
+	
+	模拟事件:
+		DOM: createEvent(), 参数可以为	UIEvents, MouseEvents, MutationEvents, HTMLEvents， KeyboardEvent
+		鼠标: createEvent, initMouseEvent, dispatchEvent,
+		键盘, createEvent, initKeyboardEvent, dispatchEvent,
+		Firefox中： createEvent("KeyEvents"), initKeyEvent, dispatchEvent
+	自定义事件: initCustomEvent
+	IE模拟事件: createEventObject(), fireEvent("onclick", event);
+			
+	
+	
+	
+	
+	
+	
+	

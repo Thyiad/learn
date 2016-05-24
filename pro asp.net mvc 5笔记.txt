@@ -1,0 +1,246 @@
+1.Ninject条件绑定方法
+When(predicate)
+WhenClassHas<T>()
+WhenInj ectedInto<T>()
+例：
+	kernel.Bind<IDiscountHelper>().To<FlexibleDiscountHelper>()
+		.WhenInj ectedInto<LinqValueCalculator>();
+		
+2.Ninject对象生命周期
+InTransientScope()	//默认值, 短暂的周期, 每次依赖都创建一个新的
+InSingletonScope()
+ToConstant(object)
+InThreadScope()
+InRequestScope()
+
+3.Moq
+	动态实现接口
+	
+4.EntityFramework 详情：
+	http://msdn.microsoft.com/data/ef
+	
+5.创建链接的两个方法：
+	@Html.ActionLink
+	@Html.RouteLink
+	
+6.创建表单并添加隐藏字段，随Form提交至后台
+	Html.BeginForm	// BeginForm可以指定要提交到的路径：BeginForm("action","controller");
+					// 否则将默认提交到当前控制器的当前方法
+	@Html.HiddenFor
+	@Html.Hidden	// 经常Hidden一个当前地址，传递到后台处理完后再跳转回该页面，也就是Redirect(returnUrl)
+	
+7.ModelBinder
+	·实现IModelBinder接口
+	·在Global.asax中的Application_Start方法中添加Binder(ModelBinders.Binders.Add)
+	
+8.HiddenFor 如果用model.就只使用属性名，否则会使用全名称做参数名
+	@Html.HiddenFor(x=>line.Product.ProductID)	// 参数名为 line.Product.ProductID
+	
+9.遍历Model的属性
+	ViewData.ModelMedadata.Properties
+	ModelMetadata常用属性：PropertyName, DisplayName
+	
+10.ModelState
+	ModelState.IsValid
+	ModelState.AddModelError
+	
+11.服务端验证
+	ModelState.AddModelError 把错误信息以键值对的形式从Controller传递到View
+	@Html. ValidationSummary()	// Html.BeginForm中的第一行，提示消息全部出现在顶部
+	@Html.ValidationMessage(property.PropertyName)	// 提示消息出现在每个控件下面
+	
+12.Bootstrap里面的大小适用
+	xs	<768
+	sm	>768
+	md	>992
+	lg	>1200
+	
+13.Razor会自动移除null值的属性
+	<div class ="@wrapperClasses">	// 如果wrapperClasses为null，将智能地移除class属性
+	
+14.视图传递过来的路由信息：
+		ViewContext.RouteData.Values["key"];
+		
+15.给html赋值属性，Razor会自动识别_转化为-
+	@Html.RouteLink("Link Text", routeObject, htmlAttr);	// new {data_transition="fade"}
+	
+16.MVC能自动识别访问来自于Mobile还是Desktop，如果是Mobile，会自动尝试Mobile后缀的文件
+	_Layout.Mobile.cshtml	// Layout文件
+
+17.单次Http请求中保存数据，TempData
+	RedirectToAction("Index");	// ViewBag用在控制器和视图之间传递信息，但是转向之后就切换了控制器
+								// 之前在ViewBag中设置的信息就自然无效了，不会在控制器间传递
+								// 用法类似Session：TempData["message"]
+	
+18.客户端验证
+	<script src="∼/Scripts/jquery-1.9.1.js"></script>
+	<script src="∼/Scripts/jquery.validate.js"></script>
+	<script src="∼/Scripts/jquery.validate.unobtrusive.js" ></script>
+	
+---------------------------------------------路由控制(URL Routing)-----------------------------------------------------------	
+
+1.使用*来匹配所有
+	 routes.MapRoute(
+		name: "All",
+		url: "{*catchall}",			// 只要是*号前缀即可，后面可跟任何字符串，甚至是不跟
+		defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+	);
+	
+	
+2.指定命名空间内搜索控制器：
+	MapRoute的namespaces参数：new[]{"URLsAndRoutes.AdditionalControllers"}
+	
+3.为控制器添加约束(MapRoute的constraints参数)：
+	正则约束：new {controller = "^H.*", action = "^Index$|^About$"}				// 正则匹配
+	http请求方法约束：httpMethod = new HttpMethodConstraint("GET", "POST")		// 名字可以不是httpMethod，只要值是HttpMethodConstraint类型的实例
+	类型和值的约束：id = new RangeRouteConstraint(10, 20);						// System.Web.Mvc.Routing.Constraints下有更多的约束类								
+	自定义约束：继承自IRouteConstraint接口，实现Match方法。	
+
+5.属性路由
+	RoutConfig.cs中调用MapMvcAttributeRoutes方法
+	controller的方法添加Route属性：
+		[Route("Test")]			// 匹配值为Test的路径
+		public ActionResult Index() {}
+		
+	添加限制：
+		[Route("Test/{id:int}")]
+	多个限制：
+		[Route("Test/{user:alpha:length(6)}")]
+	在Controller上添加前缀属性:
+		[RoutePrefix("Users")]	// 这样该控制器下的方法将匹配Users前缀的路径：Users/xxx
+		public class CustomerController : Controller {}
+	指定某个方法不受前缀影响：
+		[Route("~/Test")]
+		public ActionResult Index(){}
+
+5.Area的默认命名空间为：UrlsAndRoutes.Areas.{{AreaName}}.Controllers
+  Controller的默认命名空间为：UrlsAndRoutes.Controllers
+  *所以如果使用了Area, RouteConfig.cs中注册路由时应当声明namespace
+   否则该route将在所有命名空间下查找controller，在Controller和Area查找到同名Controller时会报错
+   
+6.Authentication、Authorization
+	Authentication在Authorization之前
+	
+-----------------------------------------------------Helper Methods-------------------------------------------------
+1.inline helper:
+	@helper helperFunName(string[] items){
+		@foreach(string str in items){
+			<li>@str </li>
+		}
+	}
+
+2.扩展方法:
+	public static MvcHtmlString ListArrayItems(this HtmlHelper html, string[] list){
+		// 对HtmlHelper类扩展方法
+	}
+	*扩展方法需要引入命名空间，或者在views/web.config中引入
+	*可能存在编码问题破坏html文档，需要html.Encode一下或者返回类型改为string
+									
+3.@{Html.BeginForm();}
+	xxx
+  @{Html.EndForm();}
+  等同于@using(Html.BeginForm()){}
+	*BeginForm BeginRouteForm("指定路由名")
+
+4.@Html.TextBox("property")
+	先后从ViewBag和Model中查找
+	
+5.
+	@Html.LabelForModel()
+		*Model类需加属性：[DisplayName("New Person")]
+	@Html.EditorForModel()
+		*创建2个div(修饰符分别为editor-label何editor-field)，分别包含label和input
+	
+6.常见属性：
+	[HiddenInput(DisplayValue=false)]
+	[Display{Name="First")]
+	[DataType(DataType.Date)]
+
+7.EditorFor创建出来的可以使用自定义模板
+	*Shared/EditorTemplates下寻找该类型的模板
+	*模板文件名需与类型名字保持一致
+	
+8.为EditorFor的Model指定显示类：
+	[MetadataType(typeof(PersonMetaData))]
+	
+-------------------------------------------------URL and Ajax------------------------------------------------------
+
+1.常用方法
+	Url.Content("~/Content/Site.css")															/Content/Site.css
+	Html.ActionLink("My Link", "Index", "Home")													<a href="/">My Link</a>
+	Url.Action("GetPeople", "People")															/People/GetPeople
+	Url.RouteUrl(new {controller = "People", action="GetPeople"})								/People/GetPeople
+	Html.RouteLink("My Link", new {controller = "People", action="GetPeople"})					<a href="/People/GetPeople">My Link</a>
+	Html.RouteLink("My Link", "FormRoute", new {controller = "People", action="GetPeople"})		<a href="/app/forms/People/GetPeople">My Link</a>
+	
+----------------------------------------------------Model Binding-----------------------------------------------------------
+
+1.依次从以下处查找参数：
+	Request.Form
+	RouteData.Values
+	Request.QueryString
+	Request.Files
+
+2.绑定可以在Controller中指定，也可以在Model中指定：
+	Controller:
+		public ActionResult DisplaySummary([Bind(Prefix="HomeAddress", Exclude="Country")]AddressSummary summary)
+		{
+			return View(summary);
+		}
+	Model:
+		[Bind(Include="City")]
+		public class AddressSummary 
+		{
+			public string City { get; set; }
+			public string Country { get; set; }
+		}
+	
+3.绑定Array和List:
+	name = "names"		// names是Action的参数名(Array或List)
+	*如果是自定义的Model的属性，则需要设置成name="[0].Property"
+
+4.可以手动控制绑定：
+	UpdateModel(addresses, new FormValueProvider(ControllerContext));
+	*各自对应的Provider:
+		Request.Form FormValueProvider
+		RouteData.Values RouteDataValueProvider
+		Request.QueryString QueryStringValueProvider
+		Request.Files HttpFileCollectionValueProvider
+	
+5.自定义绑定：
+	继承IValueProvider:
+		bool ContainsPrefix(string prefix);
+		ValueProviderResult GetValue(string key);
+	再实现一个ValueProviderFactory，在ValueProviderResult注册该Factory
+	
+6.还可以为指定类型绑定Model值	
+	
+		
+----------------------------------------------------Model Validation-----------------------------------------------------------
+
+1.常用的类及属性：
+	ModelState
+	Html.ValidationSummary
+	Html.ValidationMessageFor
+	ValidationAttribute
+	IvalidatableObject
+	RemoteAttribute
+
+2.Model验证常用属性：
+	Required(ErrorMessage="message")
+	MustBeTrue(ErrorMessage="You must accept")
+	*可以自定义属性，继承ValidationAttribute，重载IsValid方法即可
+
+
+----------------------------------------------------Model Validation-----------------------------------------------------------
+
+1.启用Bundles:
+	Web.Config -> pages -> namespaces
+		<add namespace="System.Web.Optimization"/>
+	Web.Config -> system.web
+		<compilation debug="false" targetFramework="4.5.1" />
+		*false则合并压缩成一个文件
+
+
+
+	

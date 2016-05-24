@@ -1,0 +1,13 @@
+1.如果是在 onclick事件里面使用click()方法来触发onclick事件, 那么有一个很有趣的地方, 只会调用一次, 将不会无限制循环调用, 
+估计是有这么一个判断的逻辑, 如果onclick事件来源于click, 那么在这次的onclick中的click将失效.
+	window.onload=function(){
+		document.body.onclick = function(e){
+			//alert(e);
+			selfclicktest();
+			alert(document.body.getAttribute('onclick'));	//将弹出两次
+		};
+		function selfclicktest(){
+			document.body.click();
+		}
+	}
+	

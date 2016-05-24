@@ -1,0 +1,234 @@
+----------------------SQL Server------------------------------
+1.查询数据库大小：Exec sp_spaceused 					-- 数据库大小
+				  Exec sp_spaceused 'Table_name'		-- 数据表大小
+
+2.是否存在某数据库：	IF EXISTS (select 1 from master.sys.databases where [name] ='数据库名')
+
+3.数据库中是否存在某张表：		IF EXISTS(select 1 from 数据库名.dbo.sysobjects where name = '表名')
+						IF OBJECT_ID('表名','U') IS NOT NULL	-- 需要在当前数据库中，也就是：use 数据库名; 后面的U是xtype列的值，以下是几个常用的值：
+																-- P = SQL Stored Procedure
+																-- U = Table (user-defined)
+																-- V = View
+  
+4.表中是否存在某字段：	IF EXISTS (SELECT 1 FROM SYSOBJECTS T1 INNER JOIN SYSCOLUMNS T2 ON T1.ID=T2.ID WHERE T1.NAME='表名' AND T2.NAME='列名')
+						IF COL_LENGTH('表名', '列名') IS NOT NULL
+						
+5.查询出行号：SELECT ROW_NUMBER() OVER(ORDER BY 列名), 其他列 FROM 表名
+
+6.
+
+
+
+----------------------Perl------------------------------
+1.字符串操作：
+	substr EXPR,OFFSET,LENGTH,REPLACEMENT	# 如果使用了最后一个参数，那么原字符被查找出来的字符串将被替换
+	split /PATTERN/,EXPR,LIMIT				# 第一个参数是正则表达式，比方说如果想要使用\进行分隔，那么需要是'\\\\'，因为正则需要2个\，字符串中又要对这两个\进行转移，所以就变成了4个
+											# 最后一个参数指定分割出的最大数目
+	index STR,SUBSTR,POSITION				# 最后一个参数指定搜索开始位置
+	rindex STR,SUBSTR,POSITION				# 返回最右边的位置，最后一个参数指定搜索开始位置
+	join EXPR,LIST							# 返回拼接后的字符串，第一个参数指定
+	
+2.数组操作：
+	push			# 插入值到最后面
+	unshift			# 插入值到最前面
+	pop				# 取出最后一个值，并从原数组中移除
+	shift			# 取出第一个值，并从原数组中移除
+	scalar			# 转到标量上下文
+	reverse			# 反序
+  遍历：
+	each			# 返回一个列表，里面分别是索引和值	while(my ($index, $value) =  each  @array)
+	for				# for(my $i=0; $i<10; $i++)
+	sort			# 内置变量$a和$b: sort{$a <=> $b}, sort{$a cmp $b}, reverse sort{$a cmp $b} 同 sort{$b cmp $a} 性能相同(旧版本的会有差异)
+  打印：
+	say @array		# 数组值拼接后的字符串，同 join '', @array;
+	say "@array"	# 数组值以空格拼接后的字符串，同 join ' ', @array;		# 列表分隔符 $" 的默认值是空格
+	say "$array[0]"	# 可以单个内插
+	
+3.哈希操作：
+	keys			# 哈希键数组
+	values			# 哈希值数组
+	exists			# 是否存在：exists $hash{'key'} - 可省略引号, 同$hash{key}
+	delete			# 按键删除：delete $hash{'key'}
+  遍历：
+	each			# 返回一个列表，分别是键和值：while(my ($key, $value) = each %hash)
+  打印：
+	say "$hash{key}"	# 哈希只可以单个内插，不能整个哈希内插
+
+4.调试操作：
+	调试指令启用-d选项：perl -d file
+	c		继续执行		#相当于C#的F5,直到下一个断点或watch
+	n		逐过程			#相当于C#的F10
+	-s		单语句  		#相当于C#的F11
+	r		跳出子过程
+	w expr	添加一个watch	#在满足表达式时触发	
+	l		显示源代码
+	-		上一行代码
+	.		当前行
+	b N		设置断点		# N为行数
+	B N		取消断点		# N为行数，B *取消所有断点
+	L		显示断点信息
+	p expr	打印表达式的值
+	#q		退出调试
+	
+5.正则表达式：
+	递归匹配：(?R)
+	例如递归匹配(): \([^()]*([^()]|(?R))*\)	# [^()]|(?R) 匹配括号中间是字符或者继续括号 
+	
+6.文件操作：
+	open FILEHANDLE,MODE,EXPR	# 打开文件句柄
+		<	读取
+		>	创建	#如果已经存在那么就替换
+		>>	追加
+			#例如：
+			open(my $fh, "<:encoding(UTF-8)", "filename");
+	opendir DIRHANDLE, EXPR
+			#例如：
+			opendir ( DIR, $dirname ) || die "Error in opening dir $dirname\n";
+			while( ($filename = readdir(DIR))){
+				 print("$filename\n");
+			}
+			closedir(DIR);
+	mkdir DIRPATH 	创建文件夹 	#windows中只能一级一级的创建
+	File::Basename模块
+		fileparse	
+			my($filename, $dirs, $suffix) = fileparse('C:\foo\bar\baz');	#("baz", 'C:\foo\bar\', "")
+		basename
+			basename("/foo/bar");	
+			basename("/foo/bar");	# 都返回bar	
+		dirname
+			dirname("/foo/bar/baz");	# 返回foo/bar. fileparse() 返回 /foo/bar/
+			dirname("/foo/bar/baz/");	# 返回/foo/bar. fileparse() 返回 /foo/bar/baz/
+			dirname("foo/");			# 返回'.'. fileparse() 返回 'foo/'
+	File::Spec模块
+		use File::Spec;				# 使用时需要写全方法路径，例如：File::Spec->catfile
+		use File::Spec::Functions; 	# 这样可以直接使用方法
+			默认导入的方法：
+				canonpath,catdir,catfile,curdir,rootdir,updir,no_upwards,file_name_is_absolute,path
+			需要时再导入的方法：
+				devnull,tmpdir,splitpath,splitdir,catpath,abs2rel,rel2abs,case_tolerant
+7.时间模块：
+	DateTime模块
+		$dt = DateTime->now; # same as ( epoch => time() )
+		$year   = $dt->year;
+		$month  = $dt->month;          # 1-12
+		$day    = $dt->day;            # 1-31
+		$dow    = $dt->day_of_week;    # 1-7 (Monday is 1)
+		$hour   = $dt->hour;           # 0-23
+		$minute = $dt->minute;         # 0-59
+		$second = $dt->second;         # 0-61 (leap seconds!)
+	Time::HiRes模块
+		简单的时间差可以使用
+		use Time::HiRes qw(gettimeofday tv_interval);
+		my $start=[gettimeofday];
+		my $end=[gettimeofday];
+		my $diff = tv_interval $start,$end;
+	Time::Format模块
+		use Time::Format qw(time_format time_strftime time_manip);
+		print "Today is ", time_format('yyyy/mm/dd', $some_time), "\n";
+	Time::Interval模块
+	Date::Manip模块
+			
+8.数据库模块：
+	DBI模块
+	
+9.xml模块：
+	XML::LibXML
+	
+	
+	
+----------------------Regex------------------------------
+1.元字符
+	.	匹配除换行符以外的任意字符
+	\w	匹配字母或数字或下划线或汉字
+	\s	匹配任意的空白符
+	\d	匹配数字
+	\b	匹配单词的开始或结束
+	^	匹配字符串的开始
+	$	匹配字符串的结束
+	
+2.限定符
+	*	重复零次或更多次
+	+	重复一次或更多次
+	?	重复零次或一次
+	{n}	重复n次
+	{n,}	重复n次或更多次
+	{n,m}	重复n到m次
+
+3.字符类
+	[aeiou]		# []用来自由指定范围
+	[0-9]
+	
+4.分支条件
+	|
+	
+5.反义
+	\W	匹配任意不是字母，数字，下划线，汉字的字符
+	\S	匹配任意不是空白符的字符
+	\D	匹配任意非数字的字符
+	\B	匹配不是单词开头或结束的位置
+	[^x]	匹配除了x以外的任意字符
+	[^aeiou]	匹配除了aeiou这几个字母以外的任意字符
+	
+6.分组
+	(exp)	匹配exp,并捕获文本到自动命名的组里
+	(?<name>exp)	匹配exp,并捕获文本到名称为name的组里，也可以写成(?'name'exp)
+	(?:exp)	匹配exp,不捕获匹配的文本，也不给此分组分配组号
+
+7.后向引用
+	\1			# 后向引用分组1的内容
+	\k<gName>	# 后向引用分组gName的内容
+	
+8.零宽断言
+	(?=exp)			后面是exp
+	(?<=exp)		前面是exp
+	(?!exp)			后面不是exp
+	(?<!exp)		前面不是exp
+	(?#comment)		注释
+	(?(exp)yes|no)	后面位置匹配exp, 使用yes, 否则使用no
+	(?(exp)yes)		同上，空表达式作为no
+	(?(name)yes|no)	如果name组捕获到了内容，使用yes, 否则使用no
+	(?(name)yes)	同上，空表达式作为no
+
+
+9.贪婪与懒惰
+	*?		重复任意次，但尽可能少重复
+	+?		重复1次或更多次，但尽可能少重复
+	??		重复0次或1次，但尽可能少重复
+	{n,m}?	重复n到m次，但尽可能少重复
+	{n,}?	重复n次以上，但尽可能少重复
+
+10.处理选项
+	IgnoreCase(忽略大小写)				匹配时不区分大小写。
+	Multiline(多行模式)					匹配任意一行的行首和行尾 
+	Singleline(单行模式)				.匹配任意字符（包括换行符\n）。 
+	IgnorePatternWhitespace(忽略空白)	忽略表达式中的非转义空白并启用由#标记的注释。
+	ExplicitCapture(显式捕获)			仅捕获已被显式命名的组。
+		#多行模式和单行模式可以一起启用，他们之间没有关系，只是名字让人误解而已
+		
+11.平衡组/递归匹配
+	(?'group')(?'-group')(?(group)yes|no)	# 常用作(?(group)(?!)),单独的(?!)总是匹配失败
+	
+12.其他
+	\a	报警字符(打印它的效果是电脑嘀一声)
+	\b	通常是单词分界位置，但如果在字符类里使用代表退格
+	\t	制表符，Tab
+	\r	回车
+	\v	竖向制表符
+	\f	换页符
+	\n	换行符
+	\e	Escape
+	\0nn	ASCII代码中八进制代码为nn的字符
+	\xnn	ASCII代码中十六进制代码为nn的字符
+	\unnnn	Unicode代码中十六进制代码为nnnn的字符
+	\cN	ASCII控制字符。比如\cC代表Ctrl+C
+	\A	字符串开头(类似^，但不受处理多行选项的影响)
+	\Z	字符串结尾或行尾(不受处理多行选项的影响)
+	\z	字符串结尾(类似$，但不受处理多行选项的影响)
+	\G	当前搜索的开头
+	\p{name}	Unicode中命名为name的字符类，例如\p{IsGreek}
+	(?>exp)	贪婪子表达式
+	(?im-nsx:exp)	在子表达式exp中改变处理选项
+	(?im-nsx)	为表达式后面的部分改变处理选项
+	
+	
+	

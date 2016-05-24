@@ -1,0 +1,38 @@
+1.C#各版本的新特性：
+	2.0(.net framework 2.0)：
+		·迭代器, yield:		// 通常用作一个方法，返回IEnumerable类型，for(int i =0; i<10; i++){yield return i;};
+		·泛型
+		·匿名方法
+		·协变和逆变
+		·可空类型
+		·??运算符			// 如果为空则返回另外一个值，例如return nullObj ?? another;
+		
+	3.0(.net framework 3.5)：
+		·Linq
+		·类型初始化器		// 即 new constructor(){Property1 = p1, property2 = p2};
+		·集合初始化器		// 即 new List(){1,2,3};
+		·匿名类型			// 即 var x=new{Name="James"}; 相当于定义了一个类，其中有个名为Name的属性，值为James
+		·局部变量类型推断	// 即 var x = new Object();	相当于 Object x = new Object();
+		·Lambda表达式
+		·自动化属性			// 即 public string Name{get;set;}; 自动生成私有变量和访问器
+		·扩展方法			// 静态类，静态方法，参数使用 this 开头，比如 this int x, 就是int类型的扩展方法
+		·分部方法			// 定义在分部类中，返回值必须是void，只有在另一个部分类中实现了，才会被包含于源代码编译
+		
+	4.0(.net framework 4.0)
+		·动态查阅, dynamic	// 动态编程，把既有的静态对象标记为动态对象
+		·具名参数、可选参数	// 参数可选即 int buffer = 1024; 具名参数即 Method(buffer: 1000, file: "c:\\0.txt"; 参数顺序可打乱
+		·泛型的协变和逆变
+	
+	5.0(.net framework 4.5)
+		·异步与等待 async await
+		·便利Zip压缩 内置zip压缩支持
+		·正则表达式可以设定超时
+	6.0(.net framework 4.6)
+		
+2.remoting激活方式:
+	服务端激活：SingleTon,SingleCall-GetObject()
+	客户端激活：CreateInstance()
+		RemotingConfiguration.RegisterWellKnownServiceType(
+		typeof(ServerRemoteObject.ServerObject),
+		"ServiceMessage",WellKnownObjectMode.SingleCall);
+		

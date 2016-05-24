@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <script>
+
+        (function(){
+            privilegedMethod=function(){
+                this.name="new name";
+            };
+            privilegedMethod.prototype.getName=function(){
+                return this.name;
+            }
+            privilegedMethod.prototype.setName=function(n){
+                this.name=n;
+            }
+        })();
+
+        function errorTest()
+        {
+            var b=true;
+            if(b)
+            {
+                function sss(){}
+            }
+            else{
+                function sss(){}
+            }
+        }
+        function scopeTest()
+        {
+            var result=new Array();
+            for(i=0;i<10;i++)
+            {
+                result[i]=function()
+                {   var d=i;
+                    return function(){
+                        return d;
+                    }
+                }
+            }
+            return result;
+        }
+        var name="the window";
+        function thisTest(){
+            var name="the window";
+            var objecct={
+                name:"object",
+                getNameFunc:function(){
+                    var name="innerName";
+                    return function(){
+                        return this.name;
+                    }
+                }
+            };
+            alert(objecct.getNameFunc()());
+        }
+        function testOtherUser(){
+            function A(){
+                var arg = [];
+                for(var i=0,len=arguments.length;i<len;i++){
+                    (function(_i){
+                        arg.push(arguments[_i]);
+                    })(i);
+                }
+                this.num = new Array(arg);
+            }
+            A.prototype.insert = function(index,value){
+                this.num.splice(index,0,value);
+                return this.num;
+            }
+            A.prototype.get = function(index){
+                return this.num.slice(index,index+1);
+            }
+            var a1 = new A("red","blue","green");
+            a1.insert(1,"black");
+            alert(a1.num);
+        }
+        var name="this window";
+        /*var objects={
+            name:"My Object",
+            getNameFunc:function(){
+                return this.name;
+                return  function(){
+                    return this.name;
+                }
+            }
+        }
+        alert(objects.getNameFunc());*/
+        function load()
+        {
+           /* var t1=new privilegedMethod();
+            var t2=new privilegedMethod();
+            t1.setName("t1Name");
+            alert(t1.getName());
+            alert(t2.getName());*/
+            var name2="dddfd";
+            var object={
+                name:"load Object",
+                getNameFunc:function(){
+                    var me=this;
+                    return  function(){
+                     alert(me.name2);
+                     }
+                }
+            };
+            var object2={
+                name2:"Object2",
+                getNameFunc:function(){
+                    alert(this.name2)
+                    object.getNameFunc()();
+                }
+            }
+            object2.getNameFunc();
+        }
+    </script>
+</head>
+<body onload="load()">
+</body>
+</html>

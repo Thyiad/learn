@@ -1,0 +1,30 @@
+		请求报文							响应报文
+GET /test/hi.txt HTTP/1.0	 起始行		HTTP/1.0 200 OK
+Accept: text/*				 首部		Content-type: text/plain
+Accept-Language: en,fr					Content-length:19
+
+							 主体		Hi! I'm a message!
+
+1.http报文信息：
+  `起始行
+	请求报文: 要做什么 --> 响应报文： 出现了什么情况
+  `首部
+	任意个首部字段(名字: 值), 以空行结束
+  `主体
+	请求报文: 要发送给Web服务器的数据 --> 响应报文: 要返回给客户端的数据
+	数据可以是文本(txt), 也可是二进制数据(图片, 视频, 音频, 软件程序)
+	
+2.连接
+	HTTP				应用层
+	TCP					传输层
+	IP					网络层
+	网络特有的链路接口		数据链路层
+	物理网络硬件			物理层
+	
+3.URI(URL, URN)
+  URL: 通过位置来标识(方案:// 服务器位置 /路径)
+  URN: 通过名字来识别
+  http规范中使用的是URI, 实际http应用程序处理的只是URL
+  
+4.<scheme>://<user>:<password>@<host>:<port>/<path>;<params>?<query>#<frag>
+方案://用户名:密码@主机地址:端口/路径;参数?查询#片段
