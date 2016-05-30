@@ -1,0 +1,24 @@
+$_									// 最近一次运行的表达式
+$0 - $4								// 最近使用调试工具选中的节点
+$									// document.querySelector(), 一般都被jQuery覆盖了
+$$									// document.querySelectorAll()
+$x(path)							// 符合xpath表达式的节点
+clear()								// 清空输出框
+copy(object)						// 复制指定对象成字符串到粘贴板
+debug(function)						// 调试指定函数 ，运行到该函数时自动断点
+dir(object)							// 显示指定对象的所有属性
+dirxml(object)						// 显示指定对象的整个xml节点
+inspect(object/function)			// 选中指定dom或方法
+getEventListeners(object)			// 获取指定dom绑定的所有事件
+keys(object)						// 获取指定对象的所有属性名
+monitor(function)					// 监控指定函数
+monitorEvents(object[,events])		// 监控指定dom的事件
+profile([name])						// 开始监控性能
+profileEnd([name])					// 停止监控性能
+table(data,[,columns])				// 以表格形式展现数据
+undebug(function)
+unmonitor(function)
+unmonitorEvent(object,[,events])
+values(object)
+
+自定义命令							// https://github.com/amasad/debug_utils
