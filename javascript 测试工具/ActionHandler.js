@@ -8,7 +8,8 @@ function $(e)
 }
 
 function log(txt,clear){
-	$('logArea').value = clear?txt:($('logArea').value+'\n'+txt);
+	txt= txt.toString();
+	$('logArea').value = clear?txt:($('logArea').value+txt+'\n');
 }
 
 String.prototype.trimStart=function(){
@@ -41,14 +42,12 @@ function createMongoData(){
 			type=typeStr[0].substring(1,typeStr[0].length-1)
 		}
 		
-		var listItem = type.split('/');
+		trimAll = trimAll.replace(regexType,'');
 		
+		var listItem = type.split('/');
 		var current = null;
 		
-		trimAll = trimAll.replace(regexType,'');
-		if(trimAll === 'status'){
-			console.log(111);
-		}
+		
 		// 类型是下拉，则设置为下拉的随机项
 		if(listItem.length > 1){
 			var itemIdx = Math.floor(Math.random()*listItem.length+0);
@@ -99,9 +98,6 @@ function executeCode()
     try
     {
         eval($('sourceArea').value);
-        if($('sourceArea').value!==''){
-            $('logArea').value='';
-        }
     }
     catch(exception)
     {

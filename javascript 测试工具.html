@@ -32,6 +32,13 @@
 <script src="javascript%20测试工具/ActionHandler.js"></script>
 <script type="text/javascript">
 	var $sourceArea = document.getElementById("sourceArea");
+	document.addEventListener("keydown", function(e){
+		if(e.keyCode === 116){
+			executeCode();
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	},false)
 	$sourceArea.addEventListener("keydown", function(e){
 		if(e.keyCode === 9){
 			var $index = $sourceArea.selectionStart, $srcvalue = $sourceArea.value;
