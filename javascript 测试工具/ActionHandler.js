@@ -22,32 +22,32 @@ String.prototype.trimEnd=function(){
 function createMongoData(){
 	var result = {};
 	var lineArray = $('sourceArea').value.split('\n');
-	
+
 	var levelSpaceLen = 3;
 	var regexEnd = /\s+$/gi;
 	var regexStart=/^\s+/gi;
 	var regexType=/\([^)]+\)/gi;
-	
+
 	var levelObj={
 		l0:result,
 	}
 	lineArray.forEach(function(item,idx){
 		var level = getLevel(item);
 		var type = '';
-		
+
 		var trimAll = item.trim();
 		var typeStr = regexType.exec(trimAll);
-		
+
 		if(typeStr){
 			type=typeStr[0].substring(1,typeStr[0].length-1)
 		}
-		
+
 		trimAll = trimAll.replace(regexType,'');
-		
+
 		var listItem = type.split('/');
 		var current = null;
-		
-		
+
+
 		// 类型是下拉，则设置为下拉的随机项
 		if(listItem.length > 1){
 			var itemIdx = Math.floor(Math.random()*listItem.length+0);
@@ -62,7 +62,7 @@ function createMongoData(){
 		}else {
 			current = trimAll;
 		}
-		
+
 		if(Object.prototype.toString.call(current) === "[object Array]"){
 			if(getLevel(lineArray[idx+1]) > level){
 				current.push({});
@@ -70,20 +70,20 @@ function createMongoData(){
 				current.push=(trimAll);
 			}
 		}
-		
+
 		var levelPre = levelObj['l'+(level-1).toString()];
 		if(Object.prototype.toString.call(levelPre) === "[object Array]"){
 			levelPre=levelPre[0];
 		}
-		
+
 		levelPre[trimAll]= levelObj['l'+level.toString()] = current;
 	})
-	
+
 	log(JSON.stringify(result),true);
-	
+
 	function getLevel(str){
 		if(str === null || str === undefined) return 1;
-		
+
 		var levelSpace = str.trimEnd().match(regexStart);
 		if(levelSpace){
 			return (levelSpace[0].length/levelSpaceLen)+1;
@@ -125,7 +125,7 @@ function FormatCode() {
 	{
 		$('sourceArea').value = js_beautify(js_source, tabsize, tabchar);
 	}
-	
+
 	return false;
 }
 

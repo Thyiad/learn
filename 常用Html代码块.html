@@ -7,6 +7,78 @@ var vm = new Vue({
 	methods:{},
 });
 
+<-----------------------------------------------vue-form-validate----------------------------------------------------------->
+var uiMsg={};
+
+function getFormData() {
+	return {
+		'basic': [
+			{
+				label: uiMsg['Qty3'],
+                type: 'text',
+                name: 'priceInfos.quantityC',
+                data: '',
+                required: true,
+                disabled: false,
+                format: 'digits',
+			}
+		],
+	}
+}
+
+function getFormValidators(){
+	return [
+		{
+            formID:'xxxformID',
+			formData:xxxFormData,
+			submitHandler:function(){
+				// xxx action
+			}
+        },
+	]
+} 
+
+
+<div v-for="item in formData.basic" class="form-group">
+	<label class="control-label col-md-3">
+		{{item.label}}
+		<span v-if="item.required" class="required"> * </span>
+	</label>
+	<div class="col-md-9">
+		<input v-if="item.type==='text'" :type="item.format==='digits'?'number':'text'" name="{{item.name}}" data-disabled="{{item.disabled?'disabled':''}}" class="form-control" />
+		<span v-if="item.type==='text' && item.tip" class="help-block">{{item.tip}}</span>
+		<select v-if="item.type === 'list'" :data-multiple="item.multiple?'multiple':''"  name="{{item.name}}" data-disabled="{{item.disabled?'disabled':''}}" class="form-control">
+			<option v-for="opt in item.data" data-selected="{{opt.selected}}" value="{{opt.optValue}}">{{opt.optText}}</option>
+		</select>
+		<textarea v-if="item.type === 'area'" name="{{item.name}}" class="form-control"></textarea>
+		<input v-if="item.type==='date'" type="text" name="{{item.name}}" class="form-control date-picker">
+		<div v-if="item.type==='yesno'" class="radio-list" :data-error-container="'#error_yesno_'+item.name+$index">
+			<label v-for="opt in item.data">
+				<input type="radio" :name="item.name" value="{{opt.optValue}}">{{opt.optText}}
+			</label>
+		</div>
+		<div v-if="item.type==='yesno'" :id="'error_yesno_'+item.name+$index"></div>
+		<textarea v-if="item.type==='rich'" class="ckeditor form-control" name="{{item.name}}" :data-error-container="'#error_'+item.name+$index"></textarea>
+		<div v-if="item.type==='rich'" :id="'error_'+item.name+$index"> </div>
+	</div>
+</div>
+<------------------------------------------------have value--------------------------------------------------------->
+<input v-if="item.type==='text'" :type="item.format==='digits'?'number':'text'" name="{{item.name}}" data-disabled="{{item.disabled?'disabled':''}}" class="form-control" :value="getDotProp(productData,item.name)"/>
+<span v-if="item.type==='text' && item.tip" class="help-block">{{item.tip}}</span>
+<select v-if="item.type === 'list'" :data-multiple="item.multiple?'multiple':''"  name="{{item.name}}" data-disabled="{{item.disabled?'disabled':''}}" class="form-control">
+	<option v-for="opt in item.data" :data-selected="getOptSelectedTag(productData, item.name, opt.optValue, item.multiple)"  value="{{opt.optValue}}">{{opt.optText}}</option>
+</select>
+<textarea v-if="item.type === 'area'" name="{{item.name}}" class="form-control" :value="getDotProp(productData,item.name)"></textarea>
+<input v-if="item.type==='date'" type="text" name="{{item.name}}" class="form-control date-picker" :value="getDotProp(productData,item.name)">
+<div v-if="item.type==='yesno'" class="radio-list" :data-error-container="'#error_yesno_'+item.name+$index">
+	<label v-for="opt in item.data">
+		<input type="radio" :name="item.name" :data-checked="getOptCheckedTag(productData, item.name, opt.optValue)" value="{{opt.optValue}}">{{opt.optText}}
+	</label>
+</div>
+<div v-if="item.type==='yesno'" :id="'error_yesno_'+item.name+$index"></div>
+<textarea v-if="item.type==='rich'" class="ckeditor form-control" name="{{item.name}}" :data-error-container="'#error_'+item.name+$index" :value="getDotProp(productData,item.name)"></textarea>
+<div v-if="item.type==='rich'" :id="'error_'+item.name+$index"> </div>
+
 
 <------------------------------------------------modal--------------------------------------------------------->
 $('#modal').modal('hide');	// hide, show,toglle
