@@ -19,7 +19,27 @@ String.prototype.trimEnd=function(){
 	return this.replace(/\s+$/gi,'');
 }
 
-function createMongoData(){
+function createAttributes(){
+	var result = createMongoData(true);
+
+	doPrintAttribute(result);
+
+	function doPrintAttribute(obj,prefix) {
+		prefix = prefix || '';
+		Object.keys(obj).forEach(function(key) {
+			var value = obj[key];
+			if (Object.prototype.toString.call(value) === "[object String]") {
+				log("'"+prefix+value+"',");
+			}else if (Object.prototype.toString.call(value) === "[object Object]") {
+				doPrintAttribute(value,prefix+key+'.');
+			}else if (Object.prototype.toString.call(value) === "[object Array]") {
+				// array 暂不处理, 一般会另开一个form
+			}
+		})
+	}
+}
+
+function createMongoData(preventLog){
 	var result = {};
 	var lineArray = $('sourceArea').value.split('\n');
 
@@ -79,7 +99,9 @@ function createMongoData(){
 		levelPre[trimAll]= levelObj['l'+level.toString()] = current;
 	})
 
-	log(JSON.stringify(result),true);
+	if(!preventLog){
+		log(JSON.stringify(result),true);
+	}
 
 	function getLevel(str){
 		if(str === null || str === undefined) return 1;
@@ -91,6 +113,8 @@ function createMongoData(){
 			return 1;
 		}
 	}
+
+	return result;
 }
 
 function executeCode()
