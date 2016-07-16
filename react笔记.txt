@@ -1,0 +1,179 @@
+1.页面结构:
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>		// 这一步很费时间, 最好使用babel自己转码
+	
+	<script type="text/babel">							// type需要标记为text/babel, 外置的babel则设置src属性
+		// ** Our code goes here! **
+    </script>
+	
+2.ReactDom.render			// 将模板转换为HTML语言, 并插入指定的DOM节点
+	ReactDOM.render(
+	  <h1>Hello, world!</h1>,
+	  document.getElementById('example')
+	);
+	
+3.JSX语法
+	<>			// HTML标签
+	{}			// 代码块
+	var names = ['Alice', 'Emily', 'Kate'];
+	ReactDOM.render(
+	  <div>
+	  {
+		names.map(function (name) {
+		  return <div>Hello, {name}!</div>
+		})
+	  }
+	  </div>,
+	  document.getElementById('example')
+	);
+	*允许直接在模板中插入JavaScript变量, 如果是数组, 则展开：
+	var arr = [
+		<h1>Hello world!</h1>,
+		<h2>React is awesome</h2>,
+	];
+	
+4.组件
+	var HelloMessage = React.createClass({
+	  render: function() {
+		return <h1>Hello {this.props.name}</h1>;
+	  }
+	});
+
+	ReactDOM.render(
+	  <HelloMessage name="John" />,
+	  document.getElementById('example')
+	);
+	
+5.this.props.children
+	var NotesList = React.createClass({
+	  render: function() {
+		return (
+		  <ol>
+		  {
+			React.Children.map(this.props.children, function (child) {
+			  return <li>{child}</li>;
+			})
+		  }
+		  </ol>
+		);
+	  }
+	});
+
+	ReactDOM.render(
+	  <NotesList>
+		<span>hello</span>
+		<span>world</span>
+	  </NotesList>,
+	  document.body
+	);
+	
+6.PropTypes
+	var MyTitle = React.createClass({
+	  propTypes: {
+		title: React.PropTypes.string.isRequired,
+	  },
+
+	  render: function() {
+		 return <h1> {this.props.title} </h1>;
+	   }
+	});
+	
+7.获取真实的DOM节点			// ref 属性
+	var MyComponent = React.createClass({
+	  handleClick: function() {
+		this.refs.myTextInput.focus();
+	  },
+	  render: function() {
+		return (
+		  <div>
+			<input type="text" ref="myTextInput" />
+			<input type="button" value="Focus the text input" onClick={this.handleClick} />
+		  </div>
+		);
+	  }
+	});
+
+	ReactDOM.render(
+	  <MyComponent />,
+	  document.getElementById('example')
+	);
+	
+8.this.state
+	var LikeButton = React.createClass({
+	  getInitialState: function() {
+		return {liked: false};
+	  },
+	  handleClick: function(event) {
+		this.setState({liked: !this.state.liked});
+	  },
+	  render: function() {
+		var text = this.state.liked ? 'like' : 'haven\'t liked';
+		return (
+		  <p onClick={this.handleClick}>
+			You {text} this. Click to toggle.
+		  </p>
+		);
+	  }
+	});
+
+	ReactDOM.render(
+	  <LikeButton />,
+	  document.getElementById('example')
+	);
+	
+9.表单
+	不能用this.props读取表单的内容, 只能通过state来间接获取:
+	var Input = React.createClass({
+	  getInitialState: function() {
+		return {value: 'Hello!'};
+	  },
+	  handleChange: function(event) {
+		this.setState({value: event.target.value});
+	  },
+	  render: function () {
+		var value = this.state.value;
+		return (
+		  <div>
+			<input type="text" value={value} onChange={this.handleChange} />
+			<p>{value}</p>
+		  </div>
+		);
+	  }
+	});
+
+	ReactDOM.render(<Input/>, document.body);
+	
+10.组件的生命周期
+	Mounting			// 已插入真实DOM
+	Updating			// 正在被重新渲染
+	Unmounting			// 已移出真实DOM
+	*每种状态都有两种处理函数: will(状态前), did(状态后):
+	componentWillMount、componentDidMount、componentWillUpdate(object nextProps, object nextState)、componentDidUpdate(object nextProps, object nextState)、componentWillUnmount
+	
+	两种特殊状态处理函数：
+	componentWillReceiveProps(object nextProps)						// 已加载组件收到新的参数时调用
+	shouldComponentUpdate(object nextProps, object nextState)		// 组件判断是否重新渲染时调用
+	
+11.ajax
+	ajax的回调函数中setState来重新渲染UI
+
+
+其他注意事项：
+1.style设置方式：
+	style="opacity:{this.state.opacity};"			// 错误
+	style={{opacity: this.state.opacity}}			// 正确
+	* 第一重大括号表示这是JavaScript语法, 第二重大括号表示样式对象
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

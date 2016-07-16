@@ -1,0 +1,13 @@
+1.babel
+	npm install --global babel-cli						// 全局安装babel
+	npm install --save-dev babel-cli					// 当前项目安装babel
+	npm install --save-dev babel-preset-es2015			// 当前项目安装es2015转码规则
+	npm install --save-dev babel-preset-react			// 当前项目安装react转码规则
+	npm install --save-dev babel-preset-stage-0			// 当前项目安装不同stage转码规则. es2015以后的语法提案, 0-3共4个阶段
+	
+	babel src.js --out-file dst.js			// 转码到指定输出文件, --out-file 或 -o
+	babel src --out-dir dst					// 转码到目录到指定输出目录, --out-dir 或- d
+	babel src -d dst -s						// -s 参数生成source map文件
+	
+2.eslint
+	npm install --save-dev eslint babel-eslint			// 当前项目安装eslint

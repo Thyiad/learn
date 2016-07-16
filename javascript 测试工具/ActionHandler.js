@@ -67,7 +67,6 @@ function createMongoData(preventLog){
 		var listItem = type.split('/');
 		var current = null;
 
-
 		// 类型是下拉，则设置为下拉的随机项
 		if(listItem.length > 1){
 			var itemIdx = Math.floor(Math.random()*listItem.length+0);

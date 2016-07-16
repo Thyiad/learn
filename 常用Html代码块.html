@@ -1,3 +1,33 @@
+<------------------------------------------------vue 封装的组件--------------------------------------------------------->
+<my-portlet color="" title="">
+	<my-tab-left slot="body" :tabs="tabs">
+		<div slot="tabContent" class="tab-content">
+			<div v-for="tab in tabs" :id="tab.id" class="tab-pane fade">
+				<my-form v-if="$index===0" :show-error="true"
+						 :form-id="'formBasic'"
+						 :form-items="basicFormItems"
+						 :ui-config="uiConfig"
+						 :model="{registrationType:'b2b'}">
+				</my-form>
+				<!--columns需要name,type,data,display,className字段-->
+				<my-table-modal v-if="$index===1"
+					:ui-config="uiConfig"
+					:action="{create:true,edit:true,delete:true}"
+					:data-list="addressTab.addresses"
+					:form-items="addressFormItems"
+					:editing-obj="addressTab.editingAddress"
+					:columns="addressFormItems"
+					:id="&quot;Address&quot;"
+					:auto-num="true"
+					:modal="{title:uiConfig[&quot;Address Information&quot;],height:500}"
+					@action="addressAction">
+				</my-table-modal>
+			</div>
+		</div>
+	</my-tab-left>
+</my-portlet>
+
+
 <------------------------------------------------vue--------------------------------------------------------->
 var vm = new Vue({
 	el:'#app',
