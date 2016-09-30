@@ -1,3 +1,6 @@
+查询是否存在：Any、firstOrDefault、Count
+	3者中Any性能最高，直接属性时Count性能最低，导航属性时firstOrDefault性能最低
+
 Linq
 // 单序列操作
 Where()

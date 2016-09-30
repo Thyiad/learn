@@ -1,0 +1,4 @@
+1.Enable-Migrations
+2.Add-Migration xxx
+3.Update-Database
+4.Get-Migrations

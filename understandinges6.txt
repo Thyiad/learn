@@ -1,0 +1,78 @@
+-----------------------------------------------------------第一章 块级作用域---------------------------------------------------------------------
+1. let
+	没有变量提升，必须先声明后使用
+	在同一作用域内不能重复定义同名变量
+	
+2. const
+	恒定的是指针，而不是内容。所以如果是对象，是可以修改const对象的属性的
+	同样是必须先定义才能使用
+	
+3. 时间死区：TDZ (temporal dead zone)
+	定义之前就使用变量的话，定义的语句属于 TDZ
+	* 使用时报错，定义语句并不会执行
+	
+4. 顶级作用域：
+	let和const定义在顶级作用域时并不会为window添加或覆盖对象
+	
+	
+-----------------------------------------------------------第二章 字符串和正则表达式---------------------------------------------------------------------
+1. String.codePointAt
+
+2. String.fromCodePoint
+
+3. normalize
+
+4. includes、startsWith、endsWith
+	* 这3个都还能接收第二个参数，用来标识起始匹配位置
+	
+5. repeat
+	x.repeat(3);			// "xxx"
+	
+6. 模板字符串：`text`
+	`t
+	ext ${name}`
+	* 可以穿插变量
+	* 可以直接输出换行
+	并且可以自己定义tag:
+		function tag(literals, ...substitutions) {
+			// return a string
+			// literals的长度始终比substitutions的长度大1
+		}
+	let message = tag`start ${param1} end ${param2}.`;
+		
+7. RegExp构造函数允许同时传RegExp和flags
+	var re1 = /ab/i,
+    re2 = new RegExp(re1, "g");		
+	
+8. RegExp的y标识：
+	如果字符串开头不匹配的话，就不向后匹配。这怎么像^的功能。。。
+	* var pattern = /hello\d/y;
+	* pttern.stricky				// ES5报错，ES6OK
+	
+9. RegExp的u标识：
+	* 正确匹配2位表示一个字符的UTF-16，即超出常用范围：2^16^的字符
+		
+10.	RegExp的flags属性
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
