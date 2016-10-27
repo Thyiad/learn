@@ -1,0 +1,38 @@
+flex 布局
+
+display: flex;
+
+容器属性：
+	flex-direction:    
+		row | row-reverse | column | column-reverse
+		* 排列方向：水平(默认)、水平右起、垂直、垂直下起
+	flex-wrap:
+		nowrap | wrap | wrap-reverse
+		* 一行排不下如何换行：不换行(默认)、换行、换行下起
+	flex-flow:
+		row nowrap
+		* flex-direction 和 flex-wrap 的简写，默认值为 row nowrap
+	justify-content:
+		flex-start | flex-end | center | space-between | space-around
+		* 水平对齐方式：左对齐(默认)、右对齐、居中、两端对齐，项目之间的距离都相等、每个项目两侧间距的间距相等
+	align-items:
+		flex-start | flex-end | center | baseline | stretch
+		* 交叉轴对齐方式：顶部对齐、底部对齐、中部对齐、文字基线对齐、拉伸铺满高度(默认值)
+	align-content:
+		flex-start | flex-end | center | space-between | space-around | stretch
+		* 多轴线对齐方式：
+		
+项目属性：
+	order:
+		值越小排列越靠前
+	flex-grow:
+		放大比例，默认0：存在剩余空间，也不放大
+	flex-shrink:
+		缩小比例，默认1：空间不足，该项目将缩小
+	flex-basis:
+		项目占据的主轴空间，默认auto：项目的本来大小
+	flex:
+		flex-grow, flex-shrink 和 flex-basis的简写，默认 0 1 auto：后两个属性可选
+	align-self:
+		允许项目有不一样的对齐方式，覆盖容器的aligin-items 属性
+	

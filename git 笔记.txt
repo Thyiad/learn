@@ -42,15 +42,19 @@ git config --global alias.st status		// 设置status别名, 同设置checkout, c
 											*每个仓库的git配置文件放在.git/config文件中，当前用户的git配置文件放在用户主目录的.gitconfig中
 
 ssh_config						// 把UserKnownHostsFile=/dev/null一行删除, 就会自动保存host到已知列表
-								   					
+								// 多个git服务器一起用，例如github, gitoschina一起用时，生成key时需要指定 IdentityFile 
+								   			
+											
+
+
+													
 
 
 
 
 
 
-
-
+													
 
 
 
