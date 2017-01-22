@@ -1,0 +1,35 @@
+### 目前使用主要差异
+
+- {{{html}}} 被移除，需要使用指令 v-html="html"
+
+- 内插值属性被移除，需要使用 :class=""
+
+- ready 被移除，需要使用
+```javascript
+mounted: function(){
+        this.$nextTick(function(){
+            // code
+        });
+}
+```
+
+- $dispatch 被移除，需要使用 $emit ，如果事件比较复杂，可以 new 一个 Vue 实例来进行事件分发
+
+- $set 被移除，使用 Vue.set(obj, key, value) 替代
+
+- $remove 被移除，使用原生的 splice 替代
+
+- for 循环中的 $index 和 $key 被移除，需要显式声明
+```javascript
+v-for="(item, index) in items"
+```
+
+- \<template\>\</template\> 被移除，使用空 div 作为根节点
+
+- track-by:key 被移除，使用 :key = "item.id" 替代
+
+- toWay 被移除，强制单向数据流，子级组件需要$emit通知父级更新数据
+
+- :prop.one 和 .sync 被移除，同上，强制单向数据流
+
+- v-else 和 v-show 不允许连用

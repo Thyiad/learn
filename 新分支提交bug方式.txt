@@ -1,0 +1,14 @@
+#### 1. 切换到 master 分支， 更新并创建新分支
+- `git checkout master`
+- `git pull`
+- `git checkout -b bug-1115`
+
+#### 2. 修改并提交代码
+- `git add .`
+- `git commit -m "fix bug 1115"`
+
+#### 3. 提交到远程分支
+- `git push --set-upstream origin bug-1115`
+
+#### 4. 在oschina上面发起 pull request
+![pull request](http://git.oschina.net/uploads/images/2017/0106/104802_0379d3de_383876.png "在这里输入图片标题")

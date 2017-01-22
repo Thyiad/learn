@@ -5,6 +5,7 @@ git status
 git diff 						// -- <file> 查看文件差异
 git log							// --pretty=oneline, --graph 查看分支合并图
 git reset						// --hard <versionNum> || <HEAD^ HEAD~100> 回退到指定版本, 版本号只要前几位就可以了
+									*windows中^是个特殊字符，必须使用双引号括起来
 git reflog						// 命令的历史记录
 git checkout					// -- <file> 丢弃工作区的修改(不能撤销暂存区), 不加file就是切换分支
 								    *git reset HEAD <file> 撤销暂存区的修改
@@ -13,8 +14,9 @@ git remote add origin <.git>	// 关联远程库
 git push -u origin master		// 推送到远程master库，-u可选，用以绑定默认的远程库
 git clone <.git>				// 克隆库
 git branch dev					// 创建分支
-git checkout <-b|-d> dev		// 切换分支，-b 创建并切换分支，-d 删除分支, -D强行删除(未合并过的分支)
-git branch						// 列出所有分支，在当前分支前标记*号
+git checkout <-b|-d> dev		// 切换分支，-b 创建并切换分支
+git branch						// 列出所有分支，在当前分支前标记*号，-d 删除分支, -D强行删除(未合并过的分支)
+									*如果分支已推送到远程, 还需要从远程删除：git push origin --delete <branchName>
 git merge <--no-ff> dev			// 合并指定分支到当前分支，--no-ff 禁用 Fast forward, 用以保留分支的历史
 git stash						// 储藏工作现场
 								    *bug修复步骤: git stash, git checkout master, git checkout -b issue-101,  modify and commit
@@ -31,7 +33,7 @@ git tag -a|-s <name> -m "desc"	// -a指定标签名，-m指定说明文字, -s�
 git tag							// 查看所有标签
 git show <name>					// 查看标签信息
 git tag -d <tagname>			// 删除标签
-								    *如果标签已推送到远程, 还需要从远程删除：git push origin :refs/tags/<tagname>
+								    *如果标签已推送到远程, 还需要从远程删除：git push origin --delete tag <tagname>
 git push origin <tagname>		// 推送标签
 git push origin --tags			// 推送所有尚未推送的标签
 
