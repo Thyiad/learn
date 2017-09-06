@@ -13,3 +13,6 @@
 (select Count(1) from tName as a where result='Win' and a.rstime=tName.rstime) as Win,
 (select Count(1) from tName as a where result='Lose' and a.rstime=tName.rstime) as Lose,
 from tName group rstime;
+
+4.自增列重置为1
+dbcc checkident('tablename',reseed,1)

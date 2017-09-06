@@ -1,0 +1,12 @@
+---------------------- NPM 使用介绍 -----------------------
+1.npm -v		// 查看当前版本
+
+2.npm install <Module Name> -g	// 安装Node.js模块, -g 全局
+
+3.npm uninstall <Module Name>	// 卸载模块
+
+4.npm ls	// 列出当前项目引用的包
+
+5.npm update <Module Name>	// 更新模块
+
+6.npm search <Module Name>	// 搜索模块

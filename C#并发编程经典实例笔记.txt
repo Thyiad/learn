@@ -1,0 +1,6 @@
+1.await之后的代码会试图在原始的上下文中回复运行。
+	可以在await中使用ConfigureAwait方法，将参数continueOnCapturedContext设为false。
+	接下来的代码会在线程池县城里继续运行。
+	*最佳实践：只在需要时回复上下文，否则一直使用ConfigureAwait
+
+2.如果使用async，最好就一直使用它。
