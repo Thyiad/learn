@@ -6,6 +6,7 @@ git diff 						// -- <file> 查看文件差异
 git log							// --pretty=oneline, --graph 查看分支合并图
 git reset						// --hard <versionNum> || <HEAD^ HEAD~100> 回退到指定版本, 版本号只要前几位就可以了
 									*windows中^是个特殊字符，必须使用双引号括起来
+									git reset HEAD 撤消所有的add
 git reflog						// 命令的历史记录
 git checkout					// -- <file> 丢弃工作区的修改(不能撤销暂存区), 不加file就是切换分支
 								    *git reset HEAD <file> 撤销暂存区的修改
