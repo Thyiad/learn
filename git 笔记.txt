@@ -1,6 +1,8 @@
 git init
 git add <file>					// 把修改放到暂存区
 git commit						// 把暂存区的修改提交到分支
+git commit --amend				// 对最新提交进行修复，把暂存区的修改和之前的提交合并
+		   --amend --no-edit	// --no-edit 不修改提交信息
 git status
 git diff 						// -- <file> 查看文件差异
 git log							// --pretty=oneline, --graph 查看分支合并图
@@ -11,7 +13,12 @@ git reflog						// 命令的历史记录
 git checkout					// -- <file> 丢弃工作区的修改(不能撤销暂存区), 不加file就是切换分支
 								    *git reset HEAD <file> 撤销暂存区的修改
 git rm <file>					// 删除文件并提交到工作区
-git remote add origin <.git>	// 关联远程库	
+git remote add upstream <.git>	// 关联远程库, 对于fork的项目，一般会添加一个名为upstream的上游库
+									git fetch upstream dev
+									git checkout dev
+									git merge upstream/dev
+								   
+								
 git push -u origin master		// 推送到远程master库，-u可选，用以绑定默认的远程库
 git clone <.git>				// 克隆库
 git branch dev					// 创建分支
