@@ -124,10 +124,54 @@
 	
 10.正则表达式
 	
+11.权限管理
+	系统内置角色：
+		Database User roles
+			read, readWrite,
+		DatabaseAdministration roles
+			dbAdmin, dbOwner, userAdmin
+		Cluster Administration Roles
+			clusterAdmin, clusterManager, clusterMonitor, hostManager
+		Backup and REstoration Roles
+			backup, restore
+		All-Database Roles
+			readAnyDatabase, readWriteAnyDatabase, userAdminAnyDatabase, dbAdminAnyDatabase
+		Superuser Roles
+			root
+				readWriteAnyDatabase, dbAdminAnyDatabase, userAdminAnyDatabase, clusterAdmin, restore, backup
+
+	1. 用户创建用户
+		管理员：
+			db.createUser({
+				user: "root",
+				pwd: "admin123",
+				customData: {description: "管理员用户"},
+				roles: ["root"],
+			})
+		业务数据库：
+			db.createUser({
+				user: "tradition",
+				pwd: "admin123",
+				roles:[
+					{role:"readWrite", db:"tradition"},
+					{role: "dbAdmin", db:"tradition"},
+				]
+			})	
+
+	2.开启权限
+		官方是在mongod启动时添加 --auth参数：
+			mongod --auth
+		而brew不行：
+			brew services start mongodb --auth
+		需要修改 /usr/local/etc/mongod.conf, 添加以下2行：
+			security:
+				authorization: enabled
 	
+	3.修改用户
+		db.updateUser("tradition", {pwd: "admin123", roles:[{role: "read", db: "tradition"}]})
 	
-	
-	
+	4.删除用户
+		db.dropUser("tradition")
 	
 	
 	
