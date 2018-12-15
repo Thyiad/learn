@@ -10,6 +10,7 @@ $rst = 0;
 readline DATA;
 while(<DATA>){
 	my @tmp=split;
+	print "@tmp\n";
     push @arr ,\@tmp;
 }
 

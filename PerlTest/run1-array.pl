@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-
 open(DATA, "<input.txt") or die "input.txt 文件无法打开, $!";
 open(DATA2, ">output.txt") or die "output.txt 文件无法写入, $!";
 
@@ -15,11 +14,13 @@ while(<DATA>){
 }
 
 @tmpArr;
+%hash;
 
 for ($i = 0; $i <= $#arr; $i++) {
     @tmpArr=();
     for($j=0;$j<=$#arr;$j++){
         if($j!=$i){
+            $key = $i.'_'.$j;
             foreach $tmp(@{@arr[$j]}){
                 if(!grep {$_ eq $tmp} @tmpArr){
                     push(@tmpArr, $tmp)
