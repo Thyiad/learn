@@ -142,6 +142,7 @@
 
 	1. 用户创建用户
 		管理员：
+			use admin
 			db.createUser({
 				user: "root",
 				pwd: "admin123",
@@ -149,6 +150,7 @@
 				roles: ["root"],
 			})
 		业务数据库：
+			use tradition
 			db.createUser({
 				user: "tradition",
 				pwd: "admin123",
