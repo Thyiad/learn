@@ -296,3 +296,81 @@ sorted(L, key=str.lower)    # 比较小写
 def fn(item):               # 定义函数，返回小写
     return str.lower(item)
 ```
+
+- 闭包
+函数能返回函数，与js一样，存在闭包
+```python
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+             return i*i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()    # 9, 9, 9 而不是1, 4, 9
+```
+
+- 拉姆达表达式
+与 js, C# 相比，多了一个lambda前缀
+```python
+lambda x: x * x # lambda 参数: 逻辑, 多参数用逗号隔开，反而不需要括号(js, c#需要)，有括号会报错
+# 等同于
+def f(x):
+    return x * x
+```
+
+- 装饰器 decorator
+```python
+import functools
+
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
+
+@log('execute')
+def now():
+    print('2015-3-25')
+
+now()
+execute now():
+2015-3-25
+```
+
+- 偏函数
+``` python
+import functools
+int2 = functools.partial(int, base=2)
+
+int2('12345')
+# 等同于
+int('12345', base=2)
+```
+
+### 模块
+建立一个文件夹，必须有 \_\_init\_\_.py，可以是空文件，也可以是一个模块的代码
+``` python
+thyiad
+├─ __init__.py
+├─ abc.py
+└─ xyz.py
+
+import thyiad.abc
+from thyiad import abc
+abc.xxx()
+```
+
+与es5一样，并没有私有变量，默认下划线开头的变量和函数不期望被外部访问
+
+模块搜索路径：
+```python
+import sys
+sys.path.append('/users/thyiad/my_scripts')
+
+# 要么设置环境变量PYTHONPATH
+```
+
+### 
