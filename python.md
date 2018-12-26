@@ -34,7 +34,7 @@ print('''line1
 > % 格式化
 ``` python
 'hello, %s' % 'world'
-'$s, you have' % ('Michael', 100000)d
+'%s, you have $%d' % ('Michael', 100000)
 ```
 
 - 数组：list
@@ -363,7 +363,7 @@ from thyiad import abc
 abc.xxx()
 ```
 
-与es5一样，并没有私有变量，默认下划线开头的变量和函数不期望被外部访问
+与es5一样，模块内部并没有私有变量，默认下划线开头的变量和函数不期望被外部访问
 
 模块搜索路径：
 ```python
@@ -373,4 +373,151 @@ sys.path.append('/users/thyiad/my_scripts')
 # 要么设置环境变量PYTHONPATH
 ```
 
-### 
+### 面向对象
+
+- 作用域
+``` python
+class Student(object):  # 通过逗号继承多个类：(Runnable, Flyable, )
+
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+        self.__name = name
+        self.__score = score
+        name = name # 通过Student.name访问，类似静态变量，而且实例中没有定义该变量时，会自动返回该变量
+
+    def print_score(self):
+        print('%s: %s' % (self.name, self.score))
+
+    zhangsan = Student('zhangsan', 59)
+    zhangsan.print_score()
+
+    # 构造函数是 def __init__(self), 第一个参数是自身
+    # 定义其他函数时也需要第一个参数为self，没有this的概念
+    # 创建实例时不需要 new
+    # class里面__开头的变量和函数，外界无法访问
+    # __xxx__ 是特殊变量，不是私有变量
+    # _xxx 是按约定习俗告诉外界，不要访问我这个变量/函数
+    # __xxx其实是被编译器编译成了_class__xxx, 比如上例，依然可以通过zhangsan._Student__name访问__name，只不过不同版本的解释器生成的变量名可能不尽相同
+
+    # 高级用法
+    # getter, 实际转换为：get_score()
+    @property               
+    def score(self):
+        return self.core
+    # setter，实际转换为：set_score()
+    @score.setter           
+    def score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        self._score = value
+
+    # 用tuple定义允许绑定的属性名称
+    __slots__ = ('name', 'age')
+
+    # 等同于C#中重载toString，print(Student('zhangsan',18)) 时会调用该函数
+    def __str__(self):  
+        return 'name is: %s' % self.name
+
+    # 与__next__配合，可以被for ... in 循环遍历值
+    def __iter__(self):
+        return self
+    def __next__(self):
+        self++
+        if(self.a>1000):
+            raise StopIteration()
+        return self.a
+
+    # 当成数组使用
+    def __getitem__(self, n):   
+        return 1
+        # 如果要支持切片，还需要用isintance来判断为int（索引）还是slice（切片），进而返回不同的值
+
+    # 获取默认属性、默认函数
+    def __getattr__(self, attr):
+        if(attr=='age'):
+            return 25
+        elif(attr == 'name'):
+            return lambda: 'zhangsan'
+
+    # 直接把实例当成函数调用
+    def __call__(self):
+        print('my name is %s.' % self.name)
+```
+
+- 继承和多态
+```python
+class Animal(object):
+    def run(self):
+        print('animal is running...')
+
+class Dog(Animal):
+    pass
+class Cat(Animal):
+    def run(self):  # 覆盖父类的run函数
+        print('cat is running...')
+
+# 鸭子类型：如果一个函数要求传入Animal类型，一个对象只要实现了Animal的run函数即可，不必像C#，Java那样必须传入Animal或Animal的子类
+```
+
+- 获取对象信息
+``` python
+type(123)   # 获取对象类型, <class 'int'>
+isinstance(dark, Animal)    # 判断实例是否是某个类型
+dir(obj)    # 获取该对象的所有属性和方法
+```
+
+- 枚举
+``` python
+from enum import Enum, unique
+
+Month = Enum('Month', ('Jan', 'Feb'))   # 默认从1开始
+
+@unique # 装饰器保证不重复
+class Month(Enum):
+    Jan = 0 # 手动设置为0
+    Feb = 1
+```
+
+- 元类
+动态创建class
+```python
+# type
+def fn(self, name='world'):
+    print ('Hello, $s.' % name)
+Hello = type('Hello', (object,), dict(hello=fn))
+
+# metaclass
+class ListMetaclass(type):
+    def __new__(cls, name, bases, attrs):
+        attrs['add'] = lambda self, value: self.append(value)
+        return type.__new__(cls, name, bases, attrs)
+
+# 为MyList动态添加add函数
+class MyList(list, metaclass=ListMetaclass):
+    pass
+```
+
+### 调试
+- try except finally
+raise 往上抛错误，等同于C#/js的throw
+``` python
+import logging
+logging.basicConfig(level=logging.INFO)
+
+try:
+    print('try...)
+except ZeroDivisionError as e:
+    print('except:', e)
+    loggin.exception(e) # 内置的loggin模块可以打印详细的堆栈
+finally:
+    print('finally...')
+print ('end')
+
+assert n != 0, 'n is zero!'
+python -o err.py    # 使用-o参数关闭assert, 此时等同于pass
+
+pdb调试
+python -m pdb err.py    # l查看代码，p 变量名查看变量，q结束退出程序
+pdb.set_trace() # 代码中放入这一行，运行到这里时，自动暂停
+```
