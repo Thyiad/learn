@@ -521,3 +521,13 @@ pdb调试
 python -m pdb err.py    # l查看代码，p 变量名查看变量，q结束退出程序
 pdb.set_trace() # 代码中放入这一行，运行到这里时，自动暂停
 ```
+
+### IO
+- open, read, close
+``` python
+f = open('filepath', 'r')
+f.read()
+for line in f.readlines():
+    print(line.strip())
+f.close()
+```
