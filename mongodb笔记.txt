@@ -178,6 +178,9 @@
 	
 	4.删除用户
 		db.dropUser("tradition")
+		
+	5.开启权限后
+		db.auth("admin", "admin123")
 	
 	
 	
