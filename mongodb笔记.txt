@@ -70,8 +70,11 @@
 	Shard Server
 	
 17.备份与恢复
-	mongodump -h dbhost -d dbname -o dbdirectory
-	mongorestore -h dbhost -d dbname --directoryperdb dbdirectory
+	mongodump -h dbhost -u uname -p pwd -d dbname -o dbdirectory	# 会自动加上dbname的子文件夹
+	mongorestore -h dbhost -u uname -p pwd -d dbname dbdirectory	// 需要定位到dbname的子文件夹
+
+	mongodump -h 47.102.153.17 -u uname -p pwd -d tradition -o /Users/taohongyong/Documents/tmp
+	mongorestore -h 127.0.0.1 -u uname -p pwd -d tradition /Users/taohongyong/Documents/tmp/tradition
 	
 18.监控
 	mongostat.exe
@@ -150,7 +153,7 @@
 				roles: ["root"],
 			})
 		业务数据库：
-			use tradition
+			use tradition	# 不存在该数据时，即为新建
 			db.createUser({
 				user: "tradition",
 				pwd: "admin123",
@@ -168,7 +171,8 @@
 		需要修改 /usr/local/etc/mongod.conf, 添加以下2行：
 			security:
 				authorization: enabled
-	
+		开启权限后，需要db.auth("name", "pwd")
+
 	3.修改用户
 		db.updateUser("tradition", {pwd: "admin123", roles:[{role: "read", db: "tradition"}]})
 	
