@@ -2,9 +2,10 @@
 
 ### frp转发域名
 
-- match: ftp\.gantongpinggu\.com(?!:)
+- match: .*
 - redirect: {HTTP_HOST}:7000{REQUEST_URI}
 - 有点坑爹，必须要新建一个空站点供反向代理用，否则重写规则不会生效的
+    > 所以 match 变成了 .* ，否则应该是：ftp\.gantongpinggu\.com(?!:)
     > 详见：[IIS论坛](https://forums.iis.net/t/1234125.aspx?Arr+reverse+proxy+does+not+work+at+server+level)
     > ARR is an IIS out of band module. Being a module requires a worker process which requires at least one web site. In any scenario, if you delete your only site, you will lose your ARR reverse proxy.
 - server配置：
