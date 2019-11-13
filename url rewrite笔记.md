@@ -2,7 +2,7 @@
 
 ### frp转发域名
 
-- match: ftp\.gantongpinggu\.com
+- match: ftp\.gantongpinggu\.com(?!:)
 - redirect: {HTTP_HOST}:7000{REQUEST_URI}
 - server配置：
     ``` bash
