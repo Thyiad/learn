@@ -9,7 +9,14 @@
 		
 5.db.collection.save     		// save如果指定_id字段，就是更新该_id的数据
 
-6.db.col.update({'title':'MongoDB 教程'},{$set:{'title':'MongoDB'}})
+6.db.col.update({'title':'MongoDB 教程'},{$set:{'title':'MongoDB'}}, {
+     upsert: <boolean>,
+     multi: <boolean>,
+     writeConcern: <document>,
+     collation: <document>,
+     arrayFilters: [ <filterdocument1>, ... ],
+     hint:  <document|string>        // Available starting in MongoDB 4.2
+   })
 
 7.db.collection.remove
 
