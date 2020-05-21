@@ -93,10 +93,31 @@ docker build -t="thyiad/static_web:v1" .
 
 ### 7.docker compose
 
-
-
 ### docker配置shadowsocks
 ``` bash
 docker run --restart=always --name=myshadowsocks -d -p 54285:54285 oddrationale/docker-shadowsocks -s 0.0.0.0 -p 54285 -k thyiad -m aes-256-cfb
 docker ps
 ```
+
+
+
+# dockerfile里面的命令
+
+FROM
+MAINTAINER
+ARG
+RUN
+WORKDIR
+COPY
+VOLUME
+ENTRYPOINT
+
+# 编译dockerfile
+docker build -t="thyiad/my-frp:v1" .
+
+# 查看卷
+docker volume ls
+docker volume inspect --format '{{ .Mountpoint }}' 自动前缀_卷名
+
+apt-get update
+docker exec

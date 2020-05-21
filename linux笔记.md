@@ -1,3 +1,13 @@
+### 常用命令
+- mkdir 创建文件夹
+- pwd 显示当前路径
+- rm 删除文件
+- pwd|pbcopy 复制当前路径(mac)
+- scp /etc/eva.log user@remoteIP:/home/user 上传文件
+``` bash
+scp /Users/taohongyong/Documents/project/github/tech-share/mini-program.html root@47.52.229.178:/usr/revealjs/content/mini-program.html
+```
+
 ### 1.linux系统启动过程
 
 - 内核引导
