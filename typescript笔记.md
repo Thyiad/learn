@@ -155,3 +155,14 @@ type FromIndex = { [k in Index]?: number };
 
 
 ```
+
+### 8.infer
+这个比较有意思，能从extends中推断类型
+```ts
+type Func = (user: User) => void;
+
+ParamsType<T> = T extends (param: infer P) => any ? P : T;
+// 如果 T 是 (param: P) => any，那么ParamsType 的返回类型就是P，否则为T
+
+type returnType = ParamsType<Func>; // User
+```

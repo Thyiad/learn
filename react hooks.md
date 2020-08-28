@@ -12,7 +12,7 @@ effect hook
 useEffect(()=>{
     // do some thing
 }, [])
-// 默认每次render后都会执行
+// 默认每次render后都会执行, 不会阻塞浏览器绘制
 // 返回值会在执行前，先执行一遍，一般设置为一个函数，作为销毁操作
 // 第二个参数设置为[]，等同于didMount，只会执行一遍
 // 第二个参数设置为其他state值，则只会在其他state值变更时才执行
@@ -116,7 +116,7 @@ useLayoutEffect hook
 useLayoutEffect(()=>{
     // do something
 }, [])
-// 使用方式与useEffect一样，但会在render之前执行，而useEffect是render之后
+// 使用方式与useEffect一样，dom变更之后会调用，但useLayoutEffect会阻塞浏览器绘制
 ```
 
 ### 10.useDebugValue
