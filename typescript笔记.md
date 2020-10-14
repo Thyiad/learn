@@ -177,6 +177,7 @@ type returnType = ParamsType<Func>; // User
 - Pick<T, U>
   提取部分属性
 - Required<T>
+  属性全部必填
 - Exclude<U1, U2>
   排除类型
 - Extract<U1, U2>
