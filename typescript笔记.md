@@ -166,3 +166,34 @@ ParamsType<T> = T extends (param: infer P) => any ? P : T;
 
 type returnType = ParamsType<Func>; // User
 ```
+
+### 9.高级类型
+- Partial<T>
+  将属性全部变为可选
+- Readonly<T>
+  将属性全部变为只读
+- Record<U, T>
+  指定属性范围，值类型为T
+- Pick<T, U>
+  提取部分属性
+- Required<T>
+- Exclude<U1, U2>
+  排除类型
+- Extract<U1, U2>
+  提取相同类型
+- Omit<T, U>
+  排除接口中指定的属性
+- NonNullable<U>
+  排除null和undefined类型
+- Parameters<F>
+  提取函数的参数，返回数组类型
+- ConstructorParameters<C>
+  提取构造函数的参数，返回数组类型
+- ReturnType<F>
+  提取函数的返回值类型
+- InstanceType<C>
+  获取构造函数的返回类型
+- ThisParameterType<T>
+  获取函数中this的数据类型
+- OmitThisParameter<F>
+  移除函数中的this类型，函数体中不允许使用this
