@@ -56,6 +56,17 @@ ssh_config						// 把UserKnownHostsFile=/dev/null一行删除, 就会自动保�
 
 统计代码行数：git log --author=Thyiad --since=2019-01-01 --until=2021-02-01 --format='%aN' | sort -u | while read name; do echo -en "$name\t"; git log --author="$name" --pretty=tformat: --numstat | grep "\(.html\|.js\|.json\|.scss\|.less\|.css\|.ts\|.tsx\|.xml\|.properties\)$" | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -; done
 
+清空git历史记录：
+``` bash
+git checkout --orphan latest_branch
+git add -A
+git commit -am "commit message"
+git branch -D master
+git branch -m master
+git push -f origin master
+```
+
+
 								   			
 											
 
