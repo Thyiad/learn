@@ -6,6 +6,15 @@
 - scp /etc/eva.log user@remoteIP:/home/user 上传文件
 ``` bash
 scp /Users/taohongyong/Documents/project/github/tech-share/mini-program.html root@47.52.229.178:/usr/revealjs/content/mini-program.html
+scp -r /Users/taohongyong/documents/tmp/go2tencentcloud root@47.52.229.178:/usr/go2tencentcloud
+```
+- centos 查看系统版本
+``` bash
+cat /etc/redhat-release
+```
+- 查看磁盘剩余空间
+```
+df -hl
 ```
 
 ### 1.linux系统启动过程
