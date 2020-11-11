@@ -5,7 +5,7 @@ ssh -V
 groupadd sftp
 useradd -g sftp -s /sbin/nologin -d / ftpthy    # -d设置登入目录
 passwd ftpthy
-vim /etc/ssh/sshd_config    # Subsystem 改为 Subsystem sftp internal-sftp
+vim /etc/ssh/sshd_config    # Subsystem 改为 Subsystem sftp internal-sftp -u 0002
 systemctl restart sshd
 ```
 
