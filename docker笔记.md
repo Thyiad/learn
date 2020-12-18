@@ -101,7 +101,7 @@ docker ps
 
 
 
-# dockerfile里面的命令
+### dockerfile里面的命令
 
 FROM
 MAINTAINER
@@ -112,12 +112,16 @@ COPY
 VOLUME
 ENTRYPOINT
 
-# 编译dockerfile
+### 编译dockerfile
 docker build -t="thyiad/my-frp:v1" .
 
-# 查看卷
+### 查看卷
 docker volume ls
 docker volume inspect --format '{{ .Mountpoint }}' 自动前缀_卷名
 
 apt-get update
 docker exec
+
+### docker-compose 强制重新编译
+
+docker-compose up -d --no-deps --build <service_name>
