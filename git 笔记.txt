@@ -67,6 +67,10 @@ git push -f origin master
 ```
 
 
+git config --global credential.helper store		// http、https克隆代码时记住账号密码
+
+
+
 								   			
 											
 
